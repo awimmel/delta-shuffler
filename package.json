@@ -1,0 +1,21 @@
+{
+  "name": "draft-buddy",
+  "version": "1.0.0",
+  "description": "Fantasy football draft companion",
+  "main": "bin/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "draft-buddy": "./bin/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "clear": "^0.1.0",
+    "cross-env": "^10.0.0",
+    "inquirer": "^12.9.3",
+    "axios": "^1.6.7"
+  }
+}
