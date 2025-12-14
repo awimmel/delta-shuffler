@@ -6,6 +6,7 @@ const PlaylistTable = require('./tables/playlistTable')
 const createPlaylistDetailsView = require('./views/playlistDetailsView')
 
 const playlistHelper = require('./backend/playlistHelper.js');
+const songHelper = require('./backend/songHelper.js');
 
 class MainScreen {
     constructor(screen) {
@@ -78,8 +79,8 @@ class MainScreen {
             const filteredAlgorithms = this.algorithmsTable._rawData.filter(item => item[0].toLowerCase().includes(query))
             this.algorithmsTable.setData([['NAME'], ...filteredAlgorithms])
         } else if (!this.songsTable.hidden) {
-            const filteredSongs = this.songsTable._rawData.filter(item => item[0].toLowerCase().includes(query))
-            this.songsTable.setData([['SONG', 'ARTIST', 'ALBUM'], ...filteredSongs])
+            const filteredSongs = this.songsTable.rawData.filter(song => song.name.toLowerCase().includes(query) || songHelper.getArtistString(song).toLowerCase().includes(query) || song.album.name.toLowerCase().includes(query))
+            this.songsTable.setData([['SONG', 'ARTIST', 'ALBUM'], ...songHelper.displaySongs(filteredSongs)])
         } else {
             this.filteredPlaylists = this.playlists.filter(item => item.name.toLowerCase().includes(query))
             this.playlistTable.setData(this.filteredPlaylists)

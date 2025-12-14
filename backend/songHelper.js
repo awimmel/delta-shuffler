@@ -20,7 +20,11 @@ exports.readSongs = function (playlistId) {
 
 exports.displaySongs = function (songs) {
 	return songs.map((song) => {
-		const artistString = song.artists.map((artist) => artist.name).join(", ");
+		const artistString = this.getArtistString(song);
 		return [song.name, artistString, song.album.name];
 	});
+};
+
+exports.getArtistString = function (song) {
+	return song.artists.map((artist) => artist.name).join(", ");
 };
