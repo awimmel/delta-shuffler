@@ -148,7 +148,6 @@ module.exports = function createPlaylistToolbar(parent, searchBar, algorithmsTab
 		},
 		() => {
 			searchBar.setValue("");
-			localAlgorithmsTable.setData([["NAME"], ...localAlgorithmsTable._rawData]);
 
 			localSongsTable.hide();
 			localAlgorithmsTable.show();
@@ -167,10 +166,6 @@ module.exports = function createPlaylistToolbar(parent, searchBar, algorithmsTab
 		},
 		() => {
 			searchBar.setValue("");
-			localSongsTable.setData([
-				["SONG", "ARTIST", "ALBUM"],
-				...songHelper.displaySongs(localSongsTable.rawData)
-			]);
 
 			localAlgorithmsTable.hide();
 			localSongsTable.show();

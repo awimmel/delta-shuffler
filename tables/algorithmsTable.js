@@ -1,5 +1,38 @@
 const createTable = require("./table.js");
+const algorithmHelper = require("../backend/algorithmHelper.js");
 
-module.exports = function createAlgorithmsTable(parent, algorithms) {
-	return createTable(parent, 3, ["NAME", "CONDITION", "SONG COUNT"], algorithms, []);
-};
+const columns = ["NAME", "CONDITION", "SONG COUNT"];
+
+class AlgorithmsTable {
+	constructor(parent, algorithms) {
+		this.parent = parent;
+		this.algorithms = algorithms;
+		this.table = createTable(parent, 3, columns, algorithms, []);
+		this.hidden = false;
+	}
+
+	setData(algorithms) {
+		this.algorithms = algorithms;
+		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(algorithms)]);
+	}
+
+	filterData(algorithms) {
+		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(algorithms)]);
+	}
+
+	hide() {
+		this.table.hide();
+		this.hidden = true;
+	}
+
+	focus() {
+		this.table.focus();
+	}
+
+	show() {
+		this.table.show();
+		this.hidden = false;
+	}
+}
+
+module.exports = AlgorithmsTable;

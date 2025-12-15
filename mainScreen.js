@@ -3,7 +3,7 @@ const focusText = require("./utilities/focusText.js");
 const createMenu = require("./components/menu");
 const createSearchbar = require("./components/searchBar");
 const PlaylistTable = require("./tables/playlistTable");
-const createPlaylistDetailsView = require("./views/playlistDetailsView");
+const PlaylistDetailsView = require("./views/playlistDetailsView");
 
 const playlistHelper = require("./backend/playlistHelper.js");
 const songHelper = require("./backend/songHelper.js");
@@ -22,10 +22,10 @@ class MainScreen {
 		this.menu = createMenu(this, this.searchBar);
 		this.playlists = playlistHelper.readPlaylists();
 		this.filteredPlaylists = this.playlists;
-		this.playlistDetailsView = createPlaylistDetailsView(this.screen, this.searchBar);
-		this.backButton = this.playlistDetailsView.children[2].children[0];
-		this.algorithmsTable = this.playlistDetailsView.children[0];
-		this.songsTable = this.playlistDetailsView.children[1];
+		this.playlistDetailsView = new PlaylistDetailsView(this.screen, this.searchBar);
+		this.backButton = this.playlistDetailsView.playlistToolbar.children[0];
+		this.algorithmsTable = this.playlistDetailsView.algorithmsTable;
+		this.songsTable = this.playlistDetailsView.songsTable;
 		this.playlistTable = new PlaylistTable(
 			this.screen,
 			this.filteredPlaylists,
@@ -34,9 +34,7 @@ class MainScreen {
 		);
 
 		this.backButton.on("keypress", (char, key) => {
-			const activeTable = this.playlistDetailsView.children[0].hidden
-				? this.playlistDetailsView.children[1]
-				: this.playlistDetailsView.children[0];
+			const activeTable = this.playlistDetailsView.getActiveTable();
 			if (key.name === "enter") {
 				this.playlistDetailsView.hide();
 				this.algorithmsTable.hide();
@@ -45,7 +43,7 @@ class MainScreen {
 				this.playlistTable.show();
 				this.playlistTable.focus();
 			} else if (key.name === "right") {
-				this.playlistDetailsView.children[2].children[1].focus();
+				this.playlistDetailsView.playlistToolbar.children[1].focus();
 			} else if (key.name === "up") {
 				focusText(this.searchBar);
 			} else if (key.name === "down") {
@@ -53,7 +51,6 @@ class MainScreen {
 			}
 		});
 
-		this.playlistDetailsView.hide();
 		this.updateList();
 		focusText(this.searchBar);
 		this.screen.render();
@@ -68,7 +65,7 @@ class MainScreen {
 				this.screen.render();
 			} else if (key.name === "down") {
 				if (!this.playlistDetailsView.hidden) {
-					this.playlistDetailsView.children[2].children[0].focus();
+					this.playlistDetailsView.playlistToolbar.children[0].focus();
 				} else if (!this.playlistTable.hidden) {
 					this.playlistTable.focus();
 				}
@@ -83,21 +80,18 @@ class MainScreen {
 	updateList(newChar) {
 		const query = this.getQuery(newChar);
 		if (!this.algorithmsTable.hidden) {
-			const filteredAlgorithms = this.algorithmsTable._rawData.filter(item =>
-				item[0].toLowerCase().includes(query)
+			const filteredAlgorithms = this.algorithmsTable.algorithms.filter(item =>
+				item.name.toLowerCase().includes(query)
 			);
-			this.algorithmsTable.setData([["NAME"], ...filteredAlgorithms]);
+			this.algorithmsTable.filterData(filteredAlgorithms);
 		} else if (!this.songsTable.hidden) {
-			const filteredSongs = this.songsTable.rawData.filter(
+			const filteredSongs = this.songsTable.songs.filter(
 				song =>
 					song.name.toLowerCase().includes(query) ||
 					songHelper.getArtistString(song).toLowerCase().includes(query) ||
 					song.album.name.toLowerCase().includes(query)
 			);
-			this.songsTable.setData([
-				["SONG", "ARTIST", "ALBUM"],
-				...songHelper.displaySongs(filteredSongs)
-			]);
+			this.songsTable.filterData(filteredSongs);
 		} else {
 			this.filteredPlaylists = this.playlists.filter(item =>
 				item.name.toLowerCase().includes(query)

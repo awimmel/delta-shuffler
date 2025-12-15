@@ -5,81 +5,104 @@ const primaryColor = variables.primaryColor;
 const createPlaylistToolbar = require("../components/playlistToolbar");
 const createSongPopover = require("../components/popovers/songPopover");
 const createAlgorithmPopover = require("../components/popovers/algorithmPopover");
-const createAlgorithmsTable = require("../tables/algorithmsTable");
-const createSongsTable = require("../tables/songsTable");
+const AlgorithmsTable = require("../tables/algorithmsTable");
+const SongsTable = require("../tables/songsTable");
 
 const setTableKeypress = require("../utilities/setTableKeypress");
 
-module.exports = function createPlaylistDetailsView(parent, searchBar) {
-	const playlistDetailsView = blessed.box({
-		parent: parent,
-		top: 8,
-		left: 0,
-		height: "100%-8",
-		width: "100%",
-		keys: true,
-		style: {
-			header: {
-				fg: primaryColor,
-				bold: true
-			},
-			cell: {
-				bold: true,
-				selected: {
-					bg: primaryColor,
-					fg: "black",
+class PlaylistDetailsView {
+	constructor(parent, searchBar) {
+		this.playlistDetailsView = blessed.box({
+			parent: parent,
+			top: 8,
+			left: 0,
+			height: "100%-8",
+			width: "100%",
+			keys: true,
+			style: {
+				header: {
+					fg: primaryColor,
 					bold: true
+				},
+				cell: {
+					bold: true,
+					selected: {
+						bg: primaryColor,
+						fg: "black",
+						bold: true
+					}
 				}
 			}
-		}
-	});
+		});
 
-	const algorithmsTable = createAlgorithmsTable(playlistDetailsView, []);
-	algorithmsTable.hide();
+		this.algorithmsTable = new AlgorithmsTable(this.playlistDetailsView, []);
+		this.algorithmsTable.hide();
 
-	const songsTable = createSongsTable(playlistDetailsView, []);
-	songsTable.hide();
+		this.songsTable = new SongsTable(this.playlistDetailsView, []);
+		this.songsTable.hide();
 
-	const playlistToolbar = createPlaylistToolbar(
-		playlistDetailsView,
-		searchBar,
-		algorithmsTable,
-		songsTable
-	);
-	const createAlgorithmButton = playlistToolbar.children[0];
+		this.playlistToolbar = createPlaylistToolbar(
+			this.playlistDetailsView,
+			searchBar,
+			this.algorithmsTable,
+			this.songsTable
+		);
+		const createAlgorithmButton = this.playlistToolbar.children[0];
 
-	playlistToolbar.on("keypress", (char, key) => {
-		if (key.name === "up") {
-			searchBar.focus();
-		} else if (key.name === "down") {
-			if (!algorithmsTable.hidden) {
-				algorithmsTable.focus();
-			} else {
-				songsTable.focus();
+		this.playlistToolbar.on("keypress", (char, key) => {
+			if (key.name === "up") {
+				searchBar.focus();
+			} else if (key.name === "down") {
+				if (!this.algorithmsTable.hidden) {
+					this.algorithmsTable.focus();
+				} else {
+					this.songsTable.focus();
+				}
 			}
+		});
+
+		setTableKeypress(
+			this.algorithmsTable.table,
+			index => {
+				const algorithm = this.algorithmsTable.algorithms[index - 1];
+				createAlgorithmPopover(parent, this.algorithmsTable, algorithm, searchBar);
+			},
+			() => createAlgorithmButton.focus()
+		);
+		setTableKeypress(
+			this.songsTable.table,
+			index => {
+				const song = {
+					title: this.songsTable.rows[index][0],
+					artist: this.songsTable.rows[index][1],
+					album: this.songsTable.rows[index][2]
+				};
+				createSongPopover(parent, this.songsTable, song);
+			},
+			() => createAlgorithmButton.focus()
+		);
+
+		this.playlistDetailsView.hide();
+		this.hidden = true;
+	}
+
+	show() {
+		this.playlistDetailsView.show();
+		this.hidden = false;
+	}
+
+	hide() {
+		this.playlistDetailsView.hide();
+		this.hidden = true;
+	}
+	
+	getActiveTable() {
+		if (this.algorithmsTable.hidden) {
+			return this.songsTable;
+		} else {
+			return this.algorithmsTable;
 		}
-	});
+	}
+}
 
-	setTableKeypress(
-		algorithmsTable,
-		index => {
-			const algorithm = algorithmsTable.rawData[index - 1];
-			createAlgorithmPopover(parent, algorithmsTable, algorithm, searchBar);
-		},
-		() => createAlgorithmButton.focus()
-	);
-	setTableKeypress(
-		songsTable,
-		index => {
-			const song = {
-				title: songsTable.rows[index][0],
-				artist: songsTable.rows[index][1],
-				album: songsTable.rows[index][2]
-			};
-			createSongPopover(parent, songsTable, song);
-		},
-		() => createAlgorithmButton.focus()
-	);
-
-	return playlistDetailsView;
-};
+module.exports = PlaylistDetailsView;

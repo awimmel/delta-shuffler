@@ -25,15 +25,13 @@ class PlaylistTable {
 				this.playlistTable.setData([["PLAYLIST", "SONG COUNT"], ...this.playlistsToDisplay]);
 
 				const playlistId = this.playlists[index].id;
-				const algorithmsTable = playlistDetailsView.children[0];
+				const algorithmsTable = playlistDetailsView.algorithmsTable;
 				const algorithms = algorithmHelper.readAlgorithms(playlistId)
-				algorithmsTable.setData([["NAME", "CONDITION", "SONG COUNT"], ...algorithmHelper.displayAlgorithms(algorithms)]);
-				algorithmsTable.rawData = algorithms;
+				algorithmsTable.setData(algorithms);
 
-				const songsTable = playlistDetailsView.children[1];
+				const songsTable = playlistDetailsView.songsTable;
 				const songs = songHelper.readSongs(playlistId);
-				songsTable.setData([["SONG", "ARTIST", "ALBUM"], ...songHelper.displaySongs(songs)]);
-				songsTable.rawData = songs;
+				songsTable.setData(songs);
 
 				this.playlistTable.hide();
 				playlistDetailsView.show();
