@@ -2,16 +2,14 @@ const path = require("path");
 const fs = require("fs");
 // const { randomUUID } = require("crypto");
 
-const fileName = "algorithms.json";
+const filePath = path.join(__dirname, "../database", "algorithms.json");
 
 exports.readAlgorithms = function () {
-	const algorithmsPath = path.join(__dirname, "../database", fileName);
-	return JSON.parse(fs.readFileSync(algorithmsPath, "utf8"));
+	return JSON.parse(fs.readFileSync(filePath, "utf8"));
 };
 
 exports.writeAlgorithms = function (algorithms) {
-	const algorithmsPath = path.join(__dirname, "../database", fileName);
-	fs.writeFile(algorithmsPath, JSON.stringify(algorithms), err => {});
+	fs.writeFile(filePath, JSON.stringify(algorithms), err => {});
 };
 
 exports.filterAlgorithms = function (playlistId, algorithms) {

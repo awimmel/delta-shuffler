@@ -3,6 +3,8 @@ const path = require("path");
 const fs = require("fs");
 const authHelper = require("./authHelper.js");
 const algorithmHelper = require("./algorithmHelper.js");
+const playlistHelper = require("./playlistHelper.js");
+const songHelper = require("./songHelper.js");
 
 const spotifyApi = "https://api.spotify.com/v1";
 const elementLimit = 50;
@@ -33,18 +35,13 @@ exports.refresh = async function (screen) {
 			newAlg = true;
 		}
 	}
-	const playlistPath = path.join(__dirname, "../database", "playlists.json");
-	fs.writeFile(playlistPath, JSON.stringify(playlists), err => {});
+	playlistHelper.writePlaylists(playlists);
 
 	if (newAlg) {
 		algorithmHelper.writeAlgorithms(algorithms);
 	}
 
-	const songsPath = path.join(__dirname, "../database", "songs.json");
-	fs.writeFile(songsPath, JSON.stringify(getUniqueSongs(songs)), err => {});
-
-	const playlistSongsPath = path.join(__dirname, "../database", "playlistSongs.json");
-	fs.writeFile(playlistSongsPath, JSON.stringify(playlistSongs), err => {});
+	songHelper.writeSongs(songs, playlistSongs);
 
 	screen.setPlaylists(playlists);
 };
@@ -111,8 +108,4 @@ async function getPlaylistTracks(accessToken, playlistId) {
 		},
 		added_at: item.added_at
 	}));
-}
-
-function getUniqueSongs(songs) {
-	return [...new Map(songs.map(song => [song.id, song])).values()];
 }

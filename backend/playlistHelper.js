@@ -1,9 +1,14 @@
 const path = require("path");
 const fs = require("fs");
 
+const filePath = path.join(__dirname, "../database", "playlists.json");
+
 exports.readPlaylists = function () {
-	const playlistsPath = path.join(__dirname, "../database", "playlists.json");
-	return JSON.parse(fs.readFileSync(playlistsPath, "utf8"));
+	return JSON.parse(fs.readFileSync(filePath, "utf8"));
+};
+
+exports.writePlaylists = function (playlists) {
+	fs.writeFile(filePath, JSON.stringify(playlists), err => {});
 };
 
 exports.displayPlaylists = function (playlists) {

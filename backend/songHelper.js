@@ -1,15 +1,21 @@
 const path = require("path");
 const fs = require("fs");
 
+const songsPath = path.join(__dirname, "../database", "songs.json");
+const playlistSongsPath = path.join(__dirname, "../database", "playlistSongs.json");
+
 exports.readSongs = function (playlistId) {
-	const playlistSongsPath = path.join(__dirname, "../database", "playlistSongs.json");
 	const playlistSongs = JSON.parse(fs.readFileSync(playlistSongsPath, "utf8"));
 	const songIds = playlistSongs
 		.filter(playlistSong => playlistSong.playlistId === playlistId)
 		.map(playlistSong => playlistSong.songId);
 
-	const songsPath = path.join(__dirname, "../database", "songs.json");
 	return JSON.parse(fs.readFileSync(songsPath, "utf8")).filter(song => songIds.includes(song.id));
+};
+
+exports.writeSongs = function (songs, playlistSongs) {
+	fs.writeFile(songsPath, JSON.stringify(getUniqueSongs(songs)), err => {});
+	fs.writeFile(playlistSongsPath, JSON.stringify(playlistSongs), err => {});
 };
 
 exports.displaySongs = function (songs) {
@@ -22,3 +28,7 @@ exports.displaySongs = function (songs) {
 exports.getArtistString = function (song) {
 	return song.artists.map(artist => artist.name).join(", ");
 };
+
+function getUniqueSongs(songs) {
+	return [...new Map(songs.map(song => [song.id, song])).values()];
+}
