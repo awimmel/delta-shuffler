@@ -4,12 +4,21 @@ const fs = require("fs");
 
 const filePath = path.join(__dirname, "../database", "algorithms.json");
 
-exports.readAlgorithms = function () {
+exports.readAllAlgorithms = function () {
 	return JSON.parse(fs.readFileSync(filePath, "utf8"));
+};
+
+exports.readAlgorithms = function (playlistId) {
+	const algorithms = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	return this.filterAlgorithms(playlistId, algorithms);
 };
 
 exports.writeAlgorithms = function (algorithms) {
 	fs.writeFile(filePath, JSON.stringify(algorithms), err => {});
+};
+
+exports.displayAlgorithms = function (algorithms) {
+	return algorithms.map(algorithm => [algorithm.name, algorithm.condition, algorithm.matchingSongs.toString()])
 };
 
 exports.filterAlgorithms = function (playlistId, algorithms) {

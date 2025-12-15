@@ -4,6 +4,7 @@ const setTableKeypress = require("../utilities/setTableKeypress");
 
 const playlistHelper = require("../backend/playlistHelper.js");
 const songHelper = require("../backend/songHelper.js");
+const algorithmHelper = require("../backend/algorithmHelper.js");
 
 class PlaylistTable {
 	constructor(mainScreen, playlists, search, playlistDetailsView) {
@@ -23,12 +24,14 @@ class PlaylistTable {
 				search.setValue("");
 				this.playlistTable.setData([["PLAYLIST", "SONG COUNT"], ...this.playlistsToDisplay]);
 
+				const playlistId = this.playlists[index].id;
 				const algorithmsTable = playlistDetailsView.children[0];
-				algorithmsTable.setData([["NAME"], ["First"], ["Second"], ["Third"]]);
-				algorithmsTable._rawData = [["First"], ["Second"], ["Third"]];
+				const algorithms = algorithmHelper.readAlgorithms(playlistId)
+				algorithmsTable.setData([["NAME", "CONDITION", "SONG COUNT"], ...algorithmHelper.displayAlgorithms(algorithms)]);
+				algorithmsTable.rawData = algorithms;
 
 				const songsTable = playlistDetailsView.children[1];
-				const songs = songHelper.readSongs(this.playlists[index].id);
+				const songs = songHelper.readSongs(playlistId);
 				songsTable.setData([["SONG", "ARTIST", "ALBUM"], ...songHelper.displaySongs(songs)]);
 				songsTable.rawData = songs;
 

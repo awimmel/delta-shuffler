@@ -27,7 +27,6 @@ module.exports = function createPlaylistDetailsView(parent, searchBar) {
 				bold: true,
 				selected: {
 					bg: primaryColor,
-					// fg: '#D3D3D3',
 					fg: "black",
 					bold: true
 				}
@@ -35,15 +34,9 @@ module.exports = function createPlaylistDetailsView(parent, searchBar) {
 		}
 	});
 
-	const algorithms = [["First"], ["Second"], ["Third"]];
 	const algorithmsTable = createAlgorithmsTable(playlistDetailsView, []);
 	algorithmsTable.hide();
 
-	const songs = [
-		["When I'm Sixty Four", "The Beatles", "Sgt. Pepper's Lonely Hearts Club Band"],
-		["The Moment", "Tame Impala", "Currents"],
-		["Wish You Were Here", "Pink Floyd", "Wish You Were Here"]
-	];
 	const songsTable = createSongsTable(playlistDetailsView, []);
 	songsTable.hide();
 
@@ -70,12 +63,8 @@ module.exports = function createPlaylistDetailsView(parent, searchBar) {
 	setTableKeypress(
 		algorithmsTable,
 		index => {
-			const algorithm = {
-				name: algorithmsTable.rows[index]
-			};
+			const algorithm = algorithmsTable.rawData[index - 1];
 			createAlgorithmPopover(parent, algorithmsTable, algorithm, searchBar);
-			// logger.log(index)
-			// logger.log(algorithmsTable.rows[index])
 		},
 		() => createAlgorithmButton.focus()
 	);
@@ -88,8 +77,6 @@ module.exports = function createPlaylistDetailsView(parent, searchBar) {
 				album: songsTable.rows[index][2]
 			};
 			createSongPopover(parent, songsTable, song);
-			// logger.log(index)
-			// logger.log(songsTable.rows[index])
 		},
 		() => createAlgorithmButton.focus()
 	);

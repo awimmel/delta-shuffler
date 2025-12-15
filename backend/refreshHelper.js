@@ -11,7 +11,7 @@ const elementLimit = 50;
 exports.refresh = async function (screen) {
 	const accessToken = await authHelper.getAccessToken();
 	const playlists = await getPlaylists(accessToken);
-	let algorithms = algorithmHelper.readAlgorithms();
+	let algorithms = algorithmHelper.readAllAlgorithms();
 
 	let songs = [];
 	let playlistSongs = [];

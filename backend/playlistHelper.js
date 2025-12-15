@@ -12,9 +12,7 @@ exports.writePlaylists = function (playlists) {
 };
 
 exports.displayPlaylists = function (playlists) {
-	const formattedPlaylists = playlists.map(playlist => {
-		return [playlist.name, playlist.songCount.toString()];
-	});
+	const formattedPlaylists = playlists.map(playlist => [playlist.name, playlist.songCount.toString()]);
 	formattedPlaylists.sort((first, second) => first[0].localeCompare(second[0]));
 
 	return formattedPlaylists;
