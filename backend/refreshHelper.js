@@ -1,6 +1,4 @@
 const axios = require("axios");
-const path = require("path");
-const fs = require("fs");
 const authHelper = require("./authHelper.js");
 const algorithmHelper = require("./algorithmHelper.js");
 const playlistHelper = require("./playlistHelper.js");
@@ -19,7 +17,7 @@ exports.refresh = async function (screen) {
 	for (const playlist of playlists) {
 		const currSongs = await getPlaylistTracks(accessToken, playlist["id"]);
 		songs = [...songs, ...currSongs];
-		playlist.songCount = songs.length;
+		playlist.songCount = currSongs.length;
 
 		const currPlaylistSongs = currSongs.map(song => {
 			return {
