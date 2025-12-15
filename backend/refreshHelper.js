@@ -2,16 +2,18 @@ const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
 const authHelper = require("./authHelper.js");
-const playlistHelper = require("./playlistHelper.js");
+const algorithmHelper = require("./algorithmHelper.js");
 
 const spotifyApi = "https://api.spotify.com/v1";
 const elementLimit = 50;
 exports.refresh = async function (screen) {
 	const accessToken = await authHelper.getAccessToken();
 	const playlists = await getPlaylists(accessToken);
+	let algorithms = algorithmHelper.readAlgorithms();
 
 	let songs = [];
 	let playlistSongs = [];
+	let newAlg = false;
 	for (const playlist of playlists) {
 		const currSongs = await getPlaylistTracks(accessToken, playlist["id"]);
 		songs = [...songs, ...currSongs];
@@ -24,9 +26,19 @@ exports.refresh = async function (screen) {
 			};
 		});
 		playlistSongs = [...playlistSongs, ...currPlaylistSongs];
+
+		const matchingAlgs = algorithmHelper.filterAlgorithms(playlist.id, algorithms);
+		if (matchingAlgs.length === 0) {
+			algorithms = [...algorithms, algorithmHelper.createDefaultAlgorithm(playlist)];
+			newAlg = true;
+		}
 	}
 	const playlistPath = path.join(__dirname, "../database", "playlists.json");
 	fs.writeFile(playlistPath, JSON.stringify(playlists), err => {});
+
+	if (newAlg) {
+		algorithmHelper.writeAlgorithms(algorithms);
+	}
 
 	const songsPath = path.join(__dirname, "../database", "songs.json");
 	fs.writeFile(songsPath, JSON.stringify(getUniqueSongs(songs)), err => {});

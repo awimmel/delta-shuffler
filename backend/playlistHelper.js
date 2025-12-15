@@ -3,8 +3,7 @@ const fs = require("fs");
 
 exports.readPlaylists = function () {
 	const playlistsPath = path.join(__dirname, "../database", "playlists.json");
-	const playlists = JSON.parse(fs.readFileSync(playlistsPath, "utf8"));
-	return playlists;
+	return JSON.parse(fs.readFileSync(playlistsPath, "utf8"));
 };
 
 exports.displayPlaylists = function (playlists) {
