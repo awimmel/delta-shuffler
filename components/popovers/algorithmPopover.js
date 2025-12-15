@@ -19,7 +19,7 @@ module.exports = function createAlgorithmPopover(screen, algorithmsTable, algori
 
 	blessed.text({
 		parent: algorithmBox,
-		content: `Matching Songs: 23\n\nCreated Date: 10/15/2025\n\nModified Date: 10/19/2025`,
+		content: `Condition: ${algorithm.condition}\n\nMatching Songs: ${algorithm.matchingSongs}`,
 		top: 1,
 		left: 2,
 		width: "100%-4",

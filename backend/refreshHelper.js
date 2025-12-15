@@ -6,6 +6,7 @@ const songHelper = require("./songHelper.js");
 
 const spotifyApi = "https://api.spotify.com/v1";
 const elementLimit = 50;
+
 exports.refresh = async function (screen) {
 	const accessToken = await authHelper.getAccessToken();
 	const playlists = await getPlaylists(accessToken);

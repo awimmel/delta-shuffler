@@ -2,6 +2,8 @@ const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const focusText = require("../../utilities/focusText.js");
+const algorithmHelper = require("../../backend/algorithmHelper.js");
+const songHelper = require("../../backend/songHelper.js");
 
 const variables = require("../../database/variables.json");
 const primaryColor = variables.primaryColor;
@@ -10,7 +12,7 @@ module.exports = function createQueuePopover(screen, algorithmsTable, algorithm,
 	const queueBox = blessed.box({
 		parent: screen,
 		border: "line",
-		height: 7,
+		height: 9,
 		width: 60,
 		top: "center",
 		left: "center",
@@ -21,7 +23,7 @@ module.exports = function createQueuePopover(screen, algorithmsTable, algorithm,
 
 	const songCountInput = blessed.textbox({
 		parent: queueBox,
-		label: " Number of Songs (empty queues all songs): ",
+		label: " Number of Songs: ",
 		top: 1,
 		left: "center",
 		height: 3,
@@ -42,10 +44,23 @@ module.exports = function createQueuePopover(screen, algorithmsTable, algorithm,
 		}
 	});
 
+	blessed.text({
+		parent: queueBox,
+		label: " * Empty input queues 50 songs, which is also the maximum supported value * ",
+		top: 4,
+		left: "center",
+		height: 1,
+		width: "85%",
+		content: "",
+		style: {
+			fg: "white"
+		}
+	});
+
 	const cancelBox = blessed.box({
 		parent: queueBox,
 		content: "Cancel",
-		top: 4,
+		top: 6,
 		left: 15,
 		height: 3,
 		width: 8,
@@ -72,7 +87,7 @@ module.exports = function createQueuePopover(screen, algorithmsTable, algorithm,
 	const queueSongsBox = blessed.box({
 		parent: queueBox,
 		content: "Queue",
-		top: 4,
+		top: 6,
 		left: 35,
 		height: 3,
 		width: 7,
@@ -129,7 +144,12 @@ module.exports = function createQueuePopover(screen, algorithmsTable, algorithm,
 			focusText(songCountInput);
 		},
 		() => {},
-		() => {
+		async () => {
+			const queueValue = Number(songCountInput.getValue());
+			if (Number.isInteger(queueValue)) {
+				await algorithmHelper.runAlgorithm(algorithm, songHelper.readSongs(algorithm.playlistId), queueValue);
+			}
+
 			queueBox.destroy();
 			focusText(searchBar);
 			algorithmsTable.focus();
