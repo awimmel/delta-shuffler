@@ -34,7 +34,7 @@ exports.refresh = async function (screen) {
 	const playlistSongsPath = path.join(__dirname, "../database", "playlistSongs.json");
 	fs.writeFile(playlistSongsPath, JSON.stringify(playlistSongs), err => {});
 
-	screen.setPlaylists(playlistHelper.displayPlaylists(playlists, playlistSongs));
+	screen.setPlaylists(playlists);
 };
 
 async function getPlaylists(accessToken) {
