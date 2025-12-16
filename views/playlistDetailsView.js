@@ -72,12 +72,7 @@ class PlaylistDetailsView {
 		setTableKeypress(
 			this.songsTable.table,
 			index => {
-				const song = {
-					title: this.songsTable.rows[index][0],
-					artist: this.songsTable.rows[index][1],
-					album: this.songsTable.rows[index][2]
-				};
-				createSongPopover(parent, this.songsTable, song);
+				createSongPopover(parent, this.songsTable, this.songsTable.songs[index - 1]);
 			},
 			() => createAlgorithmButton.focus()
 		);
@@ -95,7 +90,7 @@ class PlaylistDetailsView {
 		this.playlistDetailsView.hide();
 		this.hidden = true;
 	}
-	
+
 	getActiveTable() {
 		if (this.algorithmsTable.hidden) {
 			return this.songsTable;

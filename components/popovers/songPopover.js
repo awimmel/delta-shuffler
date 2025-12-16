@@ -1,6 +1,8 @@
 const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
+const songHelper = require("../../backend/songHelper.js");
+const queueHelper = require("../../backend/queueHelper.js");
 
 module.exports = function createSongPopover(screen, songsTable, song) {
 	const songBox = blessed.box({
@@ -10,7 +12,7 @@ module.exports = function createSongPopover(screen, songsTable, song) {
 		width: 60,
 		top: "center",
 		left: "center",
-		label: ` {bold}${song.title}{/bold} `,
+		label: ` {bold}${song.name}{/bold} `,
 		tags: true,
 		hidden: false
 	});
@@ -18,7 +20,7 @@ module.exports = function createSongPopover(screen, songsTable, song) {
 	// Info about the current song
 	blessed.text({
 		parent: songBox,
-		content: `Artist: ${song.artist}\n\nAlbum: ${song.album}`,
+		content: `Artist: ${songHelper.getArtistString(song)}\n\nAlbum: ${song.album.name}`,
 		top: 1,
 		left: 2,
 		width: "100%-4",
@@ -97,7 +99,9 @@ module.exports = function createSongPopover(screen, songsTable, song) {
 		() => {},
 		() => {},
 		() => {},
-		() => {
+		async () => {
+			await queueHelper.queueSongs([song.id]);
+
 			songBox.destroy();
 			songsTable.focus();
 			screen.render();
