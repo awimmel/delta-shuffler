@@ -8,7 +8,7 @@ const variables = require("../../database/variables.json");
 const primaryColor = variables.primaryColor;
 
 class NameAlgorithmPopover {
-	constructor(screen, backButton, searchBar, playlistId) {
+	constructor(screen, backButton, searchBar, algorithmsTable) {
 		this.screen = screen;
 		this.nameAlgBox = blessed.box({
 			parent: this.screen,
@@ -138,7 +138,7 @@ class NameAlgorithmPopover {
 					this.screen,
 					backButton,
 					searchBar,
-					playlistId
+					algorithmsTable
 				);
 			}
 		);

@@ -36,10 +36,10 @@ class PlaylistDetailsView {
 			}
 		});
 
-		this.algorithmsTable = new AlgorithmsTable(this.playlistDetailsView, []);
+		this.algorithmsTable = new AlgorithmsTable(this.playlistDetailsView);
 		this.algorithmsTable.hide();
 
-		this.songsTable = new SongsTable(this.playlistDetailsView, []);
+		this.songsTable = new SongsTable(this.playlistDetailsView);
 		this.songsTable.hide();
 
 		this.playlistToolbar = new PlaylistToolbar(

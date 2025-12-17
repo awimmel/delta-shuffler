@@ -129,7 +129,7 @@ class PlaylistToolbar {
 				this.focusTable();
 			},
 			() => {
-				new NameAlgorithmPopover(parent.parent, this.backButton, this.searchBar, "1");
+				new NameAlgorithmPopover(parent.parent, this.backButton, this.searchBar, this.algorithmsTable);
 			}
 		);
 		toolbarKeypress(

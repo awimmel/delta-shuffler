@@ -63,6 +63,8 @@ exports.writeAlgorithm = function (name, playlistId, conditionGroups, randomize)
 
 	const existingAlgs = this.readAllAlgorithms();
 	this.writeAlgorithms([...existingAlgs, newAlg]);
+
+	return newAlg; 
 };
 
 exports.runAlgorithm = async function (algorithm, songs, queueCount) {

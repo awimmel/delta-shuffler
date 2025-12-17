@@ -9,7 +9,7 @@ const variables = require("../../database/variables.json");
 const primaryColor = variables.primaryColor;
 
 class BuildAlgorithmPopover {
-	constructor(name, screen, backButton, searchBar, playlistId) {
+	constructor(name, screen, backButton, searchBar, algorithmsTable) {
 		this.name = name;
 		this.screen = screen;
 		this.buildAlgBox = blessed.box({
@@ -137,12 +137,13 @@ class BuildAlgorithmPopover {
 			focusFunction(this.randomizeCheckbox),
 			() => {},
 			() => {
-				algorithmHelper.writeAlgorithm(
+				const newAlg = algorithmHelper.writeAlgorithm(
 					this.name,
-					playlistId,
+					algorithmsTable.playlistId,
 					this.conditionGroups,
 					this.randomizeCheckbox.checked
 				);
+				algorithmsTable.addAlgorithm(newAlg);
 
 				this.buildAlgBox.destroy();
 				// Focus on the searchBar to remove hanging blinking cursor

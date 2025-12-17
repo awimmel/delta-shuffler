@@ -4,10 +4,10 @@ const songHelper = require("../backend/songHelper.js");
 const columns = ["NAME", "ARTIST", "ALBUM"];
 
 class SongsTable {
-	constructor(parent, songs) {
+	constructor(parent) {
 		this.parent = parent;
-		this.songs = songs;
-		this.table = createTable(parent, 3, columns, songs, []);
+		this.songs = [];
+		this.table = createTable(parent, 3, columns, [], []);
 		this.hidden = false;
 	}
 
