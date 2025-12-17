@@ -16,8 +16,11 @@ class AlgorithmsTable {
 		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(algorithms)]);
 	}
 
-	filterData(algorithms) {
-		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(algorithms)]);
+	filterData(query) {
+		const filteredAlgorithms = this.algorithms.filter(item =>
+			item.name.toLowerCase().includes(query)
+		);
+		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(filteredAlgorithms)]);
 	}
 
 	hide() {

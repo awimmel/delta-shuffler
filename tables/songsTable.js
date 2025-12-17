@@ -16,8 +16,14 @@ class SongsTable {
 		this.table.setData([columns, ...songHelper.displaySongs(songs)]);
 	}
 
-	filterData(songs) {
-		this.table.setData([columns, ...songHelper.displaySongs(songs)]);
+	filterData(query) {
+		const filteredSongs = this.songs.filter(
+			song =>
+				song.name.toLowerCase().includes(query) ||
+				songHelper.getArtistString(song).toLowerCase().includes(query) ||
+				song.album.name.toLowerCase().includes(query)
+		);
+		this.table.setData([columns, ...songHelper.displaySongs(filteredSongs)]);
 	}
 
 	hide() {
@@ -33,6 +39,6 @@ class SongsTable {
 		this.table.show();
 		this.hidden = false;
 	}
-};
+}
 
 module.exports = SongsTable;

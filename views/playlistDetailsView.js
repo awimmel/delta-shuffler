@@ -103,6 +103,10 @@ class PlaylistDetailsView {
 			return this.algorithmsTable;
 		}
 	}
+
+	filterData(query) {
+		this.getActiveTable().filterData(query);
+	}
 }
 
 module.exports = PlaylistDetailsView;

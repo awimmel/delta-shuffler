@@ -79,19 +79,8 @@ class MainScreen {
 
 	updateList(newChar) {
 		const query = this.getQuery(newChar);
-		if (!this.algorithmsTable.hidden) {
-			const filteredAlgorithms = this.algorithmsTable.algorithms.filter(item =>
-				item.name.toLowerCase().includes(query)
-			);
-			this.algorithmsTable.filterData(filteredAlgorithms);
-		} else if (!this.songsTable.hidden) {
-			const filteredSongs = this.songsTable.songs.filter(
-				song =>
-					song.name.toLowerCase().includes(query) ||
-					songHelper.getArtistString(song).toLowerCase().includes(query) ||
-					song.album.name.toLowerCase().includes(query)
-			);
-			this.songsTable.filterData(filteredSongs);
+		if (!this.playlistDetailsView.hidden) {
+			this.playlistDetailsView.filterData(query);
 		} else {
 			this.filteredPlaylists = this.playlists.filter(item =>
 				item.name.toLowerCase().includes(query)
