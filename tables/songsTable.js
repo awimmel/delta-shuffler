@@ -11,9 +11,9 @@ class SongsTable {
 		this.hidden = false;
 	}
 
-	setData(songs) {
-		this.songs = songs;
-		this.table.setData([columns, ...songHelper.displaySongs(songs)]);
+	setData(playlistId) {
+		this.songs = songHelper.readSongs(playlistId);
+		this.table.setData([columns, ...songHelper.displaySongs(this.songs)]);
 	}
 
 	filterData(query) {

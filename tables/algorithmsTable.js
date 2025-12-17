@@ -11,9 +11,9 @@ class AlgorithmsTable {
 		this.hidden = false;
 	}
 
-	setData(algorithms) {
-		this.algorithms = algorithms;
-		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(algorithms)]);
+	setData(playlistId) {
+		this.algorithms = algorithmHelper.readAlgorithms(playlistId);
+		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.algorithms)]);
 	}
 
 	filterData(query) {

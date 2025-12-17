@@ -3,18 +3,17 @@ const focusText = require("../utilities/focusText.js");
 const setTableKeypress = require("../utilities/setTableKeypress");
 
 const playlistHelper = require("../backend/playlistHelper.js");
-const songHelper = require("../backend/songHelper.js");
-const algorithmHelper = require("../backend/algorithmHelper.js");
+
+const columns = ["PLAYLIST", "SONG COUNT"];
 
 class PlaylistTable {
 	constructor(mainScreen, playlists, search, playlistDetailsView) {
-		this.playlists = playlists;
-		this.playlistsToDisplay = playlistHelper.displayPlaylists(this.playlists);
+		this.playlists = playlistHelper.sortPlaylists(playlists);
 		this.playlistTable = createTable(
 			mainScreen,
 			11,
-			["PLAYLIST", "SONG COUNT"],
-			this.playlistsToDisplay,
+			columns,
+			playlistHelper.displayPlaylists(this.playlists),
 			this.playlists
 		);
 
@@ -22,16 +21,14 @@ class PlaylistTable {
 			this.playlistTable,
 			index => {
 				search.setValue("");
-				this.playlistTable.setData([["PLAYLIST", "SONG COUNT"], ...this.playlistsToDisplay]);
+				this.playlistTable.setData([columns, ...playlistHelper.displayPlaylists(this.playlists)]);
 
-				const playlistId = this.playlists[index].id;
+				const playlistId = this.playlists[index - 1].id;
 				const algorithmsTable = playlistDetailsView.algorithmsTable;
-				const algorithms = algorithmHelper.readAlgorithms(playlistId)
-				algorithmsTable.setData(algorithms);
+				algorithmsTable.setData(playlistId);
 
 				const songsTable = playlistDetailsView.songsTable;
-				const songs = songHelper.readSongs(playlistId);
-				songsTable.setData(songs);
+				songsTable.setData(playlistId);
 
 				this.playlistTable.hide();
 				playlistDetailsView.show();
@@ -46,8 +43,12 @@ class PlaylistTable {
 
 	setData(playlists) {
 		this.playlists = playlists;
-		this.playlistsToDisplay = playlistHelper.displayPlaylists(this.playlists);
-		this.playlistTable.setData([["PLAYLIST", "SONG COUNT"], ...this.playlistsToDisplay]);
+		this.playlistTable.setData([columns, ...playlistHelper.displayPlaylists(this.playlists)]);
+	}
+
+	filterData(query) {
+		const filteredPlaylists = this.playlists.filter(item => item.name.toLowerCase().includes(query));
+		this.playlistTable.setData([columns, ...playlistHelper.displayPlaylists(filteredPlaylists)]);
 	}
 
 	focus() {

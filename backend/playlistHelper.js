@@ -17,3 +17,7 @@ exports.displayPlaylists = function (playlists) {
 
 	return formattedPlaylists;
 };
+
+exports.sortPlaylists = function (playlists) {
+	return playlists.sort((first, second) => first.name.localeCompare(second.name));
+};
