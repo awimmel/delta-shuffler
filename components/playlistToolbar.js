@@ -5,181 +5,178 @@ const focusFunction = require("../utilities/focusElement.js");
 const NameAlgorithmPopover = require("../components/popovers/nameAlgorithmPopover.js");
 const variables = require("../database/variables.json");
 const primaryColor = variables.primaryColor;
-const songHelper = require("../backend/songHelper.js");
 
-let localSearchBar;
-let localAlgorithmsTable;
-let localSongsTable;
+class PlaylistToolbar {
+	constructor(parent, searchBar, algorithmsTable, songsTable) {
+		this.searchBar = searchBar;
+		this.algorithmsTable = algorithmsTable;
+		this.songsTable = songsTable;
 
-module.exports = function createPlaylistToolbar(parent, searchBar, algorithmsTable, songsTable) {
-	localSearchBar = searchBar;
-	localAlgorithmsTable = algorithmsTable;
-	localSongsTable = songsTable;
+		this.toolbar = blessed.box({
+			parent: parent,
+			top: 0,
+			left: 0,
+			height: 3,
+			width: "100%",
+			content: "",
+			keys: true
+		});
 
-	const playlistToolbar = blessed.box({
-		parent: parent,
-		top: 0,
-		left: 0,
-		height: 3,
-		width: "100%",
-		content: "",
-		keys: true
-	});
-
-	const backButton = blessed.box({
-		parent: playlistToolbar,
-		top: 0,
-		left: 0,
-		height: 3,
-		width: 6,
-		content: "Back",
-		border: "line",
-		keys: true,
-		style: {
-			fg: "white",
-			focus: {
-				fg: "black",
-				bg: primaryColor,
+		this.backButton = blessed.box({
+			parent: this.toolbar,
+			top: 0,
+			left: 0,
+			height: 3,
+			width: 6,
+			content: "Back",
+			border: "line",
+			keys: true,
+			style: {
+				fg: "white",
+				focus: {
+					fg: "black",
+					bg: primaryColor,
+					border: {
+						fg: "white"
+					}
+				},
 				border: {
-					fg: "white"
+					fg: primaryColor
 				}
-			},
-			border: {
-				fg: primaryColor
 			}
-		}
-	});
+		});
 
-	const createAlgorithm = blessed.box({
-		parent: playlistToolbar,
-		top: 0,
-		left: 6,
-		height: 3,
-		width: 19,
-		content: "Create Algorithm",
-		border: "line",
-		keys: true,
-		style: {
-			fg: "white",
-			focus: {
-				fg: "black",
-				bg: primaryColor,
+		this.createAlgorithm = blessed.box({
+			parent: this.toolbar,
+			top: 0,
+			left: 6,
+			height: 3,
+			width: 19,
+			content: "Create Algorithm",
+			border: "line",
+			keys: true,
+			style: {
+				fg: "white",
+				focus: {
+					fg: "black",
+					bg: primaryColor,
+					border: {
+						fg: "white"
+					}
+				},
 				border: {
-					fg: "white"
+					fg: primaryColor
 				}
-			},
-			border: {
-				fg: primaryColor
 			}
-		}
-	});
+		});
 
-	const showAlgorithms = blessed.box({
-		parent: playlistToolbar,
-		top: 0,
-		left: 25,
-		height: 3,
-		width: 17,
-		content: "Show Algorithms",
-		border: "line",
-		keys: true,
-		style: {
-			fg: "white",
-			focus: {
-				fg: "black",
-				bg: primaryColor,
+		this.showAlgorithms = blessed.box({
+			parent: this.toolbar,
+			top: 0,
+			left: 25,
+			height: 3,
+			width: 17,
+			content: "Show Algorithms",
+			border: "line",
+			keys: true,
+			style: {
+				fg: "white",
+				focus: {
+					fg: "black",
+					bg: primaryColor,
+					border: {
+						fg: "white"
+					}
+				},
 				border: {
-					fg: "white"
+					fg: primaryColor
 				}
-			},
-			border: {
-				fg: primaryColor
 			}
-		}
-	});
+		});
 
-	const showSongs = blessed.box({
-		parent: playlistToolbar,
-		top: 0,
-		left: 42,
-		height: 3,
-		width: 12,
-		content: "Show Songs",
-		border: "line",
-		keys: true,
-		style: {
-			fg: "white",
-			focus: {
-				fg: "black",
-				bg: primaryColor,
+		this.showSongs = blessed.box({
+			parent: this.toolbar,
+			top: 0,
+			left: 42,
+			height: 3,
+			width: 12,
+			content: "Show Songs",
+			border: "line",
+			keys: true,
+			style: {
+				fg: "white",
+				focus: {
+					fg: "black",
+					bg: primaryColor,
+					border: {
+						fg: "white"
+					}
+				},
 				border: {
-					fg: "white"
+					fg: primaryColor
 				}
-			},
-			border: {
-				fg: primaryColor
 			}
+		});
+
+		toolbarKeypress(
+			this.createAlgorithm,
+			focusFunction(this.backButton),
+			focusFunction(this.showAlgorithms),
+			() => {
+				focusText(this.searchBar);
+			},
+			() => {
+				this.focusTable();
+			},
+			() => {
+				new NameAlgorithmPopover(parent.parent, this.backButton, this.searchBar, "1");
+			}
+		);
+		toolbarKeypress(
+			this.showAlgorithms,
+			focusFunction(this.createAlgorithm),
+			focusFunction(this.showSongs),
+			() => {
+				focusText(this.searchBar);
+			},
+			() => {
+				this.focusTable();
+			},
+			() => {
+				this.searchBar.setValue("");
+
+				this.songsTable.hide();
+				this.algorithmsTable.show();
+				this.algorithmsTable.focus();
+			}
+		);
+		toolbarKeypress(
+			this.showSongs,
+			focusFunction(this.showAlgorithms),
+			() => {},
+			() => {
+				focusText(this.searchBar);
+			},
+			() => {
+				this.focusTable();
+			},
+			() => {
+				this.searchBar.setValue("");
+
+				this.algorithmsTable.hide();
+				this.songsTable.show();
+				this.songsTable.focus();
+			}
+		);
+	}
+
+	focusTable() {
+		if (!this.algorithmsTable.hidden) {
+			this.algorithmsTable.focus();
+		} else {
+			this.songsTable.focus();
 		}
-	});
-
-	toolbarKeypress(
-		createAlgorithm,
-		focusFunction(backButton),
-		focusFunction(showAlgorithms),
-		() => {
-			focusText(localSearchBar);
-		},
-		() => {
-			focusTable();
-		},
-		() => {
-			new NameAlgorithmPopover(parent.parent, backButton, searchBar, "1");
-		}
-	);
-	toolbarKeypress(
-		showAlgorithms,
-		focusFunction(createAlgorithm),
-		focusFunction(showSongs),
-		() => {
-			focusText(localSearchBar);
-		},
-		() => {
-			focusTable();
-		},
-		() => {
-			searchBar.setValue("");
-
-			localSongsTable.hide();
-			localAlgorithmsTable.show();
-			localAlgorithmsTable.focus();
-		}
-	);
-	toolbarKeypress(
-		showSongs,
-		focusFunction(showAlgorithms),
-		() => {},
-		() => {
-			focusText(localSearchBar);
-		},
-		() => {
-			focusTable();
-		},
-		() => {
-			searchBar.setValue("");
-
-			localAlgorithmsTable.hide();
-			localSongsTable.show();
-			localSongsTable.focus();
-		}
-	);
-
-	return playlistToolbar;
-};
-
-function focusTable() {
-	if (!localAlgorithmsTable.hidden) {
-		localAlgorithmsTable.focus();
-	} else {
-		localSongsTable.focus();
 	}
 }
+
+module.exports = PlaylistToolbar;

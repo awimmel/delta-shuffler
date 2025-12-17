@@ -3,9 +3,7 @@ const focusText = require("../../utilities/focusText.js");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const ConditionGroup = require("../conditions/conditionGroup.js");
-const { randomUUID } = require("crypto");
-const path = require("path");
-const fs = require("fs");
+const algorithmHelper = require("../../backend/algorithmHelper.js");
 
 const variables = require("../../database/variables.json");
 const primaryColor = variables.primaryColor;
@@ -139,23 +137,12 @@ class BuildAlgorithmPopover {
 			focusFunction(this.randomizeCheckbox),
 			() => {},
 			() => {
-				const joinOperator =
-					this.conditionGroups.length > 1
-						? ` ${this.conditionGroups[1].joinDropdown.getSelectedItem()} `
-						: "";
-				const conditionString = this.conditionGroups
-					.map(conditionGroup => conditionGroup.toString())
-					.join(joinOperator);
-
-				const algsPath = path.join(__dirname, "../../database", "algorithms.json");
-				const algObj = {
-					id: randomUUID(),
-					name: this.name,
-					playlist: playlistId,
-					condition: conditionString,
-					randomize: this.randomizeCheckbox.checked
-				};
-				fs.writeFile(algsPath, JSON.stringify(algObj), err => {});
+				algorithmHelper.writeAlgorithm(
+					this.name,
+					playlistId,
+					this.conditionGroups,
+					this.randomizeCheckbox.checked
+				);
 
 				this.buildAlgBox.destroy();
 				// Focus on the searchBar to remove hanging blinking cursor

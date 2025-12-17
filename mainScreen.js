@@ -23,7 +23,7 @@ class MainScreen {
 		this.playlists = playlistHelper.readPlaylists();
 		this.filteredPlaylists = this.playlists;
 		this.playlistDetailsView = new PlaylistDetailsView(this.screen, this.searchBar);
-		this.backButton = this.playlistDetailsView.playlistToolbar.children[0];
+		this.backButton = this.playlistDetailsView.playlistToolbar.backButton;
 		this.algorithmsTable = this.playlistDetailsView.algorithmsTable;
 		this.songsTable = this.playlistDetailsView.songsTable;
 		this.playlistTable = new PlaylistTable(
@@ -43,7 +43,7 @@ class MainScreen {
 				this.playlistTable.show();
 				this.playlistTable.focus();
 			} else if (key.name === "right") {
-				this.playlistDetailsView.playlistToolbar.children[1].focus();
+				this.playlistDetailsView.playlistToolbar.createAlgorithm.focus();
 			} else if (key.name === "up") {
 				focusText(this.searchBar);
 			} else if (key.name === "down") {
@@ -59,13 +59,13 @@ class MainScreen {
 			if (key.name === "enter") {
 				if (!this.playlistDetailsView.hidden) {
 					this.playlistDetailsView.focus();
-				} else if (!playlistTable.hidden) {
+				} else if (!this.playlistTable.hidden) {
 					this.playlistTable.focus();
 				}
 				this.screen.render();
 			} else if (key.name === "down") {
 				if (!this.playlistDetailsView.hidden) {
-					this.playlistDetailsView.playlistToolbar.children[0].focus();
+					this.playlistDetailsView.playlistToolbar.backButton.focus();
 				} else if (!this.playlistTable.hidden) {
 					this.playlistTable.focus();
 				}

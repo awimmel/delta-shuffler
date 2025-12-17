@@ -2,13 +2,14 @@ const blessed = require("blessed");
 const variables = require("../database/variables.json");
 const primaryColor = variables.primaryColor;
 
-const createPlaylistToolbar = require("../components/playlistToolbar");
 const createSongPopover = require("../components/popovers/songPopover");
 const createAlgorithmPopover = require("../components/popovers/algorithmPopover");
 const AlgorithmsTable = require("../tables/algorithmsTable");
+const PlaylistToolbar = require("../components/playlistToolbar");
 const SongsTable = require("../tables/songsTable");
 
 const setTableKeypress = require("../utilities/setTableKeypress");
+const focusFunction = require("../utilities/focusElement.js");
 
 class PlaylistDetailsView {
 	constructor(parent, searchBar) {
@@ -41,15 +42,15 @@ class PlaylistDetailsView {
 		this.songsTable = new SongsTable(this.playlistDetailsView, []);
 		this.songsTable.hide();
 
-		this.playlistToolbar = createPlaylistToolbar(
+		this.playlistToolbar = new PlaylistToolbar(
 			this.playlistDetailsView,
 			searchBar,
 			this.algorithmsTable,
 			this.songsTable
 		);
-		const createAlgorithmButton = this.playlistToolbar.children[0];
+		const backButton = this.playlistToolbar.backButton;
 
-		this.playlistToolbar.on("keypress", (char, key) => {
+		this.playlistToolbar.toolbar.on("keypress", (char, key) => {
 			if (key.name === "up") {
 				searchBar.focus();
 			} else if (key.name === "down") {
@@ -67,14 +68,14 @@ class PlaylistDetailsView {
 				const algorithm = this.algorithmsTable.algorithms[index - 1];
 				createAlgorithmPopover(parent, this.algorithmsTable, algorithm, searchBar);
 			},
-			() => createAlgorithmButton.focus()
+			focusFunction(backButton)
 		);
 		setTableKeypress(
 			this.songsTable.table,
 			index => {
 				createSongPopover(parent, this.songsTable, this.songsTable.songs[index - 1]);
 			},
-			() => createAlgorithmButton.focus()
+			focusFunction(backButton)
 		);
 
 		this.playlistDetailsView.hide();
@@ -89,6 +90,10 @@ class PlaylistDetailsView {
 	hide() {
 		this.playlistDetailsView.hide();
 		this.hidden = true;
+	}
+
+	focus() {
+		this.getActiveTable().focus();
 	}
 
 	getActiveTable() {
