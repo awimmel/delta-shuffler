@@ -3,6 +3,7 @@ const fs = require("fs");
 const { randomUUID } = require("crypto");
 const queueHelper = require("./queueHelper.js");
 const songHelper = require("./songHelper.js");
+const joinOperator = require("../utilities/joinOperator.js");
 
 const filePath = path.join(__dirname, "../database", "algorithms.json");
 
@@ -42,11 +43,11 @@ exports.createDefaultAlgorithm = function (playlist) {
 };
 
 exports.writeAlgorithm = function (name, playlistId, conditionGroups) {
-	const joinOperator =
-		conditionGroups.length > 1 ? ` ${this.conditionGroups[1].joinDropdown.getSelectedItem()} ` : "";
+	const join =
+		conditionGroups.length > 1 ? conditionGroups[1].joinDropdown.getSelectedItem() : "";
 	const conditionString = conditionGroups
 		.map(conditionGroup => `(${conditionGroup.toString()})`)
-		.join(joinOperator);
+		.join(joinOperator(join));
 
 	const songs = songHelper.readSongs(playlistId);
 	const songCount = filterSongs(songs, conditionString).length;
@@ -62,7 +63,7 @@ exports.writeAlgorithm = function (name, playlistId, conditionGroups) {
 	const existingAlgs = this.readAllAlgorithms();
 	this.writeAlgorithms([...existingAlgs, newAlg]);
 
-	return newAlg; 
+	return newAlg;
 };
 
 exports.runAlgorithm = async function (algorithm, songs, queueCount) {

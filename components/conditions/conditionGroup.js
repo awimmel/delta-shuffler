@@ -3,6 +3,7 @@ const Condition = require("./condition.js");
 const Dropdown = require("../dropdown.js");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
+const joinOperator = require("../../utilities/joinOperator.js");
 
 const variables = require("../../database/variables.json");
 const primaryColor = variables.primaryColor;
@@ -197,9 +198,9 @@ class ConditionGroup {
 	}
 
 	toString() {
-		const joinOperator = this.conditions.length > 1 ? ` ${this.conditions[1].joinDropdown.getSelectedItem()} ` : "";
+		const join = this.conditions.length > 1 ? this.conditions[0].joinDropdown.getSelectedItem() : "";
 		return this.conditions.map(condition => `(${condition.toString()})`)
-		.join(joinOperator);
+		.join(joinOperator(join));
 	}
 }
 
