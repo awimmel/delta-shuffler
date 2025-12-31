@@ -37,12 +37,11 @@ exports.createDefaultAlgorithm = function (playlist) {
 		name: "Completely Random",
 		playlistId: playlist.id,
 		condition: "true === true",
-		randomize: true,
 		matchingSongs: playlist.songCount
 	};
 };
 
-exports.writeAlgorithm = function (name, playlistId, conditionGroups, randomize) {
+exports.writeAlgorithm = function (name, playlistId, conditionGroups) {
 	const joinOperator =
 		conditionGroups.length > 1 ? ` ${this.conditionGroups[1].joinDropdown.getSelectedItem()} ` : "";
 	const conditionString = conditionGroups
@@ -57,7 +56,6 @@ exports.writeAlgorithm = function (name, playlistId, conditionGroups, randomize)
 		name: name,
 		playlistId: playlistId,
 		condition: conditionString,
-		randomize: randomize,
 		matchingSongs: songCount
 	};
 
@@ -68,8 +66,6 @@ exports.writeAlgorithm = function (name, playlistId, conditionGroups, randomize)
 };
 
 exports.runAlgorithm = async function (algorithm, songs, queueCount) {
-	// Add support for non-random algorithms in future commit
-
 	const matchingSongsSource = filterSongs(songs, algorithm.condition);
 	let matchingSongs = [...matchingSongsSource];
 

@@ -12,6 +12,9 @@ class BuildAlgorithmPopover {
 	constructor(name, screen, backButton, searchBar, algorithmsTable) {
 		this.name = name;
 		this.screen = screen;
+		this.backButton = backButton;
+		this.searchBar = searchBar;
+		this.algorithmsTable = algorithmsTable;
 		this.buildAlgBox = blessed.box({
 			parent: this.screen,
 			border: "line",
@@ -25,28 +28,6 @@ class BuildAlgorithmPopover {
 		});
 
 		this.addConditionButton = createAddConditionButton(this.buildAlgBox, 1);
-
-		this.randomizeCheckbox = blessed.checkbox({
-			parent: this.buildAlgBox,
-			keys: true,
-			top: 38,
-			left: "center",
-			height: 1,
-			width: "shrink",
-			name: "random",
-			content: "Randomize songs?",
-			style: {
-				fg: "white",
-				focus: {
-					border: {
-						fg: "white"
-					}
-				},
-				border: {
-					fg: primaryColor
-				}
-			}
-		});
 
 		this.closeBox = blessed.box({
 			parent: this.buildAlgBox,
@@ -115,43 +96,7 @@ class BuildAlgorithmPopover {
 			() => {}
 		);
 		setAddConditionNavigation(this);
-		setRandomizeCheckboxNavigation(this);
-		toolbarKeypress(
-			this.closeBox,
-			() => {},
-			focusFunction(this.saveBox),
-			focusFunction(this.randomizeCheckbox),
-			() => {},
-			() => {
-				this.buildAlgBox.destroy();
-				// Focus on the searchBar to remove hanging blinking cursor
-				focusText(searchBar);
-				backButton.focus();
-				this.screen.render();
-			}
-		);
-		toolbarKeypress(
-			this.saveBox,
-			focusFunction(this.closeBox),
-			() => {},
-			focusFunction(this.randomizeCheckbox),
-			() => {},
-			() => {
-				const newAlg = algorithmHelper.writeAlgorithm(
-					this.name,
-					algorithmsTable.playlistId,
-					this.conditionGroups,
-					this.randomizeCheckbox.checked
-				);
-				algorithmsTable.addAlgorithm(newAlg);
-
-				this.buildAlgBox.destroy();
-				// Focus on the searchBar to remove hanging blinking cursor
-				focusText(searchBar);
-				backButton.focus();
-				this.screen.render();
-			}
-		);
+		setBottomBoxesNavigation(this);
 
 		this.conditionGroups[0].focus();
 		this.screen.render();
@@ -168,7 +113,7 @@ class BuildAlgorithmPopover {
 				this.buildAlgBox,
 				this.conditionGroups.length
 			);
-			setRandomizeCheckboxNavigation(this);
+			setBottomBoxesNavigation(this);
 		}
 		setAddConditionNavigation(this);
 
@@ -220,13 +165,13 @@ function setAddConditionNavigation(buildAlgPopover) {
 		() => {
 			buildAlgPopover.conditionGroups.at(-1).focus();
 		},
-		focusFunction(buildAlgPopover.randomizeCheckbox),
+		focusFunction(buildAlgPopover.closeBox),
 		() => {
 			var bottomElement;
 			if (buildAlgPopover.conditionGroups.length === 2) {
 				buildAlgPopover.addConditionButton.destroy();
 				buildAlgPopover.addConditionButton = null;
-				bottomElement = buildAlgPopover.randomizeCheckbox;
+				bottomElement = buildAlgPopover.closeBox;
 			} else {
 				buildAlgPopover.addConditionButton.top += 11;
 				bottomElement = buildAlgPopover.addConditionButton;
@@ -252,7 +197,7 @@ function setAddConditionNavigation(buildAlgPopover) {
 			buildAlgPopover.conditionGroups.push(newGroup);
 
 			if (buildAlgPopover.addConditionButton == null) {
-				setRandomizeCheckboxNavigation(buildAlgPopover);
+				setBottomBoxesNavigation(buildAlgPopover);
 			}
 
 			buildAlgPopover.screen.render();
@@ -260,18 +205,41 @@ function setAddConditionNavigation(buildAlgPopover) {
 	);
 }
 
-function setRandomizeCheckboxNavigation(buildAlgPopover) {
+function setBottomBoxesNavigation(buildAlgPopover) {
 	const elementAbove = buildAlgPopover.addConditionButton ?? buildAlgPopover.conditionGroups.at(-1);
 	toolbarKeypress(
-		buildAlgPopover.randomizeCheckbox,
+		buildAlgPopover.closeBox,
 		() => {},
+		focusFunction(buildAlgPopover.saveBox),
+		focusFunction(elementAbove),
+		() => {},
+		() => {
+			buildAlgPopover.buildAlgBox.destroy();
+			// Focus on the searchBar to remove hanging blinking cursor
+			focusText(buildAlgPopover.searchBar);
+			buildAlgPopover.backButton.focus();
+			buildAlgPopover.screen.render();
+		}
+	);
+
+	toolbarKeypress(
+		buildAlgPopover.saveBox,
+		focusFunction(buildAlgPopover.closeBox),
 		() => {},
 		focusFunction(elementAbove),
+		() => {},
 		() => {
-			buildAlgPopover.closeBox.focus();
-		},
-		() => {
-			buildAlgPopover.randomizeCheckbox.toggle();
+			const newAlg = algorithmHelper.writeAlgorithm(
+				buildAlgPopover.name,
+				buildAlgPopover.algorithmsTable.playlistId,
+				buildAlgPopover.conditionGroups
+			);
+			buildAlgPopover.algorithmsTable.addAlgorithm(newAlg);
+
+			buildAlgPopover.buildAlgBox.destroy();
+			// Focus on the searchBar to remove hanging blinking cursor
+			focusText(buildAlgPopover.searchBar);
+			buildAlgPopover.backButton.focus();
 			buildAlgPopover.screen.render();
 		}
 	);
