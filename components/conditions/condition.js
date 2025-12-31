@@ -376,7 +376,9 @@ function generateConditions(operatorStr, type, values, join) {
 			conditions = values.map(value => `song.album.name ${operator} '${value}'`);
 			break;
 	}
-	return conditions.join(join);
+
+	// All of these conditions are joined by || because, if we have multiple, it's equivalent to an .includes()
+	return conditions.join(" || ");
 }
 
 function getOperator(operator) {
