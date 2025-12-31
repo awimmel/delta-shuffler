@@ -46,7 +46,7 @@ exports.writeAlgorithm = function (name, playlistId, conditionGroups, randomize)
 	const joinOperator =
 		conditionGroups.length > 1 ? ` ${this.conditionGroups[1].joinDropdown.getSelectedItem()} ` : "";
 	const conditionString = conditionGroups
-		.map(conditionGroup => conditionGroup.toString())
+		.map(conditionGroup => `(${conditionGroup.toString()})`)
 		.join(joinOperator);
 
 	const songs = songHelper.readSongs(playlistId);

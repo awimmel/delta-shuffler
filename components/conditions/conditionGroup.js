@@ -197,7 +197,9 @@ class ConditionGroup {
 	}
 
 	toString() {
-		return "";
+		const joinOperator = this.conditions.length > 1 ? ` ${this.conditions[1].joinDropdown.getSelectedItem()} ` : "";
+		return this.conditions.map(condition => `(${condition.toString()})`)
+		.join(joinOperator);
 	}
 }
 

@@ -82,7 +82,13 @@ class Condition {
 	}
 
 	toString() {
-		return "";
+		const values = this.valueBox.getValue().split(", ");
+		return generateConditions(
+			this.operatorDropdown.getSelectedItem(),
+			this.typeDropdown.getSelectedItem(),
+			values,
+			this.joinDropdown != null ? this.joinDropdown.getSelectedItem() : ""
+		);
 	}
 
 	bringDropdownsToFront() {
@@ -352,6 +358,34 @@ function createDeleteButton(parent, topOffset, allowAdd) {
 			}
 		}
 	});
+}
+
+function generateConditions(operatorStr, type, values, join) {
+	const operator = getOperator(operatorStr);
+	var conditions;
+	switch (type) {
+		case "Song":
+			conditions = values.map(value => `song.name ${operator} '${value}'`);
+			break;
+		case "Artist":
+			conditions = values.map(
+				value => `song.artists.some(artist => artist.name ${operator} '${value}')`
+			);
+			break;
+		case "Album":
+			conditions = values.map(value => `song.album.name ${operator} '${value}'`);
+			break;
+	}
+	return conditions.join(join);
+}
+
+function getOperator(operator) {
+	switch (operator) {
+		case "IN":
+			return "===";
+		case "NOT IN":
+			return "!==";
+	}
 }
 
 module.exports = Condition;
