@@ -4,6 +4,7 @@ const { randomUUID } = require("crypto");
 const queueHelper = require("./queueHelper.js");
 const songHelper = require("./songHelper.js");
 const joinOperator = require("../utilities/joinOperator.js");
+const displayString = require("../utilities/displayString.js");
 
 const filePath = path.join(__dirname, "../database", "algorithms.json");
 
@@ -22,8 +23,8 @@ exports.writeAlgorithms = function (algorithms) {
 
 exports.displayAlgorithms = function (algorithms) {
 	return algorithms.map(algorithm => [
-		algorithm.name,
-		algorithm.condition,
+		displayString(algorithm.name, 45),
+		displayString(algorithm.condition, 115),
 		algorithm.matchingSongs.toString()
 	]);
 };
