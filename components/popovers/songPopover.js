@@ -2,7 +2,7 @@ const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const songHelper = require("../../backend/songHelper.js");
-const queueHelper = require("../../backend/queueHelper.js");
+const playerHelper = require("../../backend/playerHelper.js");
 
 module.exports = function createSongPopover(screen, songsTable, song) {
 	const songBox = blessed.box({
@@ -100,7 +100,7 @@ module.exports = function createSongPopover(screen, songsTable, song) {
 		() => {},
 		() => {},
 		async () => {
-			await queueHelper.queueSongs([song.id]);
+			await playerHelper.queueSongs([song.id]);
 
 			songBox.destroy();
 			songsTable.focus();

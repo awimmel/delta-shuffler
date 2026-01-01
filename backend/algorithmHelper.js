@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const { randomUUID } = require("crypto");
-const queueHelper = require("./queueHelper.js");
+const playerHelper = require("./playerHelper.js");
 const songHelper = require("./songHelper.js");
 const joinOperator = require("../utilities/joinOperator.js");
 const displayString = require("../utilities/displayString.js");
@@ -83,7 +83,7 @@ exports.runAlgorithm = async function (algorithm, songs, queueCount) {
 		counter++;
 	}
 
-	await queueHelper.queueSongs(songsToQueue);
+	await playerHelper.queueSongs(songsToQueue);
 };
 
 function filterSongs(songs, condition) {

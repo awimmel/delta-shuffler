@@ -4,6 +4,7 @@ const createSettingsPopover = require("./popovers/settingsPopover.js");
 const focusText = require("../utilities/focusText.js");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const focusFunction = require("../utilities/focusElement.js");
+const playerHelper = require("../backend/playerHelper.js");
 const variables = require("../database/variables.json");
 const primaryColor = variables.primaryColor;
 
@@ -30,7 +31,7 @@ module.exports = function createMenu(mainScreen, searchBar) {
 	// Currently playing
 	const currPlaying = blessed.box({
 		parent: toolbar,
-		content: "When I'm Sixty Four \u2014 The Beatles",
+		content: "",
 		top: 1,
 		left: 0,
 		height: 1,
@@ -39,6 +40,7 @@ module.exports = function createMenu(mainScreen, searchBar) {
 			bold: true
 		}
 	});
+	updateCurrPlaying(mainScreen, currPlaying);
 
 	// Playback tools
 	const backSong = blessed.box({
@@ -254,3 +256,16 @@ module.exports = function createMenu(mainScreen, searchBar) {
 
 	return toolbar;
 };
+
+async function updateCurrPlaying(mainScreen, currPlaying) {
+	await retrieveAndSetCurrPlaying(mainScreen, currPlaying);
+
+	setInterval(async () => {
+		await retrieveAndSetCurrPlaying(mainScreen, currPlaying);
+	}, 15_000);
+}
+
+async function retrieveAndSetCurrPlaying(mainScreen, currPlaying) {
+	currPlaying.setContent(await playerHelper.getCurrPlaying());
+	mainScreen.screen.render();
+}

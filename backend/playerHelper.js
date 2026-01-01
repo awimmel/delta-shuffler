@@ -20,4 +20,19 @@ exports.queueSongs = async function (songs) {
 		counter++;
 	}
 	await Promise.all(queuePromises);
-}
+};
+
+exports.getCurrPlaying = async function () {
+	const accessToken = await authHelper.getAccessToken();
+	const resp = await axios.get(`${spotifyApi}/me/player/currently-playing`, {
+		headers: { Authorization: `Bearer ${accessToken}` }
+	});
+
+	if (resp.data === "") {
+		return "";
+	}
+
+	const song = resp.data.item.name;
+	const artistStr = resp.data.item.artists.map(artist => artist.name).join(", ");
+	return song + " - " + artistStr;
+};
