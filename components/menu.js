@@ -8,10 +8,15 @@ const playerHelper = require("../backend/playerHelper.js");
 const variables = require("../database/variables.json");
 const primaryColor = variables.primaryColor;
 
+const pause = "||";
+const play = "▷";
+
 module.exports = function createMenu(mainScreen, searchBar) {
+	const screen = mainScreen.screen;
+
 	// Toolbar container
 	const toolbar = blessed.box({
-		parent: mainScreen.screen,
+		parent: screen,
 		top: 0,
 		left: 0,
 		height: 5,
@@ -28,6 +33,7 @@ module.exports = function createMenu(mainScreen, searchBar) {
 			}
 		}
 	});
+
 	// Currently playing
 	const currPlaying = blessed.box({
 		parent: toolbar,
@@ -40,7 +46,7 @@ module.exports = function createMenu(mainScreen, searchBar) {
 			bold: true
 		}
 	});
-	updateCurrPlaying(mainScreen, currPlaying);
+	updateCurrPlaying(screen, currPlaying);
 
 	// Playback tools
 	const backSong = blessed.box({
@@ -68,7 +74,7 @@ module.exports = function createMenu(mainScreen, searchBar) {
 	});
 	const pauseSong = blessed.box({
 		parent: toolbar,
-		content: "||",
+		content: pause,
 		top: 0,
 		left: "50%",
 		height: 3,
@@ -197,7 +203,11 @@ module.exports = function createMenu(mainScreen, searchBar) {
 		() => {
 			focusText(searchBar);
 		},
-		() => {}
+		async () => {
+			pauseSong.setContent(pause);
+			await playerHelper.prevSong();
+			await retrieveAndSetCurrPlaying(screen, currPlaying);
+		}
 	);
 	toolbarKeypress(
 		pauseSong,
@@ -207,7 +217,17 @@ module.exports = function createMenu(mainScreen, searchBar) {
 		() => {
 			focusText(searchBar);
 		},
-		() => {}
+		() => {
+			if (pauseSong.getContent() === pause) {
+				playerHelper.pauseSong();
+				pauseSong.setContent(play);
+				screen.render();
+			} else {
+				playerHelper.playSong();
+				pauseSong.setContent(pause);
+				screen.render();
+			}
+		}
 	);
 	toolbarKeypress(
 		skipSong,
@@ -217,7 +237,11 @@ module.exports = function createMenu(mainScreen, searchBar) {
 		() => {
 			focusText(searchBar);
 		},
-		() => {}
+		async () => {
+			pauseSong.setContent(pause);
+			await playerHelper.skipSong();
+			await retrieveAndSetCurrPlaying(screen, currPlaying);
+		}
 	);
 	toolbarKeypress(
 		refresh,
@@ -257,15 +281,15 @@ module.exports = function createMenu(mainScreen, searchBar) {
 	return toolbar;
 };
 
-async function updateCurrPlaying(mainScreen, currPlaying) {
-	await retrieveAndSetCurrPlaying(mainScreen, currPlaying);
+async function updateCurrPlaying(screen, currPlaying) {
+	await retrieveAndSetCurrPlaying(screen, currPlaying);
 
 	setInterval(async () => {
-		await retrieveAndSetCurrPlaying(mainScreen, currPlaying);
+		await retrieveAndSetCurrPlaying(screen, currPlaying);
 	}, 15_000);
 }
 
-async function retrieveAndSetCurrPlaying(mainScreen, currPlaying) {
+async function retrieveAndSetCurrPlaying(screen, currPlaying) {
 	currPlaying.setContent(await playerHelper.getCurrPlaying());
-	mainScreen.screen.render();
+	screen.render();
 }

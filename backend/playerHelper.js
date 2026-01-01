@@ -36,3 +36,31 @@ exports.getCurrPlaying = async function () {
 	const artistStr = resp.data.item.artists.map(artist => artist.name).join(", ");
 	return song + " - " + artistStr;
 };
+
+exports.playSong = async function () {
+	const accessToken = await authHelper.getAccessToken();
+	await axios.put(`${spotifyApi}/me/player/play`, null, {
+		headers: { Authorization: `Bearer ${accessToken}` }
+	});
+};
+
+exports.pauseSong = async function () {
+	const accessToken = await authHelper.getAccessToken();
+	await axios.put(`${spotifyApi}/me/player/pause`, null, {
+		headers: { Authorization: `Bearer ${accessToken}` }
+	});
+};
+
+exports.skipSong = async function () {
+	const accessToken = await authHelper.getAccessToken();
+	await axios.post(`${spotifyApi}/me/player/next`, null, {
+		headers: { Authorization: `Bearer ${accessToken}` }
+	});
+};
+
+exports.prevSong = async function () {
+	const accessToken = await authHelper.getAccessToken();
+	await axios.post(`${spotifyApi}/me/player/previous`, null, {
+		headers: { Authorization: `Bearer ${accessToken}` }
+	});
+};
