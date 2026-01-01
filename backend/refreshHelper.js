@@ -103,7 +103,8 @@ async function getPlaylistTracks(accessToken, playlistId) {
 		album: {
 			id: item.track.album.id,
 			name: item.track.album.name,
-			release_date: item.track.album.release_date
+			release_date: item.track.album.release_date,
+			release_year: item.track.album.release_date.split('-')[0]
 		},
 		added_at: item.added_at
 	}));

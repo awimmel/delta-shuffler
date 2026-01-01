@@ -1,5 +1,6 @@
 const blessed = require("blessed");
 const Dropdown = require("../dropdown.js");
+const TypeDropdown = require("../typeDropdown.js");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const focusText = require("../../utilities/focusText.js");
@@ -15,15 +16,7 @@ class Condition {
 		this.allowAdd = allowAdd;
 		this.allowDelete = allowDelete;
 		this.bottom = bottom;
-		this.typeDropdown = new Dropdown(
-			screen,
-			["Song", "Artist", "Album"],
-			conditionGroup.conditionBox,
-			topOffset,
-			0,
-			8,
-			[]
-		);
+
 		this.operatorDropdown = new Dropdown(
 			screen,
 			["IN", "NOT IN"],
@@ -33,6 +26,17 @@ class Condition {
 			8,
 			[]
 		);
+		this.typeDropdown = new TypeDropdown(
+			screen,
+			["Song", "Artist", "Album", "Year"],
+			conditionGroup.conditionBox,
+			topOffset,
+			0,
+			8,
+			[],
+			this.operatorDropdown
+		);
+
 		this.valueBox = blessed.textbox({
 			parent: conditionGroup.conditionBox,
 			label: " Value:",
@@ -375,6 +379,9 @@ function generateConditions(operatorStr, type, values, join) {
 		case "Album":
 			conditions = values.map(value => `song.album.name ${operator} '${value}'`);
 			break;
+		case "Year":
+			conditions = values.map(value => `song.album.release_year ${operator} '${value}'`);
+			break;
 	}
 
 	// All of these conditions are joined by || because, if we have multiple, it's equivalent to an .includes()
@@ -387,6 +394,10 @@ function getOperator(operator) {
 			return "===";
 		case "NOT IN":
 			return "!==";
+		case "=":
+			return "===";
+		default:
+			return operator;
 	}
 }
 

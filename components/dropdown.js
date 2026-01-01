@@ -91,6 +91,14 @@ class Dropdown {
 	addSibling(otherDropdown) {
 		this.siblings.push(otherDropdown);
 	}
+
+	setOptions(options) {
+		this.options = options;
+		this.list.setItems(options);
+		this.list.height = options.length + 2;
+		this.button.content = options[0];
+		this.screen.render();
+	}
 }
 
 function handleDropdownSelect(dropdown) {
@@ -107,7 +115,7 @@ function createList(parent, top, left, width, options) {
 		top: top,
 		left: left,
 		width: width,
-		height: options.length * 2,
+		height: options.length + 2,
 		items: options,
 		hidden: true,
 		keys: true,
