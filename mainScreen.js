@@ -6,7 +6,6 @@ const PlaylistTable = require("./tables/playlistTable");
 const PlaylistDetailsView = require("./views/playlistDetailsView");
 
 const playlistHelper = require("./backend/playlistHelper.js");
-const songHelper = require("./backend/songHelper.js");
 
 class MainScreen {
 	constructor(screen) {

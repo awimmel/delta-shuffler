@@ -57,10 +57,11 @@ async function getPlaylists(accessToken) {
 		next = resp["data"]["next"];
 	}
 
-	return playlists.map(playlist => ({
+	const mappedPlayists = playlists.map(playlist => ({
 		id: playlist.id,
 		name: playlist.name
 	}));
+	return playlistHelper.sortPlaylists(mappedPlayists);
 }
 
 function requestPlaylistBatch(accessToken, offset) {
@@ -104,7 +105,7 @@ async function getPlaylistTracks(accessToken, playlistId) {
 			id: item.track.album.id,
 			name: item.track.album.name,
 			release_date: item.track.album.release_date,
-			release_year: item.track.album.release_date.split('-')[0]
+			release_year: item.track.album.release_date.split("-")[0]
 		},
 		added_at: item.added_at
 	}));
