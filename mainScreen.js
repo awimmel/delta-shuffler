@@ -11,13 +11,13 @@ class MainScreen {
 	constructor(screen) {
 		this.screen = screen;
 
+		this.searchBar = createSearchbar(this.screen);
 		this.screen.on("keypress", (char, key) => {
 			if (char === "/") {
-				focusText(searchBar);
+				focusText(this.searchBar);
 			}
 		});
 
-		this.searchBar = createSearchbar(this.screen);
 		this.menu = createMenu(this, this.searchBar);
 		this.playlists = playlistHelper.readPlaylists();
 		this.playlistDetailsView = new PlaylistDetailsView(this.screen, this.searchBar);
