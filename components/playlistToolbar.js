@@ -1,5 +1,4 @@
 const blessed = require("blessed");
-const focusText = require("../utilities/focusText.js");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const focusFunction = require("../utilities/focusElement.js");
 const NameAlgorithmPopover = require("../components/popovers/nameAlgorithmPopover.js");
@@ -123,7 +122,7 @@ class PlaylistToolbar {
 			focusFunction(this.backButton),
 			focusFunction(this.showAlgorithms),
 			() => {
-				focusText(this.searchBar);
+				this.searchBar.focus();
 			},
 			() => {
 				this.focusTable();
@@ -137,7 +136,7 @@ class PlaylistToolbar {
 			focusFunction(this.createAlgorithm),
 			focusFunction(this.showSongs),
 			() => {
-				focusText(this.searchBar);
+				this.searchBar.focus();
 			},
 			() => {
 				this.focusTable();
@@ -155,7 +154,7 @@ class PlaylistToolbar {
 			focusFunction(this.showAlgorithms),
 			() => {},
 			() => {
-				focusText(this.searchBar);
+				this.searchBar.focus();
 			},
 			() => {
 				this.focusTable();
