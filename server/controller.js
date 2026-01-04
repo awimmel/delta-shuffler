@@ -1,7 +1,7 @@
 const axios = require("axios");
 const authHelper = require("../backend/authHelper.js");
 
-exports.spotifyLoginResp = async (req, res) => {
+exports.spotifyLogin = async (req, res) => {
 	try {
 		const recState = decodeURIComponent(req?.query?.state);
 		const state = authHelper.getState();
@@ -21,7 +21,7 @@ exports.spotifyLoginResp = async (req, res) => {
 			{
 				grant_type: "authorization_code",
 				code: userCode,
-				redirect_uri: "http://127.0.0.1:3438/spotifyLoginResp"
+				redirect_uri: "http://127.0.0.1:3438/spotifyLogin"
 			},
 			{
 				headers: {

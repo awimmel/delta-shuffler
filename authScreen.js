@@ -14,6 +14,38 @@ class AuthScreen {
 	constructor(screen) {
 		this.screen = screen;
 
+		this.title = blessed.text({
+			parent: this.screen,
+			content: `
+        /\\  
+       /  \\                                    |\\
+      /    \\       ⎺⎺⎺⎻-⎽_          _⎽-⎻⎺⎺⎺⎺⎺⎺⎺  \\
+     /      \\            ⎺⎺⎻-⎽__⎽-⎻⎺⎺            /
+    /        \\     ⎺⎺⎺⎻-⎽_     ⎺⎺⎻-⎽__⎽-⎻⎺⎺⎺⎺⎺⎺|/
+   /          \\    ___⎽-⎻⎺⎺⎺⎻-⎽_      ⎺⎺⎻-⎽____|\\
+  /            \\         _⎽-⎻⎺⎺⎺⎻-⎽_             \\
+ /              \\  ___⎽-⎻⎺⎺          ⎺⎺⎻-⎽______ /
+/________________\\                             |/ 
+`,
+			top: "50%-20",
+			left: "50%-25",
+			width: "50%",
+			height: 15
+		});
+		
+		this.authText = blessed.text({
+			parent: this.screen,
+			content:
+				"After creating your app on Spotify's Developer dashboard, enter your Client Id and Client Secret here. " +
+				"You will be routed to a Spotify authorization page where you will be asked to grant a few permissions. " +
+				"Granting will take you to a local web page, after which you can restart the app and begin shuffling. " +
+				"If you hit any errors, the local page will describe the resolution.",
+			top: "50%-6",
+			left: "25%",
+			width: "50%",
+			height: 5
+		});
+
 		this.clientIdBox = blessed.textbox({
 			parent: this.screen,
 			label: " Client Id:",
@@ -181,7 +213,7 @@ async function beginAuth(clientId, clientSecret) {
 		querystring.stringify({
 			response_type: "code",
 			client_id: clientId,
-			redirect_uri: "http://127.0.0.1:3438/spotifyLoginResp",
+			redirect_uri: "http://127.0.0.1:3438/spotifyLogin",
 			state: state,
 			scope:
 				"user-modify-playback-state user-read-currently-playing " +
