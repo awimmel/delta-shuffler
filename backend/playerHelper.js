@@ -11,10 +11,10 @@ exports.queueSongs = async function (songs) {
 	while (counter < songs.length) {
 		queuePromises.push(
 			axios.post(`${spotifyApi}/me/player/queue`, null, {
+				headers: { Authorization: `Bearer ${accessToken}` },
 				params: {
 					uri: `spotify:track:${songs[counter]}`
-				},
-				headers: { Authorization: `Bearer ${accessToken}` }
+				}
 			})
 		);
 		counter++;
@@ -60,7 +60,20 @@ exports.skipSong = async function () {
 
 exports.prevSong = async function () {
 	const accessToken = await authHelper.getAccessToken();
-	await axios.post(`${spotifyApi}/me/player/previous`, null, {
+	const resp = await axios.get(`${spotifyApi}/me/player`, {
 		headers: { Authorization: `Bearer ${accessToken}` }
 	});
+	const rewind = resp.data.progress_ms >= 3000;
+	if (rewind) {
+		await axios.put(`${spotifyApi}/me/player/seek`, null, {
+			headers: { Authorization: `Bearer ${accessToken}` },
+			params: {
+				position_ms: 0
+			}
+		});
+	} else {
+		await axios.post(`${spotifyApi}/me/player/previous`, null, {
+			headers: { Authorization: `Bearer ${accessToken}` }
+		});
+	}
 };
