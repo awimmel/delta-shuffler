@@ -86,7 +86,7 @@ class MainScreen {
 	}
 
 	getQuery(currChar) {
-		const currQuery = this.searchBar.getValue().toLowerCase().trim();
+		const currQuery = this.searchBar.getValue().toLowerCase();
 		if (currChar != null && currChar !== "\b") {
 			return currQuery + currChar.toLowerCase();
 		} else {
