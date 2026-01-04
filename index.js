@@ -1,5 +1,12 @@
+const express = require('express');
 const blessed = require("blessed");
+const variables = require("./database/variables.json");
+
+const AuthScreen = require("./authScreen.js");
 const MainScreen = require("./mainScreen.js");
+
+const routes = require('./server/routes.js');
+const path = require('path');
 
 const screen = blessed.screen({
 	smartCSR: true,
@@ -7,4 +14,13 @@ const screen = blessed.screen({
 	term: "xterm-256color"
 });
 
-const mainScreen = new MainScreen(screen);
+if (!variables.clientId || !variables.clientSecret || !variables.accessToken || !variables.refreshToken) {
+	const app = express();
+	app.use(express.json());
+	app.use('/', routes);
+	app.use(express.static(path.join(__dirname, '/public')));
+	app.listen(3438);
+	new AuthScreen(screen);
+} else {
+	new MainScreen(screen);
+}
