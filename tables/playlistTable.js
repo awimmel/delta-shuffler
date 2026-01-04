@@ -8,6 +8,7 @@ const columns = ["PLAYLIST", "SONG COUNT"];
 class PlaylistTable {
 	constructor(mainScreen, playlists, search, playlistDetailsView) {
 		this.playlists = playlistHelper.sortPlaylists(playlists);
+		this.playlistCount = this.playlists.length;
 		this.playlistTable = createTable(
 			mainScreen,
 			11,
@@ -15,6 +16,7 @@ class PlaylistTable {
 			playlistHelper.displayPlaylists(this.playlists),
 			this.playlists
 		);
+		this.hidden = false;
 
 		setTableKeypress(
 			this.playlistTable,
@@ -30,6 +32,8 @@ class PlaylistTable {
 				songsTable.setData(playlistId);
 
 				this.playlistTable.hide();
+				this.hidden = true;
+
 				playlistDetailsView.show();
 				algorithmsTable.show();
 				algorithmsTable.focus();
@@ -42,11 +46,19 @@ class PlaylistTable {
 
 	setData(playlists) {
 		this.playlists = playlists;
+		this.playlistCount = playlists.length;
 		this.playlistTable.setData([columns, ...playlistHelper.displayPlaylists(this.playlists)]);
 	}
 
+	getDataCount() {
+		return this.playlistCount;
+	}
+
 	filterData(query) {
-		const filteredPlaylists = this.playlists.filter(item => item.name.toLowerCase().includes(query));
+		const filteredPlaylists = this.playlists.filter(item =>
+			item.name.toLowerCase().includes(query)
+		);
+		this.playlistCount = filteredPlaylists.length;
 		this.playlistTable.setData([columns, ...playlistHelper.displayPlaylists(filteredPlaylists)]);
 	}
 
@@ -56,6 +68,7 @@ class PlaylistTable {
 
 	show() {
 		this.playlistTable.show();
+		this.hidden = false;
 	}
 }
 

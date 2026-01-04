@@ -7,13 +7,19 @@ class SongsTable {
 	constructor(parent) {
 		this.parent = parent;
 		this.songs = [];
+		this.songCount = 0;
 		this.table = createTable(parent, 3, columns, [], []);
 		this.hidden = false;
 	}
 
 	setData(playlistId) {
 		this.songs = songHelper.readSongs(playlistId);
+		this.songCount = this.songs.length;
 		this.table.setData([columns, ...songHelper.displaySongs(this.songs)]);
+	}
+
+	getDataCount() {
+		return this.songCount;
 	}
 
 	filterData(query) {
@@ -23,6 +29,7 @@ class SongsTable {
 				songHelper.getArtistString(song).toLowerCase().includes(query) ||
 				song.album.name.toLowerCase().includes(query)
 		);
+		this.songCount = filteredSongs.length;
 		this.table.setData([columns, ...songHelper.displaySongs(filteredSongs)]);
 	}
 

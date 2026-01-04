@@ -107,6 +107,10 @@ class PlaylistDetailsView {
 	filterData(query) {
 		this.getActiveTable().filterData(query);
 	}
+
+	getDataCount() {
+		return this.getActiveTable().getDataCount();
+	}
 }
 
 module.exports = PlaylistDetailsView;
