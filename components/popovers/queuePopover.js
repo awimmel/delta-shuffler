@@ -131,7 +131,6 @@ module.exports = function createQueuePopover(screen, algorithmsTable, algorithm,
 		() => {},
 		() => {
 			queueBox.destroy();
-			focusText(searchBar);
 			algorithmsTable.focus();
 			screen.render();
 		}
@@ -156,7 +155,6 @@ module.exports = function createQueuePopover(screen, algorithmsTable, algorithm,
 			}
 
 			queueBox.destroy();
-			focusText(searchBar);
 			algorithmsTable.focus();
 			screen.render();
 		}

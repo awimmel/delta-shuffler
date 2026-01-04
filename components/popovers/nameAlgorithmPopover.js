@@ -117,8 +117,6 @@ class NameAlgorithmPopover {
 			() => {},
 			() => {
 				this.nameAlgBox.destroy();
-				// Focus on the searchBar to remove hanging blinking cursor
-				focusText(searchBar);
 				backButton.focus();
 				this.screen.render();
 			}

@@ -1,5 +1,4 @@
 const blessed = require("blessed");
-const focusText = require("../../utilities/focusText.js");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const ConditionGroup = require("../conditions/conditionGroup.js");
@@ -215,8 +214,6 @@ function setBottomBoxesNavigation(buildAlgPopover) {
 		() => {},
 		() => {
 			buildAlgPopover.buildAlgBox.destroy();
-			// Focus on the searchBar to remove hanging blinking cursor
-			focusText(buildAlgPopover.searchBar);
 			buildAlgPopover.backButton.focus();
 			buildAlgPopover.screen.render();
 		}
@@ -237,8 +234,6 @@ function setBottomBoxesNavigation(buildAlgPopover) {
 			buildAlgPopover.algorithmsTable.addAlgorithm(newAlg);
 
 			buildAlgPopover.buildAlgBox.destroy();
-			// Focus on the searchBar to remove hanging blinking cursor
-			focusText(buildAlgPopover.searchBar);
 			buildAlgPopover.backButton.focus();
 			buildAlgPopover.screen.render();
 		}

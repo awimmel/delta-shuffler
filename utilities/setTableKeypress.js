@@ -1,4 +1,4 @@
-module.exports = function setTableKeypress(element, enterFunction, focusFunction) {
+module.exports = function setTableKeypress(element, enterFunction, focusAbove) {
 	var prevSelected = 0;
 	element.on("keypress", function (char, key) {
 		if (key.name === "enter") {
@@ -8,7 +8,7 @@ module.exports = function setTableKeypress(element, enterFunction, focusFunction
 			this.selected === 1 &&
 			(this.selected === prevSelected || prevSelected === 0)
 		) {
-			focusFunction();
+			focusAbove();
 			prevSelected = 0;
 		} else {
 			prevSelected = this.selected;
