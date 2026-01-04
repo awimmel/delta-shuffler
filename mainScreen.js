@@ -1,7 +1,5 @@
-const focusText = require("./utilities/focusText.js");
-
 const createMenu = require("./components/menu");
-const createSearchbar = require("./components/searchBar");
+const SearchBar = require("./components/searchBar");
 const PlaylistTable = require("./tables/playlistTable");
 const PlaylistDetailsView = require("./views/playlistDetailsView");
 
@@ -11,10 +9,10 @@ class MainScreen {
 	constructor(screen) {
 		this.screen = screen;
 
-		this.searchBar = createSearchbar(this.screen);
+		this.searchBar = new SearchBar(this.screen);
 		this.screen.on("keypress", (char, key) => {
 			if (char === "/") {
-				focusText(this.searchBar);
+				this.searchBar.focus();
 			}
 		});
 
@@ -34,6 +32,7 @@ class MainScreen {
 		this.backButton.on("keypress", (char, key) => {
 			const activeTable = this.playlistDetailsView.getActiveTable();
 			if (key.name === "enter") {
+				this.searchBar.setValue("");
 				this.playlistDetailsView.hide();
 				this.algorithmsTable.hide();
 				this.songsTable.hide();
@@ -43,55 +42,15 @@ class MainScreen {
 			} else if (key.name === "right") {
 				this.playlistDetailsView.playlistToolbar.createAlgorithm.focus();
 			} else if (key.name === "up") {
-				focusText(this.searchBar);
+				this.searchBar.focus();
 			} else if (key.name === "down") {
 				activeTable.focus();
 			}
 		});
 
-		this.updateList();
-		focusText(this.searchBar);
+		this.searchBar.setKeyPresses(this.playlistDetailsView, this.playlistTable, this.menu);
+		this.searchBar.focus();
 		this.screen.render();
-
-		this.searchBar.on("keypress", (char, key) => {
-			if (key.name === "enter") {
-				if (!this.playlistDetailsView.hidden) {
-					this.playlistDetailsView.focus();
-				} else if (!this.playlistTable.hidden) {
-					this.playlistTable.focus();
-				}
-				this.screen.render();
-			} else if (key.name === "down") {
-				if (!this.playlistDetailsView.hidden) {
-					this.playlistDetailsView.playlistToolbar.backButton.focus();
-				} else if (!this.playlistTable.hidden) {
-					this.playlistTable.focus();
-				}
-			} else if (key.name === "up") {
-				this.menu.children[2].focus();
-			} else if (key.name !== "escape") {
-				this.updateList(char);
-			}
-		});
-	}
-
-	updateList(newChar) {
-		const query = this.getQuery(newChar);
-		if (!this.playlistDetailsView.hidden) {
-			this.playlistDetailsView.filterData(query);
-		} else {
-			this.playlistTable.filterData(query);
-		}
-		this.screen.render();
-	}
-
-	getQuery(currChar) {
-		const currQuery = this.searchBar.getValue().toLowerCase();
-		if (currChar != null && currChar !== "\b") {
-			return currQuery + currChar.toLowerCase();
-		} else {
-			return currQuery.slice(0, -1);
-		}
 	}
 
 	setPlaylists(playlists) {

@@ -1,5 +1,4 @@
 const createTable = require("./table.js");
-const focusText = require("../utilities/focusText.js");
 const setTableKeypress = require("../utilities/setTableKeypress");
 
 const playlistHelper = require("../backend/playlistHelper.js");
@@ -36,7 +35,7 @@ class PlaylistTable {
 				algorithmsTable.focus();
 			},
 			() => {
-				focusText(search);
+				search.focus();
 			}
 		);
 	}

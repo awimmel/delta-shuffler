@@ -201,7 +201,7 @@ module.exports = function createMenu(mainScreen, searchBar) {
 		focusFunction(pauseSong),
 		() => {},
 		() => {
-			focusText(searchBar);
+			searchBar.focus();
 		},
 		async () => {
 			pauseSong.setContent(pause);
@@ -215,7 +215,7 @@ module.exports = function createMenu(mainScreen, searchBar) {
 		focusFunction(skipSong),
 		() => {},
 		() => {
-			focusText(searchBar);
+			searchBar.focus();
 		},
 		() => {
 			if (pauseSong.getContent() === pause) {
@@ -235,7 +235,7 @@ module.exports = function createMenu(mainScreen, searchBar) {
 		focusFunction(refresh),
 		() => {},
 		() => {
-			focusText(searchBar);
+			searchBar.focus();
 		},
 		async () => {
 			pauseSong.setContent(pause);
@@ -249,7 +249,7 @@ module.exports = function createMenu(mainScreen, searchBar) {
 		focusFunction(settings),
 		() => {},
 		() => {
-			focusText(searchBar);
+			searchBar.focus();
 		},
 		() => {
 			createRefreshPopover(mainScreen, refresh);
@@ -261,7 +261,7 @@ module.exports = function createMenu(mainScreen, searchBar) {
 		focusFunction(close),
 		() => {},
 		() => {
-			focusText(searchBar);
+			searchBar.focus();
 		},
 		() => {
 			createSettingsPopover(mainScreen.screen, settings);
@@ -273,7 +273,7 @@ module.exports = function createMenu(mainScreen, searchBar) {
 		() => {},
 		() => {},
 		() => {
-			focusText(searchBar);
+			searchBar.focus();
 		},
 		() => process.exit(0)
 	);
