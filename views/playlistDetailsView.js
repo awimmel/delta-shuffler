@@ -65,7 +65,7 @@ class PlaylistDetailsView {
 		setTableKeypress(
 			this.algorithmsTable.table,
 			index => {
-				const algorithm = this.algorithmsTable.algorithms[index - 1];
+				const algorithm = this.algorithmsTable.filteredAlgorithms[index - 1];
 				createAlgorithmPopover(parent, this.algorithmsTable, algorithm, searchBar);
 			},
 			focusFunction(backButton)
@@ -73,7 +73,7 @@ class PlaylistDetailsView {
 		setTableKeypress(
 			this.songsTable.table,
 			index => {
-				createSongPopover(parent, this.songsTable, this.songsTable.songs[index - 1]);
+				createSongPopover(parent, this.songsTable, this.songsTable.filteredSongs[index - 1]);
 			},
 			focusFunction(backButton)
 		);

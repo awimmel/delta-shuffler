@@ -7,6 +7,7 @@ class SongsTable {
 	constructor(parent) {
 		this.parent = parent;
 		this.songs = [];
+		this.filteredSongs = this.songs;
 		this.songCount = 0;
 		this.table = createTable(parent, 3, columns, [], []);
 		this.hidden = false;
@@ -14,6 +15,7 @@ class SongsTable {
 
 	setData(playlistId) {
 		this.songs = songHelper.readSongs(playlistId);
+		this.filteredSongs = this.songs;
 		this.songCount = this.songs.length;
 		this.table.setData([columns, ...songHelper.displaySongs(this.songs)]);
 	}
@@ -23,14 +25,14 @@ class SongsTable {
 	}
 
 	filterData(query) {
-		const filteredSongs = this.songs.filter(
+		this.filteredSongs = this.songs.filter(
 			song =>
 				song.name.toLowerCase().includes(query) ||
 				songHelper.getArtistString(song).toLowerCase().includes(query) ||
 				song.album.name.toLowerCase().includes(query)
 		);
-		this.songCount = filteredSongs.length;
-		this.table.setData([columns, ...songHelper.displaySongs(filteredSongs)]);
+		this.songCount = this.filteredSongs.length;
+		this.table.setData([columns, ...songHelper.displaySongs(this.filteredSongs)]);
 	}
 
 	hide() {

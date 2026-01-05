@@ -7,6 +7,7 @@ class AlgorithmsTable {
 	constructor(parent) {
 		this.parent = parent;
 		this.algorithms = [];
+		this.filteredAlgorithms = this.algorithms;
 		this.algorithmCount = 0;
 		this.playlistId = "";
 		this.table = createTable(parent, 3, columns, [], []);
@@ -16,6 +17,7 @@ class AlgorithmsTable {
 	setData(playlistId) {
 		this.playlistId = playlistId;
 		this.algorithms = algorithmHelper.readAlgorithms(playlistId);
+		this.filteredAlgorithms = this.algorithms;
 		this.algorithmCount = this.algorithms.length;
 		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.algorithms)]);
 	}
@@ -25,15 +27,16 @@ class AlgorithmsTable {
 	}
 
 	filterData(query) {
-		const filteredAlgorithms = this.algorithms.filter(item =>
+		this.filteredAlgorithms = this.algorithms.filter(item =>
 			item.name.toLowerCase().includes(query)
 		);
-		this.algorithmCount = filteredAlgorithms.length;
-		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(filteredAlgorithms)]);
+		this.algorithmCount = this.filteredAlgorithms.length;
+		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.filteredAlgorithms)]);
 	}
 
 	addAlgorithm(newAlg) {
 		this.algorithms = [...this.algorithms, newAlg];
+		this.filteredAlgorithms = this.algorithms;
 		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.algorithms)]);
 	}
 
