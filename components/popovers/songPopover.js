@@ -8,7 +8,7 @@ module.exports = function createSongPopover(screen, songsTable, song) {
 	const songBox = blessed.box({
 		parent: screen,
 		border: "line",
-		height: 10,
+		height: 12,
 		width: 60,
 		top: "center",
 		left: "center",
@@ -20,17 +20,17 @@ module.exports = function createSongPopover(screen, songsTable, song) {
 	// Info about the current song
 	blessed.text({
 		parent: songBox,
-		content: `Artist: ${songHelper.getArtistString(song)}\n\nAlbum: ${song.album.name}`,
+		content: `Artist: ${songHelper.getArtistString(song)}\n\nAlbum: ${song.album.name}\n\nRelease Date: ${song.album.release_date}\n\nAdded On: ${song.added_at.split("T")[0]}`,
 		top: 1,
 		left: 2,
 		width: "100%-4",
-		height: 3
+		height: 7
 	});
 
 	const closeBox = blessed.box({
 		parent: songBox,
 		content: "Close",
-		top: 7,
+		top: 9,
 		left: 15,
 		height: 3,
 		width: 7,
@@ -57,7 +57,7 @@ module.exports = function createSongPopover(screen, songsTable, song) {
 	const queueBox = blessed.box({
 		parent: songBox,
 		content: "Queue",
-		top: 7,
+		top: 9,
 		left: 35,
 		height: 3,
 		width: 7,
