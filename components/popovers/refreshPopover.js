@@ -44,11 +44,10 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 			fg: "white",
 			bg: "default",
 			border: {
-				fg: primaryColor
+				fg: "red"
 			},
 			focus: {
-				fg: "black",
-				bg: primaryColor,
+				bg: "red",
 				border: {
 					fg: "white"
 				}
@@ -72,11 +71,10 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 			fg: "white",
 			bg: "default",
 			border: {
-				fg: primaryColor
+				fg: "blue"
 			},
 			focus: {
-				fg: "black",
-				bg: primaryColor,
+				bg: "blue",
 				border: {
 					fg: "white"
 				}
