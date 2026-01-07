@@ -19,10 +19,12 @@ exports.writeSongs = function (songs, playlistSongs) {
 };
 
 exports.displaySongs = function (songs) {
-	return songs.map(song => {
-		const artistString = this.getArtistString(song);
-		return [song.name, artistString, song.album.name];
-	});
+	return songs
+		.sort((first, second) => new Date(second.added_at) - new Date(first.added_at))
+		.map(song => {
+			const artistString = this.getArtistString(song);
+			return [song.name, artistString, song.album.name];
+		});
 };
 
 exports.getArtistString = function (song) {
