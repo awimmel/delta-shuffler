@@ -2,6 +2,7 @@ const blessed = require("blessed");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const focusFunction = require("../utilities/focusElement.js");
 const NameAlgorithmPopover = require("../components/popovers/nameAlgorithmPopover.js");
+const playlistHelper = require("../backend/playlistHelper.js");
 const variables = require("../database/variables.json");
 const primaryColor = variables.primaryColor;
 
@@ -21,10 +22,19 @@ class PlaylistToolbar {
 			keys: true
 		});
 
+		this.playlistName = blessed.text({
+			parent: parent,
+			content: "",
+			top: 1,
+			left: 1,
+			width: "50%",
+			height: 1
+		});
+
 		this.backButton = blessed.box({
 			parent: this.toolbar,
 			top: 0,
-			left: 0,
+			right: 48,
 			height: 3,
 			width: 6,
 			content: "Back",
@@ -48,7 +58,7 @@ class PlaylistToolbar {
 		this.createAlgorithm = blessed.box({
 			parent: this.toolbar,
 			top: 0,
-			left: 6,
+			right: 29,
 			height: 3,
 			width: 19,
 			content: "Create Algorithm",
@@ -72,7 +82,7 @@ class PlaylistToolbar {
 		this.showAlgorithms = blessed.box({
 			parent: this.toolbar,
 			top: 0,
-			left: 25,
+			right: 12,
 			height: 3,
 			width: 17,
 			content: "Show Algorithms",
@@ -96,7 +106,7 @@ class PlaylistToolbar {
 		this.showSongs = blessed.box({
 			parent: this.toolbar,
 			top: 0,
-			left: 42,
+			right: 0,
 			height: 3,
 			width: 12,
 			content: "Show Songs",
@@ -128,7 +138,12 @@ class PlaylistToolbar {
 				this.focusTable();
 			},
 			() => {
-				new NameAlgorithmPopover(parent.parent, this.backButton, this.searchBar, this.algorithmsTable);
+				new NameAlgorithmPopover(
+					parent.parent,
+					this.backButton,
+					this.searchBar,
+					this.algorithmsTable
+				);
 			}
 		);
 		toolbarKeypress(
@@ -175,6 +190,11 @@ class PlaylistToolbar {
 		} else {
 			this.songsTable.focus();
 		}
+	}
+
+	setPlaylistId(playlistId) {
+		const playlistName = playlistHelper.getPlaylistName(playlistId);
+		this.playlistName.setContent(playlistName);
 	}
 }
 

@@ -32,6 +32,8 @@ class PlaylistTable {
 				const songsTable = playlistDetailsView.songsTable;
 				songsTable.setData(playlistId);
 
+				playlistDetailsView.playlistToolbar.setPlaylistId(playlistId);
+
 				this.playlistTable.hide();
 				this.hidden = true;
 

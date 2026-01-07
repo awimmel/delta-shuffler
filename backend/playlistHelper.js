@@ -12,7 +12,10 @@ exports.writePlaylists = function (playlists) {
 };
 
 exports.displayPlaylists = function (playlists) {
-	const formattedPlaylists = playlists.map(playlist => [playlist.name, playlist.songCount.toString()]);
+	const formattedPlaylists = playlists.map(playlist => [
+		playlist.name,
+		playlist.songCount.toString()
+	]);
 	formattedPlaylists.sort((first, second) => first[0].localeCompare(second[0]));
 
 	return formattedPlaylists;
@@ -20,4 +23,14 @@ exports.displayPlaylists = function (playlists) {
 
 exports.sortPlaylists = function (playlists) {
 	return playlists.sort((first, second) => first.name.localeCompare(second.name));
+};
+
+exports.getPlaylistName = function (playlistId) {
+	const playlists = this.readPlaylists();
+	const matchingPlaylists = playlists.filter(playlist => playlist.id === playlistId);
+	if (matchingPlaylists.length > 0) {
+		return matchingPlaylists[0].name;
+	} else {
+		return "";
+	}
 };
