@@ -1,4 +1,4 @@
-const createMenu = require("./components/menu");
+const Menu = require("./components/menu");
 const SearchBar = require("./components/searchBar");
 const PlaylistTable = require("./tables/playlistTable");
 const PlaylistDetailsView = require("./views/playlistDetailsView");
@@ -16,7 +16,7 @@ class MainScreen {
 			}
 		});
 
-		this.menu = createMenu(this, this.searchBar);
+		this.menu = new Menu(this, this.searchBar);
 		this.playlists = playlistHelper.readPlaylists();
 		this.playlistDetailsView = new PlaylistDetailsView(this.screen, this.searchBar);
 		this.backButton = this.playlistDetailsView.playlistToolbar.backButton;
@@ -40,7 +40,9 @@ class MainScreen {
 				this.playlistTable.show();
 				this.playlistTable.focus();
 			} else if (key.name === "right") {
-				this.playlistDetailsView.playlistToolbar.createAlgorithm.focus();
+				const createAlgorithm = this.playlistDetailsView.playlistToolbar.createAlgorithm;
+				this.playlistDetailsView.playlistToolbar.prevFocus = createAlgorithm;
+				createAlgorithm.focus();
 			} else if (key.name === "up") {
 				this.searchBar.focus();
 			} else if (key.name === "down") {

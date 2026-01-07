@@ -37,17 +37,13 @@ class SearchBar {
 		this.searchBar.on("keypress", (char, key) => {
 			if (key.name === "enter" || key.name === "down") {
 				if (!playlistDetailsView.hidden && playlistDetailsView.getDataCount() !== 0) {
-					const elToFocus =
-						key.name === "down"
-							? playlistDetailsView.playlistToolbar.backButton
-							: playlistDetailsView;
-					elToFocus.focus();
+					playlistDetailsView.focus(key.name);
 				} else if (!playlistTable.hidden && playlistTable.getDataCount() !== 0) {
 					playlistTable.focus();
 				}
 				this.screen.render();
 			} else if (key.name === "up") {
-				menu.children[2].focus();
+				menu.focus();
 			} else if (key.name !== "escape") {
 				updateList(this.searchBar, char, playlistDetailsView, playlistTable, this.screen);
 			}

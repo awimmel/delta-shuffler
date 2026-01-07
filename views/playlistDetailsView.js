@@ -68,14 +68,14 @@ class PlaylistDetailsView {
 				const algorithm = this.algorithmsTable.filteredAlgorithms[index - 1];
 				createAlgorithmPopover(parent, this.algorithmsTable, algorithm, searchBar);
 			},
-			focusFunction(backButton)
+			focusFunction(this.playlistToolbar)
 		);
 		setTableKeypress(
 			this.songsTable.table,
 			index => {
 				createSongPopover(parent, this.songsTable, this.songsTable.filteredSongs[index - 1]);
 			},
-			focusFunction(backButton)
+			focusFunction(this.playlistToolbar)
 		);
 
 		this.playlistDetailsView.hide();
@@ -92,8 +92,12 @@ class PlaylistDetailsView {
 		this.hidden = true;
 	}
 
-	focus() {
-		this.getActiveTable().focus();
+	focus(keyName) {
+		if (keyName === "down") {
+			this.playlistToolbar.focus();
+		} else {
+			this.getActiveTable().focus();
+		}
 	}
 
 	getActiveTable() {

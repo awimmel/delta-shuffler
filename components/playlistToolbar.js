@@ -127,10 +127,18 @@ class PlaylistToolbar {
 			}
 		});
 
+		this.prevFocus = this.backButton;
+
 		toolbarKeypress(
 			this.createAlgorithm,
-			focusFunction(this.backButton),
-			focusFunction(this.showAlgorithms),
+			() => {
+				this.prevFocus = this.backButton;
+				this.backButton.focus();
+			},
+			() => {
+				this.prevFocus = this.showAlgorithms;
+				this.showAlgorithms.focus();
+			},
 			() => {
 				this.searchBar.focus();
 			},
@@ -148,8 +156,14 @@ class PlaylistToolbar {
 		);
 		toolbarKeypress(
 			this.showAlgorithms,
-			focusFunction(this.createAlgorithm),
-			focusFunction(this.showSongs),
+			() => {
+				this.prevFocus = this.createAlgorithm;
+				this.createAlgorithm.focus();
+			},
+			() => {
+				this.prevFocus = this.showSongs;
+				this.showSongs.focus();
+			},
 			() => {
 				this.searchBar.focus();
 			},
@@ -166,7 +180,10 @@ class PlaylistToolbar {
 		);
 		toolbarKeypress(
 			this.showSongs,
-			focusFunction(this.showAlgorithms),
+			() => {
+				this.prevFocus = this.showAlgorithms;
+				this.showAlgorithms.focus();
+			},
 			() => {},
 			() => {
 				this.searchBar.focus();
@@ -190,6 +207,10 @@ class PlaylistToolbar {
 		} else {
 			this.songsTable.focus();
 		}
+	}
+
+	focus() {
+		this.prevFocus.focus();
 	}
 
 	setPlaylistId(playlistId) {
