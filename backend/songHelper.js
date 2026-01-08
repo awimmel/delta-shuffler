@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const displayString = require("../utilities/displayString.js");
 
 const songsPath = path.join(__dirname, "../database", "songs.json");
 const playlistSongsPath = path.join(__dirname, "../database", "playlistSongs.json");
@@ -23,7 +24,7 @@ exports.displaySongs = function (songs) {
 		.sort((first, second) => new Date(second.added_at) - new Date(first.added_at))
 		.map(song => {
 			const artistString = this.getArtistString(song);
-			return [song.name, artistString, song.album.name];
+			return [displayString(song.name, 60), displayString(artistString, 40), displayString(song.album.name, 60)];
 		});
 };
 
