@@ -6,6 +6,7 @@ const columns = ["NAME", "CONDITION", "SONG COUNT"];
 class AlgorithmsTable {
 	constructor(parent) {
 		this.parent = parent;
+		this.width = this.parent.width;
 		this.algorithms = [];
 		this.filteredAlgorithms = this.algorithms;
 		this.algorithmCount = 0;
@@ -19,7 +20,7 @@ class AlgorithmsTable {
 		this.algorithms = algorithmHelper.readAlgorithms(playlistId);
 		this.filteredAlgorithms = this.algorithms;
 		this.algorithmCount = this.algorithms.length;
-		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.algorithms)]);
+		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.algorithms, this.width)]);
 	}
 
 	getDataCount() {
@@ -31,13 +32,13 @@ class AlgorithmsTable {
 			item.name.toLowerCase().includes(query)
 		);
 		this.algorithmCount = this.filteredAlgorithms.length;
-		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.filteredAlgorithms)]);
+		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.filteredAlgorithms, this.width)]);
 	}
 
 	addAlgorithm(newAlg) {
 		this.algorithms = [...this.algorithms, newAlg];
 		this.filteredAlgorithms = this.algorithms;
-		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.algorithms)]);
+		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.algorithms, this.width)]);
 	}
 
 	hide() {

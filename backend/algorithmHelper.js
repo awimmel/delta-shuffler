@@ -21,10 +21,10 @@ exports.writeAlgorithms = function (algorithms) {
 	fs.writeFile(filePath, JSON.stringify(algorithms), err => {});
 };
 
-exports.displayAlgorithms = function (algorithms) {
+exports.displayAlgorithms = function (algorithms, width) {
 	return algorithms.map(algorithm => [
-		displayString(algorithm.name, 45),
-		displayString(algorithm.condition, 115),
+		displayString(algorithm.name, Math.floor(width * 0.30)),
+		displayString(algorithm.condition, Math.floor(width * 0.70)),
 		algorithm.matchingSongs.toString()
 	]);
 };

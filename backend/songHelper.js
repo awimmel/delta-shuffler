@@ -19,12 +19,12 @@ exports.writeSongs = function (songs, playlistSongs) {
 	fs.writeFile(playlistSongsPath, JSON.stringify(playlistSongs), err => {});
 };
 
-exports.displaySongs = function (songs) {
+exports.displaySongs = function (songs, width) {
 	return songs
 		.sort((first, second) => new Date(second.added_at) - new Date(first.added_at))
 		.map(song => {
 			const artistString = this.getArtistString(song);
-			return [displayString(song.name, 60), displayString(artistString, 40), displayString(song.album.name, 60)];
+			return [displayString(song.name, Math.floor(0.4 * width)), displayString(artistString, Math.floor(0.2 * width)), displayString(song.album.name, Math.floor(0.4 * width))];
 		});
 };
 
