@@ -24,8 +24,8 @@ exports.refresh = async function (screen) {
 	for (const playlist of playlists) {
 		const trackUrl =
 			playlist.id === "likedSongs"
-				? `${spotifyApi}/me/tracks`
-				: `${spotifyApi}/playlists/${playlist["id"]}/tracks`;
+				? `${spotifyApi}/me/tracks?offset=0&limit=50`
+				: `${spotifyApi}/playlists/${playlist["id"]}/tracks?offset=0&limit=50`;
 		const currSongs = await getTracks(accessToken, trackUrl);
 		songs = [...songs, ...currSongs];
 		playlist.songCount = currSongs.length;
@@ -94,10 +94,6 @@ async function getTracks(accessToken, initialUrl) {
 	let items = [];
 	while (trackResp?.data?.next) {
 		trackResp = await axios.get(trackResp.data.next, {
-			params: {
-				limit: 50,
-				offset: 0
-			},
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}
