@@ -28,7 +28,7 @@ class Condition {
 		);
 		this.typeDropdown = new TypeDropdown(
 			screen,
-			["Song", "Artist", "Album", "Year"],
+			["Song", "Artist", "Album", "Year", "Added"],
 			conditionGroup.conditionBox,
 			topOffset,
 			0,
@@ -381,6 +381,13 @@ function generateConditions(operatorStr, type, values, join) {
 			break;
 		case "Year":
 			conditions = values.map(value => `song.album.release_year ${operator} '${value}'`);
+			break;
+		case "Added":
+			conditions = values.map(value => {
+				const numericValue = Number(value);
+				const formattedValue = Number.isInteger(numericValue) ? numericValue : `'${value}'`;
+				return `song.addedRank ${operator} ${formattedValue}`;
+			});
 			break;
 	}
 

@@ -27,16 +27,23 @@ exports.refresh = async function (screen) {
 				? `${spotifyApi}/me/tracks?offset=0&limit=50`
 				: `${spotifyApi}/playlists/${playlist["id"]}/tracks?offset=0&limit=50`;
 		const currSongs = await getTracks(accessToken, trackUrl);
-		songs = [...songs, ...currSongs];
 		playlist.songCount = currSongs.length;
 
 		const currPlaylistSongs = currSongs.map(song => {
 			return {
 				playlistId: playlist.id,
-				songId: song.id
+				songId: song.id,
+				addedAt: song.addedAt,
+				addedRank: song.addedRank
 			};
 		});
 		playlistSongs = [...playlistSongs, ...currPlaylistSongs];
+
+		const filteredSongs = currSongs.map(song => {
+			const { added_at, added_rank, ...adjSong } = song;
+			return adjSong;
+		});
+		songs = [...songs, ...filteredSongs];
 
 		const matchingAlgs = algorithmHelper.filterAlgorithms(playlist.id, algorithms);
 		if (matchingAlgs.length === 0) {
@@ -101,19 +108,22 @@ async function getTracks(accessToken, initialUrl) {
 		items = items.concat(trackResp.data.items);
 	}
 
-	return items.map(item => ({
-		id: item.track.id,
-		name: item.track.name,
-		artists: item.track.artists.map(artist => ({
-			id: artist.id,
-			name: artist.name
-		})),
-		album: {
-			id: item.track.album.id,
-			name: item.track.album.name,
-			release_date: item.track.album.release_date,
-			release_year: item.track.album.release_date.split("-")[0]
-		},
-		added_at: item.added_at
-	}));
+	return items
+		.sort((first, second) => new Date(second.added_at) - new Date(first.added_at))
+		.map((item, index) => ({
+			id: item.track.id,
+			name: item.track.name,
+			artists: item.track.artists.map(artist => ({
+				id: artist.id,
+				name: artist.name
+			})),
+			album: {
+				id: item.track.album.id,
+				name: item.track.album.name,
+				release_date: item.track.album.release_date,
+				release_year: item.track.album.release_date.split("-")[0]
+			},
+			addedAt: item.added_at,
+			addedRank: index + 1
+		}));
 }

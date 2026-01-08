@@ -7,11 +7,21 @@ const playlistSongsPath = path.join(__dirname, "../database", "playlistSongs.jso
 
 exports.readSongs = function (playlistId) {
 	const playlistSongs = JSON.parse(fs.readFileSync(playlistSongsPath, "utf8"));
-	const songIds = playlistSongs
-		.filter(playlistSong => playlistSong.playlistId === playlistId)
-		.map(playlistSong => playlistSong.songId);
+	const playlistSongsMap = new Map(
+		playlistSongs
+			.filter(playlistSong => playlistSong.playlistId === playlistId)
+			.map(playlistSong => {
+				const { songId, playlistId, ...adjPlaylistSong } = playlistSong;
+				return [playlistSong.songId, adjPlaylistSong];
+			})
+	);
 
-	return JSON.parse(fs.readFileSync(songsPath, "utf8")).filter(song => songIds.includes(song.id));
+	return JSON.parse(fs.readFileSync(songsPath, "utf8"))
+		.filter(song => playlistSongsMap.has(song.id))
+		.map(song => ({
+			...song,
+			...playlistSongsMap.get(song.id)
+		}));
 };
 
 exports.writeSongs = function (songs, playlistSongs) {
@@ -21,10 +31,14 @@ exports.writeSongs = function (songs, playlistSongs) {
 
 exports.displaySongs = function (songs, width) {
 	return songs
-		.sort((first, second) => new Date(second.added_at) - new Date(first.added_at))
+		.sort((first, second) => new Date(second.addedAt) - new Date(first.addedAt))
 		.map(song => {
 			const artistString = this.getArtistString(song);
-			return [displayString(song.name, Math.floor(0.4 * width)), displayString(artistString, Math.floor(0.2 * width)), displayString(song.album.name, Math.floor(0.4 * width))];
+			return [
+				displayString(song.name, Math.floor(0.4 * width)),
+				displayString(artistString, Math.floor(0.2 * width)),
+				displayString(song.album.name, Math.floor(0.4 * width))
+			];
 		});
 };
 

@@ -51,7 +51,7 @@ exports.writeAlgorithm = function (name, playlistId, conditionGroups) {
 		.join(joinOperator(join));
 
 	const songs = songHelper.readSongs(playlistId);
-	const songCount = filterSongs(songs, conditionString).length;
+	const songCount = this.filterSongs(songs, conditionString).length;
 
 	const newAlg = {
 		id: randomUUID(),
@@ -68,7 +68,7 @@ exports.writeAlgorithm = function (name, playlistId, conditionGroups) {
 };
 
 exports.runAlgorithm = async function (algorithm, songs, queueCount) {
-	const matchingSongsSource = filterSongs(songs, algorithm.condition);
+	const matchingSongsSource = this.filterSongs(songs, algorithm.condition);
 	let matchingSongs = [...matchingSongsSource];
 
 	let counter = 0;

@@ -20,7 +20,7 @@ module.exports = function createSongPopover(screen, songsTable, song) {
 	// Info about the current song
 	blessed.text({
 		parent: songBox,
-		content: `Artist: ${songHelper.getArtistString(song)}\n\nAlbum: ${song.album.name}\n\nRelease Date: ${song.album.release_date}\n\nAdded On: ${song.added_at.split("T")[0]}`,
+		content: `Artist: ${songHelper.getArtistString(song)}\n\nAlbum: ${song.album.name}\n\nRelease Date: ${song.album.release_date}\n\nAdded On: ${song.addedAt.split("T")[0]}`,
 		top: 1,
 		left: 2,
 		width: "100%-4",

@@ -13,7 +13,7 @@ function handleDropdownSelect(dropdown, operatorDropdown) {
 		dropdown.siblings.forEach(dropdownSibling => dropdownSibling.setSelectedIndex(index));
 		dropdown.close();
 
-		if (dropdown.getSelectedItem() === "Year") {
+		if (dropdown.getSelectedItem() === "Year" || dropdown.getSelectedItem() === "Added") {
 			operatorDropdown.setOptions(["<", "<=", "=", ">=", ">"]);
 		} else {
 			operatorDropdown.setOptions(["IN", "NOT IN"]);
