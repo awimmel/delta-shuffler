@@ -17,14 +17,13 @@ class MainScreen {
 		});
 
 		this.menu = new Menu(this, this.searchBar);
-		this.playlists = playlistHelper.readPlaylists();
 		this.playlistDetailsView = new PlaylistDetailsView(this.screen, this.searchBar);
 		this.backButton = this.playlistDetailsView.playlistToolbar.backButton;
 		this.algorithmsTable = this.playlistDetailsView.algorithmsTable;
 		this.songsTable = this.playlistDetailsView.songsTable;
 		this.playlistTable = new PlaylistTable(
 			this.screen,
-			this.playlists,
+			playlistHelper.readPlaylists(),
 			this.searchBar,
 			this.playlistDetailsView
 		);
@@ -56,7 +55,6 @@ class MainScreen {
 	}
 
 	setPlaylists(playlists) {
-		this.playlists = playlists;
 		this.playlistTable.setData(playlists);
 		this.playlistDetailsView.hide();
 		this.playlistTable.show();

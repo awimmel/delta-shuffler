@@ -48,9 +48,9 @@ class PlaylistTable {
 	}
 
 	setData(playlists) {
-		this.playlists = playlists;
+		this.playlists = playlistHelper.sortPlaylists(playlists);
 		this.filteredPlaylists = this.playlists;
-		this.playlistCount = playlists.length;
+		this.playlistCount = this.playlists.length;
 		this.playlistTable.setData([columns, ...playlistHelper.displayPlaylists(this.playlists)]);
 	}
 
