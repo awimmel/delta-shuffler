@@ -9,14 +9,24 @@ const elementLimit = 50;
 
 exports.refresh = async function (screen) {
 	const accessToken = await authHelper.getAccessToken();
-	const playlists = await getPlaylists(accessToken);
+	const playlists = [
+		...(await getPlaylists(accessToken)),
+		{
+			id: "likedSongs",
+			name: "Liked Songs"
+		}
+	];
 	let algorithms = algorithmHelper.readAllAlgorithms();
 
 	let songs = [];
 	let playlistSongs = [];
 	let newAlg = false;
 	for (const playlist of playlists) {
-		const currSongs = await getPlaylistTracks(accessToken, playlist["id"]);
+		const trackUrl =
+			playlist.id === "likedSongs"
+				? `${spotifyApi}/me/tracks`
+				: `${spotifyApi}/playlists/${playlist["id"]}/tracks`;
+		const currSongs = await getTracks(accessToken, trackUrl);
 		songs = [...songs, ...currSongs];
 		playlist.songCount = currSongs.length;
 
@@ -76,9 +86,9 @@ function requestPlaylistBatch(accessToken, offset) {
 	});
 }
 
-async function getPlaylistTracks(accessToken, playlistId) {
+async function getTracks(accessToken, initialUrl) {
 	let trackResp = {
-		data: { next: `${spotifyApi}/playlists/${playlistId}/tracks` }
+		data: { next: initialUrl }
 	};
 	let items = [];
 	while (trackResp?.data?.next) {
