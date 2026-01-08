@@ -20,7 +20,7 @@ exports.refresh = async function (screen) {
 
 	let songs = [];
 	let playlistSongs = [];
-	let newAlg = false;
+	let adjAlgs = [];
 	for (const playlist of playlists) {
 		const trackUrl =
 			playlist.id === "likedSongs"
@@ -40,16 +40,17 @@ exports.refresh = async function (screen) {
 
 		const matchingAlgs = algorithmHelper.filterAlgorithms(playlist.id, algorithms);
 		if (matchingAlgs.length === 0) {
-			algorithms = [...algorithms, algorithmHelper.createDefaultAlgorithm(playlist)];
-			newAlg = true;
+			adjAlgs.push(algorithmHelper.createDefaultAlgorithm(playlist));
+		} else {
+			for (const alg of matchingAlgs) {
+				alg.matchingSongs = algorithmHelper.filterSongs(currSongs, alg.condition).length;
+			}
+			adjAlgs = [...adjAlgs, ...matchingAlgs];
 		}
 	}
+
 	playlistHelper.writePlaylists(playlists);
-
-	if (newAlg) {
-		algorithmHelper.writeAlgorithms(algorithms);
-	}
-
+	algorithmHelper.writeAlgorithms(algorithms);
 	songHelper.writeSongs(songs, playlistSongs);
 
 	screen.setPlaylists(playlists);

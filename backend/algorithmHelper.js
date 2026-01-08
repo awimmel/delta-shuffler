@@ -86,7 +86,7 @@ exports.runAlgorithm = async function (algorithm, songs, queueCount) {
 	await playerHelper.queueSongs(songsToQueue);
 };
 
-function filterSongs(songs, condition) {
+exports.filterSongs = function(songs, condition) {
 	const filterFunction = new Function("song", `return ${condition}`);
 	return songs.filter(filterFunction).map(song => song.id);
 }
