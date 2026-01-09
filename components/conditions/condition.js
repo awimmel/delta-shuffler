@@ -90,8 +90,7 @@ class Condition {
 		return generateConditions(
 			this.operatorDropdown.getSelectedItem(),
 			this.typeDropdown.getSelectedItem(),
-			values,
-			this.joinDropdown != null ? this.joinDropdown.getSelectedItem() : ""
+			values
 		);
 	}
 
@@ -364,7 +363,7 @@ function createDeleteButton(parent, topOffset, allowAdd) {
 	});
 }
 
-function generateConditions(operatorStr, type, values, join) {
+function generateConditions(operatorStr, type, values) {
 	const operator = getOperator(operatorStr);
 	var conditions;
 	switch (type) {
