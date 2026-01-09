@@ -81,6 +81,7 @@ module.exports = function createAlgorithmPopover(screen, algorithmsTable, algori
 	});
 
 	let deleteBox;
+	let prevFocus = runAlgorithmBox;
 	if (!algorithm.id.includes("trueRandom")) {
 		deleteBox = blessed.box({
 			parent: algorithmBox,
@@ -115,7 +116,7 @@ module.exports = function createAlgorithmPopover(screen, algorithmsTable, algori
 			() => {},
 			() => {},
 			() => {
-				closeBox.focus();
+				prevFocus.focus()
 			},
 			() => {
 				algorithmBox.destroy();
@@ -128,7 +129,10 @@ module.exports = function createAlgorithmPopover(screen, algorithmsTable, algori
 	toolbarKeypress(
 		closeBox,
 		() => {},
-		focusFunction(runAlgorithmBox),
+		() => {
+			prevFocus = runAlgorithmBox;
+			runAlgorithmBox.focus();
+		},
 		() => {
 			if (deleteBox != null) {
 				deleteBox.focus();
@@ -143,7 +147,10 @@ module.exports = function createAlgorithmPopover(screen, algorithmsTable, algori
 	);
 	toolbarKeypress(
 		runAlgorithmBox,
-		focusFunction(closeBox),
+		() => {
+			prevFocus = closeBox;
+			closeBox.focus();
+		},
 		() => {},
 		() => {
 			if (deleteBox != null) {
@@ -158,7 +165,7 @@ module.exports = function createAlgorithmPopover(screen, algorithmsTable, algori
 		}
 	);
 
-	closeBox.focus();
+	runAlgorithmBox.focus();
 	screen.render();
 
 	return algorithmBox;
