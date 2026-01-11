@@ -1,5 +1,8 @@
 const path = require("path");
 const fs = require("fs");
+const algorithmHelper = require("./algorithmHelper.js");
+const songHelper = require("./songHelper.js");
+const { randomUUID } = require("crypto");
 
 const filePath = path.join(__dirname, "../database", "playlists.json");
 
@@ -33,4 +36,36 @@ exports.getPlaylistName = function (playlistId) {
 	} else {
 		return "";
 	}
+};
+
+exports.createAlgorithmPlaylist = function (playlistName, algorithm) {
+	const playlistId = randomUUID();
+	const sourcePlaylistSongs = songHelper.readSongs(algorithm.playlistId);
+	const songs = algorithmHelper.filterSongs(sourcePlaylistSongs, algorithm.condition);
+	const playlistSongs = songs.map(song => ({
+		playlistId: playlistId,
+		songId: song.id,
+		addedAt: song.addedAt,
+		addedRank: song.addedRank
+	}));
+	songHelper.addPlaylistSongs(playlistSongs);
+
+	const existingPlaylists = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	const playlist = {
+		id: playlistId,
+		name: playlistName,
+		algorithmId: algorithm.id,
+		songCount: songs.length
+	};
+	algorithmHelper.createAndSaveDefaultAlgorithm(playlist);
+
+	const playlists = [...existingPlaylists, playlist];
+	this.writePlaylists(playlists);
+	return playlists;
+};
+
+exports.algorithmPlaylistPresent = function (algorithmId) {
+	return JSON.parse(fs.readFileSync(filePath, "utf8")).some(
+		playlist => playlist.algorithmId === algorithmId
+	);
 };

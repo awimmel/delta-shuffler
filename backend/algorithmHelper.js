@@ -23,8 +23,8 @@ exports.writeAlgorithms = function (algorithms) {
 
 exports.displayAlgorithms = function (algorithms, width) {
 	return algorithms.map(algorithm => [
-		displayString(algorithm.name, Math.floor(width * 0.30)),
-		displayString(algorithm.condition, Math.floor(width * 0.70)),
+		displayString(algorithm.name, Math.floor(width * 0.3)),
+		displayString(algorithm.condition, Math.floor(width * 0.7)),
 		algorithm.matchingSongs.toString()
 	]);
 };
@@ -43,9 +43,19 @@ exports.createDefaultAlgorithm = function (playlist) {
 	};
 };
 
+exports.createAndSaveDefaultAlgorithm = function (playlist) {
+	const defaultAlg = {
+		id: `trueRandom-${playlist.id}`,
+		name: "Completely Random",
+		playlistId: playlist.id,
+		condition: "true === true",
+		matchingSongs: playlist.songCount
+	};
+	this.writeAlgorithms([...this.readAllAlgorithms(), defaultAlg]);
+};
+
 exports.writeAlgorithm = function (name, playlistId, conditionGroups) {
-	const join =
-		conditionGroups.length > 1 ? conditionGroups[1].joinDropdown.getSelectedItem() : "";
+	const join = conditionGroups.length > 1 ? conditionGroups[1].joinDropdown.getSelectedItem() : "";
 	const conditionString = conditionGroups
 		.map(conditionGroup => `(${conditionGroup.toString()})`)
 		.join(joinOperator(join));
@@ -68,7 +78,7 @@ exports.writeAlgorithm = function (name, playlistId, conditionGroups) {
 };
 
 exports.runAlgorithm = async function (algorithm, songs, queueCount) {
-	const matchingSongsSource = this.filterSongs(songs, algorithm.condition);
+	const matchingSongsSource = this.filterSongs(songs, algorithm.condition).map(song => song.id);
 	let matchingSongs = [...matchingSongsSource];
 
 	let counter = 0;
@@ -86,10 +96,10 @@ exports.runAlgorithm = async function (algorithm, songs, queueCount) {
 	await playerHelper.queueSongs(songsToQueue);
 };
 
-exports.filterSongs = function(songs, condition) {
+exports.filterSongs = function (songs, condition) {
 	const filterFunction = new Function("song", `return ${condition}`);
-	return songs.filter(filterFunction).map(song => song.id);
-}
+	return songs.filter(filterFunction);
+};
 
 function grabSong(songs) {
 	const index = Math.floor(Math.random() * songs.length);

@@ -3,8 +3,16 @@ const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const createQueuePopover = require("./queuePopover.js");
 const createDeletePopover = require("./deletePopover");
+const NamePlaylistPopover = require("./namePlaylistPopover.js");
+const playlistHelper = require("../../backend/playlistHelper.js");
 
-module.exports = function createAlgorithmPopover(screen, algorithmsTable, algorithm, searchBar) {
+module.exports = function createAlgorithmPopover(
+	mainScreen,
+	algorithmsTable,
+	algorithm,
+	searchBar
+) {
+	const screen = mainScreen.screen;
 	const algorithmBox = blessed.box({
 		parent: screen,
 		border: "line",
@@ -81,13 +89,16 @@ module.exports = function createAlgorithmPopover(screen, algorithmsTable, algori
 	});
 
 	let deleteBox;
-	let prevFocus = runAlgorithmBox;
+	let createPlaylistBox;
+	let prevSelected = runAlgorithmBox;
 	if (!algorithm.id.includes("trueRandom")) {
+		const shouldAddPlaylistBox = !playlistHelper.algorithmPlaylistPresent(algorithm.id);
+
 		deleteBox = blessed.box({
 			parent: algorithmBox,
 			content: "Delete",
 			top: -2,
-			left: 42,
+			left: shouldAddPlaylistBox ? 34 : 42,
 			height: 3,
 			width: 8,
 			tags: true,
@@ -113,10 +124,18 @@ module.exports = function createAlgorithmPopover(screen, algorithmsTable, algori
 		toolbarKeypress(
 			deleteBox,
 			() => {},
-			() => {},
+			() => {
+				if (createPlaylistBox) {
+					createPlaylistBox.focus();
+				}
+			},
 			() => {},
 			() => {
-				prevFocus.focus()
+				if (shouldAddPlaylistBox) {
+					closeBox.focus();
+				} else {
+					prevSelected.focus();
+				}
 			},
 			() => {
 				algorithmBox.destroy();
@@ -124,13 +143,55 @@ module.exports = function createAlgorithmPopover(screen, algorithmsTable, algori
 				screen.render();
 			}
 		);
+
+		if (shouldAddPlaylistBox) {
+			createPlaylistBox = blessed.box({
+				parent: algorithmBox,
+				content: "Create Playlist",
+				top: -2,
+				left: 43,
+				height: 3,
+				width: 17,
+				tags: true,
+				align: "center",
+				valign: "middle",
+				border: "line",
+				keys: true,
+				style: {
+					fg: "white",
+					bg: "default",
+					border: {
+						fg: "blue"
+					},
+					focus: {
+						bg: "blue",
+						border: {
+							fg: "white"
+						}
+					}
+				}
+			});
+
+			toolbarKeypress(
+				createPlaylistBox,
+				focusFunction(deleteBox),
+				() => {},
+				() => {},
+				focusFunction(runAlgorithmBox),
+				() => {
+					algorithmBox.destroy();
+					new NamePlaylistPopover(mainScreen, algorithmsTable, "Create Playlist", algorithm);
+					screen.render();
+				}
+			);
+		}
 	}
 
 	toolbarKeypress(
 		closeBox,
 		() => {},
 		() => {
-			prevFocus = runAlgorithmBox;
+			prevSelected = runAlgorithmBox;
 			runAlgorithmBox.focus();
 		},
 		() => {
@@ -148,12 +209,14 @@ module.exports = function createAlgorithmPopover(screen, algorithmsTable, algori
 	toolbarKeypress(
 		runAlgorithmBox,
 		() => {
-			prevFocus = closeBox;
+			prevSelected = closeBox;
 			closeBox.focus();
 		},
 		() => {},
 		() => {
-			if (deleteBox != null) {
+			if (createPlaylistBox != null) {
+				createPlaylistBox.focus();
+			} else if (deleteBox != null) {
 				deleteBox.focus();
 			}
 		},

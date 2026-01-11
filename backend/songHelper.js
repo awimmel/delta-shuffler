@@ -29,6 +29,11 @@ exports.writeSongs = function (songs, playlistSongs) {
 	fs.writeFile(playlistSongsPath, JSON.stringify(playlistSongs), err => {});
 };
 
+exports.addPlaylistSongs = function (newPlaylistSongs) {
+	const playlistSongs = JSON.parse(fs.readFileSync(playlistSongsPath, "utf8"));
+	fs.writeFile(playlistSongsPath, JSON.stringify([...playlistSongs, ...newPlaylistSongs]), err => {});
+};
+
 exports.displaySongs = function (songs, width) {
 	return songs
 		.sort((first, second) => new Date(second.addedAt) - new Date(first.addedAt))

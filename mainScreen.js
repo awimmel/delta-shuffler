@@ -17,7 +17,7 @@ class MainScreen {
 		});
 
 		this.menu = new Menu(this, this.searchBar);
-		this.playlistDetailsView = new PlaylistDetailsView(this.screen, this.searchBar);
+		this.playlistDetailsView = new PlaylistDetailsView(this, this.searchBar);
 		this.backButton = this.playlistDetailsView.playlistToolbar.backButton;
 		this.algorithmsTable = this.playlistDetailsView.algorithmsTable;
 		this.songsTable = this.playlistDetailsView.songsTable;
@@ -58,6 +58,7 @@ class MainScreen {
 		this.playlistTable.setData(playlists);
 		this.playlistDetailsView.hide();
 		this.playlistTable.show();
+		this.playlistTable.focus();
 	}
 }
 

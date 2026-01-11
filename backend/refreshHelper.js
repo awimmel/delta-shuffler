@@ -57,7 +57,7 @@ exports.refresh = async function (screen) {
 	}
 
 	playlistHelper.writePlaylists(playlists);
-	algorithmHelper.writeAlgorithms(algorithms);
+	algorithmHelper.writeAlgorithms(adjAlgs);
 	songHelper.writeSongs(songs, playlistSongs);
 
 	screen.setPlaylists(playlists);

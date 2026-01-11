@@ -12,7 +12,8 @@ const setTableKeypress = require("../utilities/setTableKeypress");
 const focusFunction = require("../utilities/focusElement.js");
 
 class PlaylistDetailsView {
-	constructor(parent, searchBar) {
+	constructor(mainScreen, searchBar) {
+		const parent = mainScreen.screen;
 		this.playlistDetailsView = blessed.box({
 			parent: parent,
 			top: 8,
@@ -48,7 +49,6 @@ class PlaylistDetailsView {
 			this.algorithmsTable,
 			this.songsTable
 		);
-		const backButton = this.playlistToolbar.backButton;
 
 		this.playlistToolbar.toolbar.on("keypress", (char, key) => {
 			if (key.name === "up") {
@@ -66,7 +66,7 @@ class PlaylistDetailsView {
 			this.algorithmsTable.table,
 			index => {
 				const algorithm = this.algorithmsTable.filteredAlgorithms[index - 1];
-				createAlgorithmPopover(parent, this.algorithmsTable, algorithm, searchBar);
+				createAlgorithmPopover(mainScreen, this.algorithmsTable, algorithm, searchBar);
 			},
 			focusFunction(this.playlistToolbar)
 		);
