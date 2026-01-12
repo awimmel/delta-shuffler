@@ -132,9 +132,9 @@ class NamePlaylistPopover {
 				focusText(this.nameBox);
 			},
 			() => {},
-			() => {
+			async () => {
 				this.popover.destroy();
-				const playlists = playlistHelper.createAlgorithmPlaylist(
+				const playlists = await playlistHelper.createAlgorithmPlaylist(
 					this.nameBox.getValue(),
 					this.algorithm
 				);

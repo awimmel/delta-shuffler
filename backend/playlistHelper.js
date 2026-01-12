@@ -1,9 +1,11 @@
+const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
 const algorithmHelper = require("./algorithmHelper.js");
+const authHelper = require("./authHelper.js");
 const songHelper = require("./songHelper.js");
-const { randomUUID } = require("crypto");
 
+const spotifyApi = "https://api.spotify.com/v1";
 const filePath = path.join(__dirname, "../database", "playlists.json");
 
 exports.readPlaylists = function () {
@@ -38,10 +40,40 @@ exports.getPlaylistName = function (playlistId) {
 	}
 };
 
-exports.createAlgorithmPlaylist = function (playlistName, algorithm) {
-	const playlistId = randomUUID();
+exports.createAlgorithmPlaylist = async function (playlistName, algorithm) {
+	const accessToken = await authHelper.getAccessToken();
+	const userId = await authHelper.getUserId();
+	const playlistResp = await axios.post(
+		`${spotifyApi}/users/${userId}/playlists`,
+		{
+			name: playlistName,
+			public: false
+		},
+		{
+			headers: { Authorization: `Bearer ${accessToken}` }
+		}
+	);
+
+	const playlistId = playlistResp.data.id;
 	const sourcePlaylistSongs = songHelper.readSongs(algorithm.playlistId);
 	const songs = algorithmHelper.filterSongs(sourcePlaylistSongs, algorithm.condition);
+
+	const spotSongs = songs.map(song => `spotify:track:${song.id}`);
+	let pos = 0;
+	for (const chunk of chunkSongs(spotSongs)) {
+		await axios.post(
+			`${spotifyApi}/playlists/${playlistId}/tracks`,
+			{
+				uris: chunk,
+				position: pos
+			},
+			{
+				headers: { Authorization: `Bearer ${accessToken}` }
+			}
+		);
+		pos += 100;
+	}
+
 	const playlistSongs = songs.map(song => ({
 		playlistId: playlistId,
 		songId: song.id,
@@ -63,6 +95,14 @@ exports.createAlgorithmPlaylist = function (playlistName, algorithm) {
 	this.writePlaylists(playlists);
 	return playlists;
 };
+
+function chunkSongs(songs) {
+	const chunks = [];
+	for (let chunk = 0; chunk < songs.length; chunk += 100) {
+		chunks.push(songs.slice(chunk, chunk + 100));
+	}
+	return chunks;
+}
 
 exports.algorithmPlaylistPresent = function (algorithmId) {
 	return JSON.parse(fs.readFileSync(filePath, "utf8")).some(

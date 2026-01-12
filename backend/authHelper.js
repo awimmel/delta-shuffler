@@ -101,3 +101,16 @@ exports.setTokens = function (accessToken, refreshToken) {
 		throw new Error(err);
 	});
 };
+
+exports.getUserId = function () {
+	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	return variables.userId;
+};
+
+exports.setUserId = function (newUserId) {
+	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	variables.userId = newUserId;
+	fs.writeFileSync(filePath, JSON.stringify(variables), err => {
+		throw new Error(err);
+	});
+};

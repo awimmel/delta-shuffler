@@ -218,7 +218,9 @@ async function beginAuth(clientId, clientSecret) {
 			scope:
 				"user-modify-playback-state user-read-currently-playing " +
 				"user-read-recently-played playlist-read-collaborative " +
-				"playlist-read-private user-read-playback-state user-library-read",
+				"playlist-read-private user-read-playback-state " +
+				"user-library-read playlist-modify-public playlist-modify-private " +
+				"user-read-private user-read-email",
 			show_dialog: true
 		});
 
