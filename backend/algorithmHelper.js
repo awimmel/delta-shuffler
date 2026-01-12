@@ -101,6 +101,13 @@ exports.filterSongs = function (songs, condition) {
 	return songs.filter(filterFunction);
 };
 
+exports.deleteAlgorithm = function (algorithmId) {
+	const filteredAlgorithms = JSON.parse(fs.readFileSync(filePath, "utf8")).filter(
+		algorithm => algorithm.id !== algorithmId
+	);
+	fs.writeFileSync(filePath, JSON.stringify(filteredAlgorithms), err => {});
+};
+
 function grabSong(songs) {
 	const index = Math.floor(Math.random() * songs.length);
 	return songs.splice(index, 1)[0];

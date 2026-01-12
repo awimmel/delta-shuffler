@@ -1,9 +1,9 @@
 const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
+const algorithmHelper = require("../../backend/algorithmHelper.js");
 
 const variables = require("../../database/variables.json");
-const primaryColor = variables.primaryColor;
 
 module.exports = function createDeletePopover(screen, algorithmsTable, algorithm) {
 	const deleteBox = blessed.box({
@@ -43,11 +43,10 @@ module.exports = function createDeletePopover(screen, algorithmsTable, algorithm
 			fg: "white",
 			bg: "default",
 			border: {
-				fg: primaryColor
+				fg: "red"
 			},
 			focus: {
-				fg: "black",
-				bg: primaryColor,
+				bg: "red",
 				border: {
 					fg: "white"
 				}
@@ -71,11 +70,10 @@ module.exports = function createDeletePopover(screen, algorithmsTable, algorithm
 			fg: "white",
 			bg: "default",
 			border: {
-				fg: primaryColor
+				fg: "blue"
 			},
 			focus: {
-				fg: "black",
-				bg: primaryColor,
+				bg: "blue",
 				border: {
 					fg: "white"
 				}
@@ -102,6 +100,8 @@ module.exports = function createDeletePopover(screen, algorithmsTable, algorithm
 		() => {},
 		() => {},
 		() => {
+			algorithmHelper.deleteAlgorithm(algorithm.id);
+			algorithmsTable.setData(algorithm.playlistId);
 			deleteBox.destroy();
 			algorithmsTable.focus();
 			screen.render();
