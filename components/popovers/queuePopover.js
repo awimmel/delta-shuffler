@@ -145,8 +145,9 @@ module.exports = function createQueuePopover(screen, algorithmsTable, algorithm,
 		() => {},
 		async () => {
 			const input = songCountInput.getValue() === "" ? "50" : songCountInput.getValue();
-			const queueValue = Number(input);
+			let queueValue = Number(input);
 			if (Number.isInteger(queueValue)) {
+				queueValue = queueValue > 50 ? 50 : queueValue;
 				await algorithmHelper.runAlgorithm(
 					algorithm,
 					songHelper.readSongs(algorithm.playlistId),
