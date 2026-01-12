@@ -29,12 +29,18 @@ exports.getCurrPlaying = async function () {
 	});
 
 	if (resp.data === "") {
-		return "";
+		return {
+			playing: false,
+			content: ""
+		};
 	}
 
 	const song = resp.data.item.name;
 	const artistStr = resp.data.item.artists.map(artist => artist.name).join(", ");
-	return song + " - " + artistStr;
+	return {
+		playing: resp.data.is_playing,
+		content: song + " - " + artistStr
+	};
 };
 
 exports.playSong = async function () {

@@ -48,7 +48,6 @@ class Menu {
 				bold: true
 			}
 		});
-		updateCurrPlaying(this.screen, this.currPlaying);
 
 		// Playback tools
 		this.backSong = blessed.box({
@@ -97,6 +96,8 @@ class Menu {
 				bold: true
 			}
 		});
+		updateCurrPlaying(this.screen, this.currPlaying, this.pauseSong);
+
 		this.skipSong = blessed.box({
 			parent: this.toolbar,
 			content: ">>",
@@ -213,7 +214,7 @@ class Menu {
 			async () => {
 				this.pauseSong.setContent(pause);
 				await playerHelper.prevSong();
-				await retrieveAndSetCurrPlaying(this.screen, this.currPlaying);
+				await retrieveAndSetCurrPlaying(this.screen, this.currPlaying, this.pauseSong);
 			}
 		);
 		toolbarKeypress(
@@ -259,7 +260,7 @@ class Menu {
 			async () => {
 				this.pauseSong.setContent(pause);
 				await playerHelper.skipSong();
-				await retrieveAndSetCurrPlaying(this.screen, this.currPlaying);
+				await retrieveAndSetCurrPlaying(this.screen, this.currPlaying, this.pauseSong);
 			}
 		);
 		toolbarKeypress(
@@ -312,7 +313,7 @@ class Menu {
 			() => process.exit(0)
 		);
 	}
-	
+
 	focus() {
 		this.prevFocus.focus();
 	}
@@ -320,15 +321,18 @@ class Menu {
 
 module.exports = Menu;
 
-async function updateCurrPlaying(screen, currPlaying) {
-	await retrieveAndSetCurrPlaying(screen, currPlaying);
+async function updateCurrPlaying(screen, currPlaying, pauseSong) {
+	await retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong);
 
 	setInterval(async () => {
-		await retrieveAndSetCurrPlaying(screen, currPlaying);
+		await retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong);
 	}, 15_000);
 }
 
-async function retrieveAndSetCurrPlaying(screen, currPlaying) {
-	currPlaying.setContent(await playerHelper.getCurrPlaying());
+async function retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong) {
+	const playingResult = await playerHelper.getCurrPlaying();
+	currPlaying.setContent(playingResult.content);
+	const pauseContent = playingResult.playing ? pause : play;
+	pauseSong.setContent(pauseContent);
 	screen.render();
 }
