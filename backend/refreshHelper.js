@@ -9,19 +9,28 @@ const elementLimit = 50;
 
 exports.refresh = async function (screen) {
 	const accessToken = await authHelper.getAccessToken();
-	const playlists = [
+	const allPlaylists = [
 		...(await getPlaylists(accessToken)),
 		{
 			id: "likedSongs",
 			name: "Liked Songs"
 		}
 	];
+	const playlistIds = allPlaylists.map(playlist => playlist.id);
+
+	const algPlaylists = playlistHelper
+		.getAlgorithmPlaylists()
+		.filter(algPlaylist => playlistIds.includes(algPlaylist.id));
+	const algPlaylistIds = algPlaylists.map(algPlaylist => algPlaylist.id);
+	const playlistsToQuery = allPlaylists.filter(playlist => !algPlaylistIds.includes(playlist.id));
+
 	let algorithms = algorithmHelper.readAllAlgorithms();
 
 	let songs = [];
 	let playlistSongs = [];
 	let adjAlgs = [];
-	for (const playlist of playlists) {
+	let algSongMap = new Map();
+	for (const playlist of playlistsToQuery) {
 		const trackUrl =
 			playlist.id === "likedSongs"
 				? `${spotifyApi}/me/tracks?offset=0&limit=50`
@@ -50,15 +59,20 @@ exports.refresh = async function (screen) {
 			adjAlgs.push(algorithmHelper.createDefaultAlgorithm(playlist));
 		} else {
 			for (const alg of matchingAlgs) {
-				alg.matchingSongs = algorithmHelper.filterSongs(currSongs, alg.condition).length;
+				const algSongs = algorithmHelper.filterSongs(currSongs, alg.condition);
+				algSongMap.set(alg.id, algSongs);
+				alg.matchingSongs = filteredSongs.length;
 			}
 			adjAlgs = [...adjAlgs, ...matchingAlgs];
 		}
 	}
 
+	const algPlaylistsUpdate = updateAlgorithmPlaylists(algPlaylists, algSongMap);
+
+	const playlists = [...playlistsToQuery, ...algPlaylistsUpdate.algPlaylists];
 	playlistHelper.writePlaylists(playlists);
 	algorithmHelper.writeAlgorithms(adjAlgs);
-	songHelper.writeSongs(songs, playlistSongs);
+	songHelper.writeSongs(songs, [...playlistSongs, ...algPlaylistsUpdate.algPlaylistSongs]);
 
 	screen.setPlaylists(playlists);
 };
@@ -126,4 +140,31 @@ async function getTracks(accessToken, initialUrl) {
 			addedAt: item.added_at,
 			addedRank: index + 1
 		}));
+}
+
+function updateAlgorithmPlaylists(algPlaylists, songsByPlaylistMap) {
+	let algPlaylistSongs = [];
+	for (const algPlaylist of algPlaylists) {
+		const songs = songsByPlaylistMap.get(algPlaylist.algorithmId);
+		algPlaylist.songCount = songs.length;
+
+		playlistHelper.setPlaylistItems(
+			algPlaylist.id,
+			songs.map(song => `spotify:track:${song.id}`)
+		);
+
+		const currPlaylistSongs = songs.map(song => {
+			return {
+				playlistId: algPlaylist.id,
+				songId: song.id,
+				addedAt: song.addedAt,
+				addedRank: song.addedRank
+			};
+		});
+		algPlaylistSongs = [...algPlaylistSongs, ...currPlaylistSongs];
+	}
+	return {
+		algPlaylists,
+		algPlaylistSongs
+	};
 }

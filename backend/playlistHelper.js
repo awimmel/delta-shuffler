@@ -96,6 +96,32 @@ exports.createAlgorithmPlaylist = async function (playlistName, algorithm) {
 	return playlists;
 };
 
+exports.algorithmPlaylistPresent = function (algorithmId) {
+	return JSON.parse(fs.readFileSync(filePath, "utf8")).some(
+		playlist => playlist.algorithmId === algorithmId
+	);
+};
+
+exports.getAlgorithmPlaylists = function () {
+	const playlists = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	return playlists.filter(playlist => playlist.algorithmId);
+};
+
+exports.setPlaylistItems = async function (playlistId, songs) {
+	const accessToken = await authHelper.getAccessToken();
+	for (const chunk of chunkSongs(songs)) {
+		await axios.put(
+			`${spotifyApi}/playlists/${playlistId}/tracks`,
+			{
+				uris: chunk
+			},
+			{
+				headers: { Authorization: `Bearer ${accessToken}` }
+			}
+		);
+	}
+};
+
 function chunkSongs(songs) {
 	const chunks = [];
 	for (let chunk = 0; chunk < songs.length; chunk += 100) {
@@ -103,9 +129,3 @@ function chunkSongs(songs) {
 	}
 	return chunks;
 }
-
-exports.algorithmPlaylistPresent = function (algorithmId) {
-	return JSON.parse(fs.readFileSync(filePath, "utf8")).some(
-		playlist => playlist.algorithmId === algorithmId
-	);
-};
