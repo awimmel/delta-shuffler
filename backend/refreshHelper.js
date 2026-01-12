@@ -61,7 +61,7 @@ exports.refresh = async function (screen) {
 			for (const alg of matchingAlgs) {
 				const algSongs = algorithmHelper.filterSongs(currSongs, alg.condition);
 				algSongMap.set(alg.id, algSongs);
-				alg.matchingSongs = filteredSongs.length;
+				alg.matchingSongs = algSongs.length;
 			}
 			adjAlgs = [...adjAlgs, ...matchingAlgs];
 		}
