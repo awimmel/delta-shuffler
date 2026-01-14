@@ -9,11 +9,13 @@ const elementLimit = 50;
 
 exports.refresh = async function (screen) {
 	const accessToken = await authHelper.getAccessToken();
+	const hiddenPlaylists = playlistHelper.getHiddenPlaylists();
 	const allPlaylists = [
-		...(await getPlaylists(accessToken)),
+		...(await getPlaylists(accessToken, hiddenPlaylists)),
 		{
 			id: "likedSongs",
-			name: "Liked Songs"
+			name: "Liked Songs",
+			visible: !hiddenPlaylists.includes("likedSongs")
 		}
 	];
 	const playlistIds = allPlaylists.map(playlist => playlist.id);
@@ -74,10 +76,10 @@ exports.refresh = async function (screen) {
 	algorithmHelper.writeAlgorithms(adjAlgs);
 	songHelper.writeSongs(songs, [...playlistSongs, ...algPlaylistsUpdate.algPlaylistSongs]);
 
-	screen.setPlaylists(playlists);
+	screen.setPlaylists(playlists.filter(playlist => playlist.visible));
 };
 
-async function getPlaylists(accessToken) {
+async function getPlaylists(accessToken, hiddenPlaylists) {
 	let offset = 0;
 	let resp = await requestPlaylistBatch(accessToken, offset);
 	let next = resp["data"]["next"];
@@ -91,7 +93,8 @@ async function getPlaylists(accessToken) {
 
 	const mappedPlayists = playlists.map(playlist => ({
 		id: playlist.id,
-		name: playlist.name
+		name: playlist.name,
+		visible: !hiddenPlaylists.includes(playlist.id)
 	}));
 	return playlistHelper.sortPlaylists(mappedPlayists);
 }

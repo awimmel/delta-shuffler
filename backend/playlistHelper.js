@@ -12,6 +12,10 @@ exports.readPlaylists = function () {
 	return JSON.parse(fs.readFileSync(filePath, "utf8"));
 };
 
+exports.readVisiblePlaylists = function () {
+	return this.readPlaylists().filter(playlist => playlist.visible);
+};
+
 exports.writePlaylists = function (playlists) {
 	fs.writeFile(filePath, JSON.stringify(playlists), err => {});
 };
@@ -120,6 +124,25 @@ exports.setPlaylistItems = async function (playlistId, songs) {
 			}
 		);
 	}
+};
+
+exports.hidePlaylists = function (playlistsToHide) {
+	const playlists = this.readPlaylists();
+	const adjPlaylists = playlists.map(playlist => {
+		if (playlistsToHide.includes(playlist.id)) {
+			playlist.visible = false;
+		} else {
+			playlist.visible = true;
+		}
+		return playlist;
+	});
+	this.writePlaylists(adjPlaylists);
+};
+
+exports.getHiddenPlaylists = function () {
+	return this.readPlaylists()
+		.filter(playlist => !playlist.visible)
+		.map(playlist => playlist.id);
 };
 
 function chunkSongs(songs) {

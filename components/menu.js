@@ -1,9 +1,7 @@
 const blessed = require("blessed");
 const createRefreshPopover = require("./popovers/refreshPopover.js");
 const createSettingsPopover = require("./popovers/settingsPopover.js");
-const focusText = require("../utilities/focusText.js");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
-const focusFunction = require("../utilities/focusElement.js");
 const playerHelper = require("../backend/playerHelper.js");
 const variables = require("../database/variables.json");
 const primaryColor = variables.primaryColor;
@@ -296,7 +294,7 @@ class Menu {
 				this.searchBar.focus();
 			},
 			() => {
-				createSettingsPopover(this.screen, this.settings);
+				createSettingsPopover(mainScreen, this.settings);
 			}
 		);
 		toolbarKeypress(

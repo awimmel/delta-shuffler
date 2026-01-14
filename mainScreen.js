@@ -23,7 +23,7 @@ class MainScreen {
 		this.songsTable = this.playlistDetailsView.songsTable;
 		this.playlistTable = new PlaylistTable(
 			this.screen,
-			playlistHelper.readPlaylists(),
+			playlistHelper.readVisiblePlaylists(),
 			this.searchBar,
 			this.playlistDetailsView
 		);
