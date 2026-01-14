@@ -7,7 +7,7 @@ const variables = require("../database/variables.json");
 const primaryColor = variables.primaryColor;
 
 class PlaylistToolbar {
-	constructor(parent, searchBar, algorithmsTable, songsTable) {
+	constructor(mainScreen, parent, searchBar, algorithmsTable, songsTable) {
 		this.searchBar = searchBar;
 		this.algorithmsTable = algorithmsTable;
 		this.songsTable = songsTable;
@@ -147,8 +147,8 @@ class PlaylistToolbar {
 			},
 			() => {
 				new NameAlgorithmPopover(
-					parent.parent,
-					this.backButton,
+					mainScreen,
+					this.createAlgorithm,
 					this.searchBar,
 					this.algorithmsTable
 				);

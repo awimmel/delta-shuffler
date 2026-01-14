@@ -119,6 +119,7 @@ class NamePlaylistPopover {
 			},
 			() => {},
 			() => {
+				this.mainScreen.setFocus(true);
 				this.popover.destroy();
 				this.closeElement.focus();
 				this.screen.render();
@@ -133,6 +134,7 @@ class NamePlaylistPopover {
 			},
 			() => {},
 			async () => {
+				this.mainScreen.setFocus(true);
 				this.popover.destroy();
 				const playlists = await playlistHelper.createAlgorithmPlaylist(
 					this.nameBox.getValue(),
@@ -144,6 +146,7 @@ class NamePlaylistPopover {
 		);
 		focusText(this.nameBox);
 
+		this.mainScreen.setFocus(false);
 		this.screen.render();
 	}
 }

@@ -8,8 +8,9 @@ const variables = require("../../database/variables.json");
 const primaryColor = variables.primaryColor;
 
 class NameAlgorithmPopover {
-	constructor(screen, backButton, searchBar, algorithmsTable) {
-		this.screen = screen;
+	constructor(mainScreen, createAlgorithmButton, searchBar, algorithmsTable) {
+		this.mainScreen = mainScreen;
+		this.screen = mainScreen.screen;
 		this.nameAlgBox = blessed.box({
 			parent: this.screen,
 			border: "line",
@@ -116,8 +117,9 @@ class NameAlgorithmPopover {
 			},
 			() => {},
 			() => {
+				mainScreen.setFocus(true);
 				this.nameAlgBox.destroy();
-				backButton.focus();
+				createAlgorithmButton.focus();
 				this.screen.render();
 			}
 		);
@@ -133,8 +135,8 @@ class NameAlgorithmPopover {
 				this.nameAlgBox.destroy();
 				new BuildAlgorithmPopover(
 					this.nameBox.value,
-					this.screen,
-					backButton,
+					this.mainScreen,
+					createAlgorithmButton,
 					searchBar,
 					algorithmsTable
 				);
@@ -142,6 +144,7 @@ class NameAlgorithmPopover {
 		);
 		focusText(this.nameBox);
 
+		this.mainScreen.setFocus(false);
 		this.screen.render();
 	}
 }

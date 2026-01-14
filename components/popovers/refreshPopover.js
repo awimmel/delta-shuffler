@@ -89,6 +89,7 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 		() => {},
 		() => {},
 		() => {
+			mainScreen.setFocus(true);
 			refreshBox.destroy();
 			refreshButton.focus();
 			mainScreen.screen.render();
@@ -105,6 +106,7 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 			await refreshHelper.refresh(mainScreen);
 			mainScreen.screen.lockKeys = false;
 
+			mainScreen.setFocus(true);
 			refreshBox.destroy();
 			refreshButton.focus();
 			mainScreen.screen.render();
@@ -112,6 +114,7 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 	);
 
 	noBox.focus();
+	mainScreen.setFocus(false);
 	mainScreen.screen.render();
 
 	return refreshBox;

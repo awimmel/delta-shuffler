@@ -44,6 +44,7 @@ class PlaylistDetailsView {
 		this.songsTable.hide();
 
 		this.playlistToolbar = new PlaylistToolbar(
+			mainScreen,
 			this.playlistDetailsView,
 			searchBar,
 			this.algorithmsTable,
@@ -73,7 +74,7 @@ class PlaylistDetailsView {
 		setTableKeypress(
 			this.songsTable.table,
 			index => {
-				createSongPopover(parent, this.songsTable, this.songsTable.filteredSongs[index - 1]);
+				createSongPopover(mainScreen, this.songsTable, this.songsTable.filteredSongs[index - 1]);
 			},
 			focusFunction(this.playlistToolbar)
 		);

@@ -4,7 +4,8 @@ const focusFunction = require("../../utilities/focusElement.js");
 const songHelper = require("../../backend/songHelper.js");
 const playerHelper = require("../../backend/playerHelper.js");
 
-module.exports = function createSongPopover(screen, songsTable, song) {
+module.exports = function createSongPopover(mainScreen, songsTable, song) {
+	const screen = mainScreen.screen;
 	const songBox = blessed.box({
 		parent: screen,
 		border: "line",
@@ -88,6 +89,7 @@ module.exports = function createSongPopover(screen, songsTable, song) {
 		() => {},
 		() => {},
 		() => {
+			mainScreen.setFocus(true);
 			songBox.destroy();
 			songsTable.focus();
 			screen.render();
@@ -102,11 +104,14 @@ module.exports = function createSongPopover(screen, songsTable, song) {
 		async () => {
 			await playerHelper.queueSongs([song.id]);
 
+			mainScreen.setFocus(true);
 			songBox.destroy();
 			songsTable.focus();
 			screen.render();
 		}
 	);
+
+	mainScreen.setFocus(false);
 
 	closeBox.focus();
 	screen.render();

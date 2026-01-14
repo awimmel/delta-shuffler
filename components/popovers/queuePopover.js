@@ -8,7 +8,8 @@ const songHelper = require("../../backend/songHelper.js");
 const variables = require("../../database/variables.json");
 const primaryColor = variables.primaryColor;
 
-module.exports = function createQueuePopover(screen, algorithmsTable, algorithm, searchBar) {
+module.exports = function createQueuePopover(mainScreen, algorithmsTable, algorithm) {
+	const screen = mainScreen.screen;
 	const queueBox = blessed.box({
 		parent: screen,
 		border: "line",
@@ -130,6 +131,7 @@ module.exports = function createQueuePopover(screen, algorithmsTable, algorithm,
 		},
 		() => {},
 		() => {
+			mainScreen.setFocus(true);
 			queueBox.destroy();
 			algorithmsTable.focus();
 			screen.render();
@@ -155,6 +157,7 @@ module.exports = function createQueuePopover(screen, algorithmsTable, algorithm,
 				);
 			}
 
+			mainScreen.setFocus(true);
 			queueBox.destroy();
 			algorithmsTable.focus();
 			screen.render();
@@ -162,6 +165,7 @@ module.exports = function createQueuePopover(screen, algorithmsTable, algorithm,
 	);
 
 	focusText(songCountInput);
+	mainScreen.setFocus(false);
 	screen.render();
 
 	return queueBox;

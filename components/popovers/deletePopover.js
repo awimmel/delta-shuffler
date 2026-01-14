@@ -5,7 +5,8 @@ const algorithmHelper = require("../../backend/algorithmHelper.js");
 
 const variables = require("../../database/variables.json");
 
-module.exports = function createDeletePopover(screen, algorithmsTable, algorithm) {
+module.exports = function createDeletePopover(mainScreen, algorithmsTable, algorithm) {
+	const screen = mainScreen.screen;
 	const deleteBox = blessed.box({
 		parent: screen,
 		border: "line",
@@ -88,6 +89,7 @@ module.exports = function createDeletePopover(screen, algorithmsTable, algorithm
 		() => {},
 		() => {},
 		() => {
+			mainScreen.setFocus(true);
 			deleteBox.destroy();
 			algorithmsTable.focus();
 			screen.render();
@@ -102,12 +104,14 @@ module.exports = function createDeletePopover(screen, algorithmsTable, algorithm
 		() => {
 			algorithmHelper.deleteAlgorithm(algorithm.id);
 			algorithmsTable.setData(algorithm.playlistId);
+			mainScreen.setFocus(true);
 			deleteBox.destroy();
 			algorithmsTable.focus();
 			screen.render();
 		}
 	);
 
+	mainScreen.setFocus(false);
 	noBox.focus();
 	screen.render();
 

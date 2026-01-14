@@ -107,6 +107,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 			playlistHelper.hidePlaylists(hiddenIds);
 
 			mainScreen.setPlaylists(playlists.filter((playlist, index) => !hidden.has(index)));
+			mainScreen.setFocus(true);
 
 			settingsBox.destroy();
 			settingsButton.focus();
@@ -138,6 +139,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		prevSelected = playlistList.selected;
 	});
 
+	mainScreen.setFocus(false);
 	playlistList.focus();
 	screen.render();
 

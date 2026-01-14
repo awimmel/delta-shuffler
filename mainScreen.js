@@ -8,13 +8,8 @@ const playlistHelper = require("./backend/playlistHelper.js");
 class MainScreen {
 	constructor(screen) {
 		this.screen = screen;
-
+		this.focus = true;
 		this.searchBar = new SearchBar(this.screen);
-		this.screen.on("keypress", (char, key) => {
-			if (char === "/") {
-				this.searchBar.focus();
-			}
-		});
 
 		this.menu = new Menu(this, this.searchBar);
 		this.playlistDetailsView = new PlaylistDetailsView(this, this.searchBar);
@@ -49,6 +44,8 @@ class MainScreen {
 			}
 		});
 
+		this.setShortcuts();
+
 		this.searchBar.setKeyPresses(this.playlistDetailsView, this.playlistTable, this.menu);
 		this.searchBar.focus();
 		this.screen.render();
@@ -59,6 +56,32 @@ class MainScreen {
 		this.playlistDetailsView.hide();
 		this.playlistTable.show();
 		this.playlistTable.focus();
+	}
+
+	setShortcuts() {
+		this.screen.on("keypress", (char, key) => {
+			if (this.focus) {
+				if (char === "/") {
+					this.searchBar.focus();
+				} else if (char === "<") {
+					this.menu.focusBack();
+				} else if (char === "+") {
+					this.menu.focusPause();
+				} else if (char === ">") {
+					this.menu.focusSkip();
+				}
+			}
+		});
+
+		this.screen.key("escape", () => {
+			if (this.focus) {
+				this.menu.focusClose();
+			}
+		});
+	}
+
+	setFocus(newFocus) {
+		this.focus = newFocus;
 	}
 }
 

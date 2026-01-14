@@ -139,7 +139,7 @@ module.exports = function createAlgorithmPopover(
 			},
 			() => {
 				algorithmBox.destroy();
-				createDeletePopover(screen, algorithmsTable, algorithm);
+				createDeletePopover(mainScreen, algorithmsTable, algorithm);
 				screen.render();
 			}
 		);
@@ -201,6 +201,8 @@ module.exports = function createAlgorithmPopover(
 		},
 		() => {},
 		() => {
+			mainScreen.setFocus(true);
+
 			algorithmBox.destroy();
 			algorithmsTable.focus();
 			screen.render();
@@ -223,10 +225,12 @@ module.exports = function createAlgorithmPopover(
 		() => {},
 		() => {
 			algorithmBox.destroy();
-			createQueuePopover(screen, algorithmsTable, algorithm, searchBar);
+			createQueuePopover(mainScreen, algorithmsTable, algorithm, searchBar);
 			screen.render();
 		}
 	);
+
+	mainScreen.setFocus(false);
 
 	runAlgorithmBox.focus();
 	screen.render();

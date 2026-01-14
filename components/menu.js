@@ -315,6 +315,22 @@ class Menu {
 	focus() {
 		this.prevFocus.focus();
 	}
+
+	focusBack() {
+		this.backSong.focus();
+	}
+
+	focusPause() {
+		this.pauseSong.focus();
+	}
+
+	focusSkip() {
+		this.skipSong.focus();
+	}
+
+	focusClose() {
+		this.close.focus();
+	}
 }
 
 module.exports = Menu;

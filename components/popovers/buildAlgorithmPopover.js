@@ -8,10 +8,11 @@ const variables = require("../../database/variables.json");
 const primaryColor = variables.primaryColor;
 
 class BuildAlgorithmPopover {
-	constructor(name, screen, backButton, searchBar, algorithmsTable) {
+	constructor(name, mainScreen, createAlgorithmButton, searchBar, algorithmsTable) {
 		this.name = name;
-		this.screen = screen;
-		this.backButton = backButton;
+		this.mainScreen = mainScreen;
+		this.screen = mainScreen.screen;
+		this.createAlgorithmButton = createAlgorithmButton;
 		this.searchBar = searchBar;
 		this.algorithmsTable = algorithmsTable;
 		this.buildAlgBox = blessed.box({
@@ -96,6 +97,8 @@ class BuildAlgorithmPopover {
 		);
 		setAddConditionNavigation(this);
 		setBottomBoxesNavigation(this);
+
+		this.mainScreen.setFocus(false);
 
 		this.conditionGroups[0].focus();
 		this.screen.render();
@@ -213,8 +216,9 @@ function setBottomBoxesNavigation(buildAlgPopover) {
 		focusFunction(elementAbove),
 		() => {},
 		() => {
+			buildAlgPopover.mainScreen.setFocus(true);
 			buildAlgPopover.buildAlgBox.destroy();
-			buildAlgPopover.backButton.focus();
+			buildAlgPopover.createAlgorithmButton.focus();
 			buildAlgPopover.screen.render();
 		}
 	);
@@ -233,8 +237,9 @@ function setBottomBoxesNavigation(buildAlgPopover) {
 			);
 			buildAlgPopover.algorithmsTable.addAlgorithm(newAlg);
 
+			buildAlgPopover.mainScreen.setFocus(true);
 			buildAlgPopover.buildAlgBox.destroy();
-			buildAlgPopover.backButton.focus();
+			buildAlgPopover.createAlgorithmButton.focus();
 			buildAlgPopover.screen.render();
 		}
 	);
