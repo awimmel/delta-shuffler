@@ -8,6 +8,8 @@ const spotifyApi = "https://api.spotify.com/v1";
 const elementLimit = 50;
 
 exports.refresh = async function (screen) {
+	authHelper.setRefreshing(true);
+
 	const accessToken = await authHelper.getAccessToken();
 	const hiddenPlaylists = playlistHelper.getHiddenPlaylists();
 	const allPlaylists = [
@@ -77,6 +79,8 @@ exports.refresh = async function (screen) {
 	songHelper.writeSongs(songs, [...playlistSongs, ...algPlaylistsUpdate.algPlaylistSongs]);
 
 	screen.setPlaylists(playlists.filter(playlist => playlist.visible));
+
+	authHelper.setRefreshing(false);
 };
 
 async function getPlaylists(accessToken, hiddenPlaylists) {

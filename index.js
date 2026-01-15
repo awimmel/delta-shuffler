@@ -19,8 +19,8 @@ if (!variables.clientId || !variables.clientSecret || !variables.accessToken || 
 	app.use(express.json());
 	app.use('/', routes);
 	app.use(express.static(path.join(__dirname, '/public')));
-	app.listen(3438);
-	new AuthScreen(screen);
+	const server = app.listen(3438);
+	new AuthScreen(screen, server);
 } else {
 	new MainScreen(screen);
 }

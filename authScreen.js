@@ -4,6 +4,8 @@ const querystring = require("querystring");
 const variables = require("./database/variables.json");
 const primaryColor = variables.primaryColor;
 
+const MainScreen = require("./mainScreen.js");
+
 const focusFunction = require("./utilities/focusElement.js");
 const focusText = require("./utilities/focusText.js");
 const toolbarKeypress = require("./utilities/toolbarKeypress.js");
@@ -11,8 +13,9 @@ const toolbarKeypress = require("./utilities/toolbarKeypress.js");
 const authHelper = require("./backend/authHelper.js");
 
 class AuthScreen {
-	constructor(screen) {
+	constructor(screen, server) {
 		this.screen = screen;
+		this.server = server;
 
 		this.title = blessed.text({
 			parent: this.screen,
@@ -32,7 +35,7 @@ class AuthScreen {
 			width: "50%",
 			height: 15
 		});
-		
+
 		this.authText = blessed.text({
 			parent: this.screen,
 			content:
@@ -189,16 +192,28 @@ class AuthScreen {
 				const clientId = this.clientIdBox.getValue();
 				const clientSecret = this.clientSecretBox.getValue();
 				if (clientId !== "" && clientSecret !== "") {
-					beginAuth(clientId, clientSecret);
+					beginAuth(clientId, clientSecret, this);
 				}
 			}
 		);
 
 		this.screen.render();
 	}
+
+	destroy() {
+		this.title.destroy();
+		this.authText.destroy();
+		this.clientIdBox.destroy();
+		this.clientSecretBox.destroy();
+		this.authBox.destroy();
+		this.exitBox.destroy();
+		this.server.close();
+
+		new MainScreen(this.screen);
+	}
 }
 
-async function beginAuth(clientId, clientSecret) {
+async function beginAuth(clientId, clientSecret, authScreen) {
 	authHelper.setClientId(clientId);
 	authHelper.setClientSecret(clientSecret);
 
@@ -227,6 +242,17 @@ async function beginAuth(clientId, clientSecret) {
 	//eventually fix import here to follow better practice
 	const open = (await import("open")).default;
 	await open(reqString);
+
+	pollForResp(authScreen);
+}
+
+async function pollForResp(authScreen) {
+	if (authHelper.getRefreshToken()) {
+		authScreen.destroy();
+		return;
+	}
+
+	setTimeout(() => pollForResp(authScreen), 750);
 }
 
 module.exports = AuthScreen;

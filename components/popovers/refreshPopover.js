@@ -3,9 +3,6 @@ const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const refreshHelper = require("../../backend/refreshHelper.js");
 
-const variables = require("../../database/variables.json");
-const primaryColor = variables.primaryColor;
-
 module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 	const refreshBox = blessed.box({
 		parent: mainScreen.screen,
@@ -102,11 +99,9 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 		() => {},
 		() => {},
 		async () => {
-			mainScreen.screen.lockKeys = true;
-			await refreshHelper.refresh(mainScreen);
-			mainScreen.screen.lockKeys = false;
+			refreshHelper.refresh(mainScreen);
+			mainScreen.createWaitingPopover();
 
-			mainScreen.setFocus(true);
 			refreshBox.destroy();
 			refreshButton.focus();
 			mainScreen.screen.render();

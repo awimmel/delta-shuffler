@@ -4,6 +4,8 @@ const PlaylistTable = require("./tables/playlistTable");
 const PlaylistDetailsView = require("./views/playlistDetailsView");
 
 const playlistHelper = require("./backend/playlistHelper.js");
+const refreshHelper = require("./backend/refreshHelper.js");
+const createWaitingPopover = require("./components/popovers/waitingPopover.js");
 
 class MainScreen {
 	constructor(screen) {
@@ -48,6 +50,12 @@ class MainScreen {
 
 		this.searchBar.setKeyPresses(this.playlistDetailsView, this.playlistTable, this.menu);
 		this.searchBar.focus();
+
+		if (playlistHelper.readPlaylists().length === 0) {
+			refreshHelper.refresh(this);
+			this.createWaitingPopover();
+		}
+
 		this.screen.render();
 	}
 
@@ -82,6 +90,10 @@ class MainScreen {
 
 	setFocus(newFocus) {
 		this.focus = newFocus;
+	}
+
+	createWaitingPopover() {
+		createWaitingPopover(this);
 	}
 }
 

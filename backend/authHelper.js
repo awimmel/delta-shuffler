@@ -114,3 +114,21 @@ exports.setUserId = function (newUserId) {
 		throw new Error(err);
 	});
 };
+
+exports.getRefreshToken = function () {
+	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	return variables.refreshToken;
+};
+
+exports.getRefreshing = function () {
+	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	return variables.refreshing;
+};
+
+exports.setRefreshing = function (newRefreshing) {
+	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	variables.refreshing = newRefreshing;
+	fs.writeFileSync(filePath, JSON.stringify(variables), err => {
+		throw new Error(err);
+	});
+};

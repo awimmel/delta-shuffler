@@ -51,10 +51,8 @@ exports.spotifyLogin = async (req, res) => {
 		}
 		authHelper.setUserId(userId);
 
-		res.send("Authorization successful. Restart app to begin shuffling.");
-		process.exit(0);
+		res.send("Authorization successful. Return to app to begin shuffling.");
 	} catch (error) {
 		res.send(error.message);
-		process.exit(0);
 	}
 };
