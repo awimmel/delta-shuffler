@@ -60,7 +60,9 @@ exports.createAlgorithmPlaylist = async function (playlistName, algorithm) {
 	);
 
 	const playlistId = playlistResp.data.id;
-	const sourcePlaylistSongs = songHelper.readSongs(algorithm.playlistId);
+	const sourcePlaylistSongs = songHelper
+		.readSongs(algorithm.playlistId)
+		.sort((first, second) => new Date(first.addedAt) - new Date(second.addedAt));
 	const songs = algorithmHelper.filterSongs(sourcePlaylistSongs, algorithm.condition);
 
 	const spotSongs = songs.map(song => `spotify:track:${song.id}`);

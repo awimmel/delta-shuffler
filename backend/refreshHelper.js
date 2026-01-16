@@ -63,7 +63,9 @@ exports.refresh = async function (screen) {
 			adjAlgs.push(algorithmHelper.createDefaultAlgorithm(playlist));
 		} else {
 			for (const alg of matchingAlgs) {
-				const algSongs = algorithmHelper.filterSongs(currSongs, alg.condition);
+				const algSongs = algorithmHelper
+					.filterSongs(currSongs, alg.condition)
+					.sort((first, second) => new Date(first.addedAt) - new Date(second.addedAt));
 				algSongMap.set(alg.id, algSongs);
 				alg.matchingSongs = algSongs.length;
 			}
