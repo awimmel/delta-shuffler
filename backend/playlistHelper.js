@@ -51,6 +51,7 @@ exports.createAlgorithmPlaylist = async function (playlistName, algorithm) {
 		`${spotifyApi}/users/${userId}/playlists`,
 		{
 			name: playlistName,
+			description: "",
 			public: false
 		},
 		{
