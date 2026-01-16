@@ -91,13 +91,14 @@ exports.createAlgorithmPlaylist = async function (playlistName, algorithm) {
 		id: playlistId,
 		name: playlistName,
 		algorithmId: algorithm.id,
-		songCount: songs.length
+		songCount: songs.length,
+		visible: true
 	};
 	algorithmHelper.createAndSaveDefaultAlgorithm(playlist);
 
 	const playlists = [...existingPlaylists, playlist];
 	this.writePlaylists(playlists);
-	return playlists;
+	return playlists.filter(playlist => playlist.visible);
 };
 
 exports.algorithmPlaylistPresent = function (algorithmId) {
