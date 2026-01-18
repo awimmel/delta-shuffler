@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Delta Shuffler</title>
+		<style>
+			* {
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				background-image: url("{{BACKGROUND}}");
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+			}
+
+			body::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.85);
+				z-index: 1;
+			}
+
+			.content {
+				position: relative;
+				z-index: 2;
+				color: white;
+				text-align: center;
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+
+			h1 {
+				font-size: 5rem;
+				margin-bottom: 1rem;
+                font-family: 'VT323', monospace;
+			}
+
+			p {
+				font-size: 2.5rem;
+			}
+            
+		</style>
+	</head>
+	<body>
+		<div class="content">
+			<h1>{{TITLE}}</h1>
+			<p>{{DESC}}</p>
+		</div>
+	</body>
+</html>
