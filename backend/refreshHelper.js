@@ -3,6 +3,7 @@ const authHelper = require("./authHelper.js");
 const algorithmHelper = require("./algorithmHelper.js");
 const playlistHelper = require("./playlistHelper.js");
 const songHelper = require("./songHelper.js");
+const orderSongs = require("../utilities/orderSongs.js");
 
 const spotifyApi = "https://api.spotify.com/v1";
 const elementLimit = 50;
@@ -63,9 +64,11 @@ exports.refresh = async function (screen) {
 			adjAlgs.push(algorithmHelper.createDefaultAlgorithm(playlist));
 		} else {
 			for (const alg of matchingAlgs) {
-				const algSongs = algorithmHelper
-					.filterSongs(currSongs, alg.condition)
-					.sort((first, second) => new Date(first.addedAt) - new Date(second.addedAt));
+				const algSongs = orderSongs(
+					algorithmHelper.filterSongs(currSongs, alg.condition),
+					"addedAt",
+					true
+				);
 				algSongMap.set(alg.id, algSongs);
 				alg.matchingSongs = algSongs.length;
 			}
@@ -131,24 +134,22 @@ async function getTracks(accessToken, initialUrl) {
 		items = items.concat(trackResp.data.items);
 	}
 
-	return items
-		.sort((first, second) => new Date(second.added_at) - new Date(first.added_at))
-		.map((item, index) => ({
-			id: item.track.id,
-			name: item.track.name,
-			artists: item.track.artists.map(artist => ({
-				id: artist.id,
-				name: artist.name
-			})),
-			album: {
-				id: item.track.album.id,
-				name: item.track.album.name,
-				release_date: item.track.album.release_date,
-				release_year: item.track.album.release_date.split("-")[0]
-			},
-			addedAt: item.added_at,
-			addedRank: index + 1
-		}));
+	return orderSongs(items, "added_at", false).map((item, index) => ({
+		id: item.track.id,
+		name: item.track.name,
+		artists: item.track.artists.map(artist => ({
+			id: artist.id,
+			name: artist.name
+		})),
+		album: {
+			id: item.track.album.id,
+			name: item.track.album.name,
+			release_date: item.track.album.release_date,
+			release_year: item.track.album.release_date.split("-")[0]
+		},
+		addedAt: item.added_at,
+		addedRank: index + 1
+	}));
 }
 
 function updateAlgorithmPlaylists(algPlaylists, songsByPlaylistMap) {

@@ -4,6 +4,7 @@ const fs = require("fs");
 const algorithmHelper = require("./algorithmHelper.js");
 const authHelper = require("./authHelper.js");
 const songHelper = require("./songHelper.js");
+const orderSongs = require("../utilities/orderSongs.js");
 
 const spotifyApi = "https://api.spotify.com/v1";
 const filePath = path.join(__dirname, "../database", "playlists.json");
@@ -60,9 +61,11 @@ exports.createAlgorithmPlaylist = async function (playlistName, algorithm) {
 	);
 
 	const playlistId = playlistResp.data.id;
-	const sourcePlaylistSongs = songHelper
-		.readSongs(algorithm.playlistId)
-		.sort((first, second) => new Date(first.addedAt) - new Date(second.addedAt));
+	const sourcePlaylistSongs = orderSongs(
+		songHelper.readSongs(algorithm.playlistId),
+		"addedAt",
+		true
+	);
 	const songs = algorithmHelper.filterSongs(sourcePlaylistSongs, algorithm.condition);
 
 	const spotSongs = songs.map(song => `spotify:track:${song.id}`);

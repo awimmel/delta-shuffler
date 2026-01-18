@@ -1,6 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const displayString = require("../utilities/displayString.js");
+const orderSongs = require("../utilities/orderSongs.js");
 
 const songsPath = path.join(__dirname, "../database", "songs.json");
 const playlistSongsPath = path.join(__dirname, "../database", "playlistSongs.json");
@@ -36,7 +37,7 @@ exports.addPlaylistSongs = function (newPlaylistSongs) {
 
 exports.displaySongs = function (songs, width) {
 	return songs
-		.sort((first, second) => new Date(second.addedAt) - new Date(first.addedAt))
+		.sort((first, second) => first.addedRank - second.addedRank)
 		.map(song => {
 			const artistString = this.getArtistString(song);
 			return [
