@@ -229,14 +229,16 @@ class Menu {
 			() => {
 				this.searchBar.focus();
 			},
-			() => {
+			async () => {
+				let modifPlayback = false;
 				if (this.pauseSong.getContent() === pause) {
-					playerHelper.pauseSong();
-					this.pauseSong.setContent(play);
-					this.screen.render();
+					modifPlayback = await playerHelper.pauseSong();
 				} else {
-					playerHelper.playSong();
-					this.pauseSong.setContent(pause);
+					modifPlayback = await playerHelper.playSong();
+				}
+
+				if (modifPlayback) {
+					this.pauseSong.setContent(this.pauseSong.getContent() === pause ? play : pause);
 					this.screen.render();
 				}
 			}

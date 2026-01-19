@@ -19,7 +19,10 @@ exports.queueSongs = async function (songs) {
 		);
 		counter++;
 	}
-	await Promise.all(queuePromises);
+
+	try {
+		await Promise.all(queuePromises);
+	} catch {}
 };
 
 exports.getCurrPlaying = async function () {
@@ -45,41 +48,55 @@ exports.getCurrPlaying = async function () {
 
 exports.playSong = async function () {
 	const accessToken = await authHelper.getAccessToken();
-	await axios.put(`${spotifyApi}/me/player/play`, null, {
-		headers: { Authorization: `Bearer ${accessToken}` }
-	});
+	try {
+		await axios.put(`${spotifyApi}/me/player/play`, null, {
+			headers: { Authorization: `Bearer ${accessToken}` }
+		});
+		return true;
+	} catch {
+		return false;
+	}
 };
 
 exports.pauseSong = async function () {
 	const accessToken = await authHelper.getAccessToken();
-	await axios.put(`${spotifyApi}/me/player/pause`, null, {
-		headers: { Authorization: `Bearer ${accessToken}` }
-	});
+	try {
+		await axios.put(`${spotifyApi}/me/player/pause`, null, {
+			headers: { Authorization: `Bearer ${accessToken}` }
+		});
+		return true;
+	} catch {
+		return false;
+	}
 };
 
 exports.skipSong = async function () {
 	const accessToken = await authHelper.getAccessToken();
-	await axios.post(`${spotifyApi}/me/player/next`, null, {
-		headers: { Authorization: `Bearer ${accessToken}` }
-	});
+	try {
+		await axios.post(`${spotifyApi}/me/player/next`, null, {
+			headers: { Authorization: `Bearer ${accessToken}` }
+		});
+	} catch {}
 };
 
 exports.prevSong = async function () {
 	const accessToken = await authHelper.getAccessToken();
-	const resp = await axios.get(`${spotifyApi}/me/player`, {
-		headers: { Authorization: `Bearer ${accessToken}` }
-	});
-	const rewind = resp.data.progress_ms >= 3000;
-	if (rewind) {
-		await axios.put(`${spotifyApi}/me/player/seek`, null, {
-			headers: { Authorization: `Bearer ${accessToken}` },
-			params: {
-				position_ms: 0
-			}
-		});
-	} else {
-		await axios.post(`${spotifyApi}/me/player/previous`, null, {
+	try {
+		const resp = await axios.get(`${spotifyApi}/me/player`, {
 			headers: { Authorization: `Bearer ${accessToken}` }
 		});
-	}
+		const rewind = resp.data.progress_ms >= 3000;
+		if (rewind) {
+			await axios.put(`${spotifyApi}/me/player/seek`, null, {
+				headers: { Authorization: `Bearer ${accessToken}` },
+				params: {
+					position_ms: 0
+				}
+			});
+		} else {
+			await axios.post(`${spotifyApi}/me/player/previous`, null, {
+				headers: { Authorization: `Bearer ${accessToken}` }
+			});
+		}
+	} catch {}
 };
