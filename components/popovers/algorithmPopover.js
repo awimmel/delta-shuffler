@@ -1,6 +1,7 @@
 const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
+const displayString = require("../../utilities/displayString.js");
 const createQueuePopover = require("./queuePopover.js");
 const createDeletePopover = require("./deletePopover");
 const NamePlaylistPopover = require("./namePlaylistPopover.js");
@@ -27,7 +28,7 @@ module.exports = function createAlgorithmPopover(
 
 	blessed.text({
 		parent: algorithmBox,
-		content: `Condition: ${algorithm.condition}\n\nMatching Songs: ${algorithm.matchingSongs}`,
+		content: `Condition: ${displayString(algorithm.condition, 149)}\n\nMatching Songs: ${algorithm.matchingSongs}`,
 		top: 1,
 		left: 2,
 		width: "100%-4",
