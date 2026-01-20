@@ -92,7 +92,9 @@ module.exports = function createAlgorithmPopover(
 	let createPlaylistBox;
 	let prevSelected = runAlgorithmBox;
 	if (!algorithm.id.includes("trueRandom")) {
-		const shouldAddPlaylistBox = !playlistHelper.algorithmPlaylistPresent(algorithm.id);
+		const shouldAddPlaylistBox =
+			!playlistHelper.algorithmPlaylistPresent(algorithm.id) &&
+			!playlistHelper.isAlgorithmPlaylist(algorithm.playlistId);
 
 		deleteBox = blessed.box({
 			parent: algorithmBox,

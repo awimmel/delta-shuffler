@@ -113,6 +113,12 @@ exports.algorithmPlaylistPresent = function (algorithmId) {
 	);
 };
 
+exports.isAlgorithmPlaylist = function (playlistId) {
+	return JSON.parse(fs.readFileSync(filePath, "utf8")).some(
+		playlist => playlist.id === playlistId && playlist.algorithmId
+	);
+};
+
 exports.getAlgorithmPlaylists = function () {
 	const playlists = JSON.parse(fs.readFileSync(filePath, "utf8"));
 	return playlists.filter(playlist => playlist.algorithmId);
