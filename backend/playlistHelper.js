@@ -68,21 +68,7 @@ exports.createAlgorithmPlaylist = async function (playlistName, algorithm) {
 	);
 	const songs = algorithmHelper.filterSongs(sourcePlaylistSongs, algorithm.condition);
 
-	const spotSongs = songs.map(song => `spotify:track:${song.id}`);
-	let pos = 0;
-	for (const chunk of chunkSongs(spotSongs)) {
-		await axios.post(
-			`${spotifyApi}/playlists/${playlistId}/tracks`,
-			{
-				uris: chunk,
-				position: pos
-			},
-			{
-				headers: { Authorization: `Bearer ${accessToken}` }
-			}
-		);
-		pos += 100;
-	}
+	await insertSongs(songs, playlistId, accessToken);
 
 	const playlistSongs = songs.map(song => ({
 		playlistId: playlistId,
@@ -126,17 +112,17 @@ exports.getAlgorithmPlaylists = function () {
 
 exports.setPlaylistItems = async function (playlistId, songs) {
 	const accessToken = await authHelper.getAccessToken();
-	for (const chunk of chunkSongs(songs)) {
-		await axios.put(
-			`${spotifyApi}/playlists/${playlistId}/tracks`,
-			{
-				uris: chunk
-			},
-			{
-				headers: { Authorization: `Bearer ${accessToken}` }
-			}
-		);
-	}
+	await axios.put(
+		`${spotifyApi}/playlists/${playlistId}/tracks`,
+		{
+			uris: []
+		},
+		{
+			headers: { Authorization: `Bearer ${accessToken}` }
+		}
+	);
+
+	await insertSongs(songs, playlistId, accessToken);
 };
 
 exports.hidePlaylists = function (playlistsToHide) {
@@ -157,6 +143,24 @@ exports.getHiddenPlaylists = function () {
 		.filter(playlist => !playlist.visible)
 		.map(playlist => playlist.id);
 };
+
+async function insertSongs(songs, playlistId, accessToken) {
+	const spotSongs = songs.map(song => `spotify:track:${song.id}`);
+	let pos = 0;
+	for (const chunk of chunkSongs(spotSongs)) {
+		await axios.post(
+			`${spotifyApi}/playlists/${playlistId}/tracks`,
+			{
+				uris: chunk,
+				position: pos
+			},
+			{
+				headers: { Authorization: `Bearer ${accessToken}` }
+			}
+		);
+		pos += 100;
+	}
+}
 
 function chunkSongs(songs) {
 	const chunks = [];

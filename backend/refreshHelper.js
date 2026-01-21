@@ -54,33 +54,20 @@ exports.refresh = async function (screen) {
 		playlistSongs = [...playlistSongs, ...currPlaylistSongs];
 
 		const filteredSongs = currSongs.map(song => {
-			const { added_at, added_rank, ...adjSong } = song;
+			const { addedAt, addedRank, ...adjSong } = song;
 			return adjSong;
 		});
 		songs = [...songs, ...filteredSongs];
 
 		const matchingAlgs = algorithmHelper.filterAlgorithms(playlist.id, algorithms);
-		if (matchingAlgs.length === 0) {
-			adjAlgs.push(algorithmHelper.createDefaultAlgorithm(playlist));
-		} else {
-			for (const alg of matchingAlgs) {
-				const algSongs = orderSongs(
-					algorithmHelper.filterSongs(currSongs, alg.condition),
-					"addedAt",
-					true
-				);
-				algSongMap.set(alg.id, algSongs);
-				alg.matchingSongs = algSongs.length;
-			}
-			adjAlgs = [...adjAlgs, ...matchingAlgs];
-		}
+		adjAlgs = [...adjAlgs, ...updateAlgorithms(matchingAlgs, playlist, currSongs, algSongMap)];
 	}
 
-	const algPlaylistsUpdate = updateAlgorithmPlaylists(algPlaylists, algSongMap);
+	const algPlaylistsUpdate = updateAlgorithmPlaylists(algPlaylists, algSongMap, algorithms);
 
 	const playlists = [...playlistsToQuery, ...algPlaylistsUpdate.algPlaylists];
 	playlistHelper.writePlaylists(playlists);
-	algorithmHelper.writeAlgorithms(adjAlgs);
+	algorithmHelper.writeAlgorithms([...adjAlgs, ...algPlaylistsUpdate.algPlaylistAlgs]);
 	songHelper.writeSongs(songs, [...playlistSongs, ...algPlaylistsUpdate.algPlaylistSongs]);
 
 	screen.setPlaylists(playlists.filter(playlist => playlist.visible));
@@ -152,29 +139,52 @@ async function getTracks(accessToken, initialUrl) {
 	}));
 }
 
-function updateAlgorithmPlaylists(algPlaylists, songsByPlaylistMap) {
+function updateAlgorithms(matchingAlgs, playlist, currSongs, algSongMap) {
+	let adjAlgs = [];
+	if (matchingAlgs.length === 0) {
+		adjAlgs.push(algorithmHelper.createDefaultAlgorithm(playlist));
+	} else {
+		for (const alg of matchingAlgs) {
+			const algSongs = orderSongs(
+				algorithmHelper.filterSongs(currSongs, alg.condition),
+				"addedAt",
+				true
+			);
+			alg.matchingSongs = algSongs.length;
+			algSongMap.set(alg.id, algSongs);
+			adjAlgs.push(alg);
+		}
+	}
+	return adjAlgs;
+}
+
+function updateAlgorithmPlaylists(algPlaylists, algSongMap, algorithms) {
 	let algPlaylistSongs = [];
+	let algPlaylistAlgs = [];
 	for (const algPlaylist of algPlaylists) {
-		const songs = songsByPlaylistMap.get(algPlaylist.algorithmId);
+		const songs = algSongMap.get(algPlaylist.algorithmId);
 		algPlaylist.songCount = songs.length;
 
-		playlistHelper.setPlaylistItems(
-			algPlaylist.id,
-			songs.map(song => `spotify:track:${song.id}`)
-		);
+		playlistHelper.setPlaylistItems(algPlaylist.id, songs);
 
-		const currPlaylistSongs = songs.map(song => {
+		const currPlaylistSongs = orderSongs(songs, "addedAt", false).map((song, index) => {
 			return {
 				playlistId: algPlaylist.id,
 				songId: song.id,
 				addedAt: song.addedAt,
-				addedRank: song.addedRank
+				addedRank: index + 1
 			};
 		});
 		algPlaylistSongs = [...algPlaylistSongs, ...currPlaylistSongs];
+		const matchingAlgs = algorithmHelper.filterAlgorithms(algPlaylist.id, algorithms);
+		algPlaylistAlgs = [
+			...algPlaylistAlgs,
+			...updateAlgorithms(matchingAlgs, algPlaylist, songs, algSongMap)
+		];
 	}
 	return {
 		algPlaylists,
-		algPlaylistSongs
+		algPlaylistSongs,
+		algPlaylistAlgs
 	};
 }
