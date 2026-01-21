@@ -70,11 +70,11 @@ exports.createAlgorithmPlaylist = async function (playlistName, algorithm) {
 
 	await insertSongs(songs, playlistId, accessToken);
 
-	const playlistSongs = songs.map(song => ({
+	const playlistSongs = orderSongs(songs, "addedAt", false).map((song, index) => ({
 		playlistId: playlistId,
 		songId: song.id,
 		addedAt: song.addedAt,
-		addedRank: song.addedRank
+		addedRank: index + 1
 	}));
 	songHelper.addPlaylistSongs(playlistSongs);
 
