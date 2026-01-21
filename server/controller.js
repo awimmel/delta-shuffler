@@ -2,6 +2,7 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 const authHelper = require("../backend/authHelper.js");
+const variables = require("../database/variables.json");
 
 const spotifyApi = "https://api.spotify.com/v1";
 const authFailed = "Authorization Failed!";
@@ -88,6 +89,7 @@ function generateHtmlPage(title, desc) {
 	let respPage = fs.readFileSync(pagePath, "utf8");
 	respPage = respPage.replace("{{TITLE}}", title);
 	respPage = respPage.replace("{{DESC}}", desc);
+	respPage = respPage.replace("\"{{TEXT_COLOR}}\"", variables.primaryColor);
 
 	const imageBuffer = fs.readFileSync(backgroundPath);
 	const base64Image = imageBuffer.toString("base64");
