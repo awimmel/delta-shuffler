@@ -77,6 +77,12 @@ class MainScreen {
 					this.menu.focusPause();
 				} else if (char === ">") {
 					this.menu.focusSkip();
+				} else if (char === "?") {
+					if (!this.playlistTable.hidden) {
+						this.playlistTable.focus();
+					} else {
+						this.playlistDetailsView.focus();
+					}
 				}
 			}
 		});
