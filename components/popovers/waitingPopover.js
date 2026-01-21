@@ -50,7 +50,7 @@ async function updateSpinner(mainScreen, waitingPopover, spinner) {
 			spinner.setContent("/");
 			break;
 		case "/":
-			spinner.setContent("——");
+			spinner.setContent("─");
 			break;
 		default:
 			spinner.setContent("\\");
