@@ -134,6 +134,8 @@ class ConditionGroup {
 		this.conditions.push(newCondition);
 		newCondition.focus();
 
+		this.joinDropdown.bringListToFront();
+
 		this.screen.render();
 	}
 
