@@ -33,9 +33,10 @@ exports.refresh = async function (screen) {
 	let algorithms = algorithmHelper.readAllAlgorithms();
 
 	let songs = [];
+	let songIds = [];
 	let playlistSongs = [];
 	let adjAlgs = [];
-	let algSongMap = new Map();
+	let playlistSongMap = new Map();
 	for (const playlist of playlistsToQuery) {
 		const trackUrl =
 			playlist.id === "likedSongs"
@@ -43,6 +44,10 @@ exports.refresh = async function (screen) {
 				: `${spotifyApi}/playlists/${playlist["id"]}/tracks?offset=0&limit=50`;
 		const currSongs = await getTracks(accessToken, trackUrl);
 		playlist.songCount = currSongs.length;
+		playlistSongMap.set(
+			playlist.id,
+			currSongs.map(song => song.id)
+		);
 
 		const currPlaylistSongs = currSongs.map(song => {
 			return {
@@ -54,14 +59,14 @@ exports.refresh = async function (screen) {
 		});
 		playlistSongs = [...playlistSongs, ...currPlaylistSongs];
 
-		const filteredSongs = currSongs.map(song => {
-			const { addedAt, addedRank, ...adjSong } = song;
-			return adjSong;
-		});
+		const filteredSongs = currSongs
+			.filter(song => !songIds.includes(song.id))
+			.map(song => {
+				const { addedAt, addedRank, ...adjSong } = song;
+				return adjSong;
+			});
 		songs = [...songs, ...filteredSongs];
-
-		const matchingAlgs = algorithmHelper.filterAlgorithms(playlist.id, algorithms);
-		adjAlgs = [...adjAlgs, ...updateAlgorithms(matchingAlgs, playlist, currSongs, algSongMap)];
+		songIds = [...songIds, ...filteredSongs.map(song => song.id)];
 	}
 
 	const artistGenres = await grabGenres(songs, accessToken);
@@ -70,7 +75,19 @@ exports.refresh = async function (screen) {
 			artist.genres = artistGenres.get(artist.id);
 		}
 		return song;
-	})
+	});
+
+	/*
+	 * Second iteration over playlistsToQuery. While obviously not ideal, this allows algorithms with genre conditions to be updated
+	 * without introducing duplicate calls to Spotify's API for artist genres
+	 */
+	let algSongMap = new Map();
+	for (const playlist of playlistsToQuery) {
+		const playlistSongIds = playlistSongMap.get(playlist.id);
+		const fullSongs = songsWithGenres.filter(song => playlistSongIds.includes(song.id));
+		const matchingAlgs = algorithmHelper.filterAlgorithms(playlist.id, algorithms);
+		adjAlgs = [...adjAlgs, ...updateAlgorithms(matchingAlgs, playlist, fullSongs, algSongMap)];
+	}
 
 	const algPlaylistsUpdate = updateAlgorithmPlaylists(algPlaylists, algSongMap, algorithms);
 
@@ -133,22 +150,24 @@ async function getTracks(accessToken, initialUrl) {
 		items = items.concat(trackResp.data.items);
 	}
 
-	return orderSongs(items, "added_at", false).map((item, index) => ({
-		id: item.track.id,
-		name: item.track.name,
-		artists: item.track.artists.map(artist => ({
-			id: artist.id,
-			name: artist.name
-		})),
-		album: {
-			id: item.track.album.id,
-			name: item.track.album.name,
-			release_date: item.track.album.release_date,
-			release_year: item.track.album.release_date.split("-")[0]
-		},
-		addedAt: item.added_at,
-		addedRank: index + 1
-	}));
+	const songs = Array.from(items.reduce((map, item) => map.set(item.track.id, item), new Map()).values());
+	return orderSongs(songs, "added_at", false)
+		.map((item, index) => ({
+			id: item.track.id,
+			name: item.track.name,
+			artists: item.track.artists.map(artist => ({
+				id: artist.id,
+				name: artist.name
+			})),
+			album: {
+				id: item.track.album.id,
+				name: item.track.album.name,
+				release_date: item.track.album.release_date,
+				release_year: item.track.album.release_date.split("-")[0]
+			},
+			addedAt: item.added_at,
+			addedRank: index + 1
+		}));
 }
 
 function updateAlgorithms(matchingAlgs, playlist, currSongs, algSongMap) {
