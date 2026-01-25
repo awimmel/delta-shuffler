@@ -16,10 +16,10 @@ module.exports = function createWaitingPopover(mainScreen) {
 
 	const spinner = blessed.text({
 		parent: waitingPopover,
-		content: "|",
+		content: "",
 		top: 1,
-		left: 7,
-		width: 3,
+		left: 5,
+		width: 7,
 		height: 1
 	});
 
@@ -42,18 +42,11 @@ async function updateSpinner(mainScreen, waitingPopover, spinner) {
 		return;
 	}
 
-	switch (spinner.getContent()) {
-		case "\\":
-			spinner.setContent("|");
-			break;
-		case "|":
-			spinner.setContent("/");
-			break;
-		case "/":
-			spinner.setContent("─");
-			break;
-		default:
-			spinner.setContent("\\");
+	if (spinner.getContent().length < 5) {
+		const newContent = spinner.getContent() + "•";
+		spinner.setContent(newContent);
+	} else {
+		spinner.setContent("");
 	}
 	mainScreen.screen.render();
 
