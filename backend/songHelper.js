@@ -1,7 +1,6 @@
 const path = require("path");
 const fs = require("fs");
 const displayString = require("../utilities/displayString.js");
-const orderSongs = require("../utilities/orderSongs.js");
 
 const songsPath = path.join(__dirname, "../database", "songs.json");
 const playlistSongsPath = path.join(__dirname, "../database", "playlistSongs.json");

@@ -26,12 +26,18 @@ class SongsTable {
 	}
 
 	filterData(query) {
-		this.filteredSongs = this.songs.filter(
-			song =>
+		this.filteredSongs = this.songs.filter(song => {
+			const genres = [
+				...new Set(song.artists.flatMap(artist => artist.genres.map(genre => genre.toLowerCase())))
+			];
+
+			return (
 				song.name.toLowerCase().includes(query) ||
 				songHelper.getArtistString(song).toLowerCase().includes(query) ||
-				song.album.name.toLowerCase().includes(query)
-		);
+				song.album.name.toLowerCase().includes(query) ||
+				genres.some(genre => genre.includes(query))
+			);
+		});
 		this.songCount = this.filteredSongs.length;
 		this.table.setData([columns, ...songHelper.displaySongs(this.filteredSongs, this.width)]);
 	}

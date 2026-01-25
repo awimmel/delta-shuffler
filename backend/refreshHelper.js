@@ -4,6 +4,7 @@ const algorithmHelper = require("./algorithmHelper.js");
 const playlistHelper = require("./playlistHelper.js");
 const songHelper = require("./songHelper.js");
 const orderSongs = require("../utilities/orderSongs.js");
+const chunkItems = require("../utilities/chunkItems.js");
 
 const spotifyApi = "https://api.spotify.com/v1";
 const elementLimit = 50;
@@ -63,12 +64,23 @@ exports.refresh = async function (screen) {
 		adjAlgs = [...adjAlgs, ...updateAlgorithms(matchingAlgs, playlist, currSongs, algSongMap)];
 	}
 
+	const artistGenres = await grabGenres(songs, accessToken);
+	const songsWithGenres = songs.map(song => {
+		for (const artist of song.artists) {
+			artist.genres = artistGenres.get(artist.id);
+		}
+		return song;
+	})
+
 	const algPlaylistsUpdate = updateAlgorithmPlaylists(algPlaylists, algSongMap, algorithms);
 
 	const playlists = [...playlistsToQuery, ...algPlaylistsUpdate.algPlaylists];
 	playlistHelper.writePlaylists(playlists);
 	algorithmHelper.writeAlgorithms([...adjAlgs, ...algPlaylistsUpdate.algPlaylistAlgs]);
-	songHelper.writeSongs(songs, [...playlistSongs, ...algPlaylistsUpdate.algPlaylistSongs]);
+	songHelper.writeSongs(songsWithGenres, [
+		...playlistSongs,
+		...algPlaylistsUpdate.algPlaylistSongs
+	]);
 
 	screen.setPlaylists(playlists.filter(playlist => playlist.visible));
 
@@ -156,6 +168,26 @@ function updateAlgorithms(matchingAlgs, playlist, currSongs, algSongMap) {
 		}
 	}
 	return adjAlgs;
+}
+
+async function grabGenres(songs, accessToken) {
+	const artists = [...new Set(songs.flatMap(song => song.artists.map(artist => artist.id)))];
+	const artistGenreMap = new Map();
+	for (const artistChunk of chunkItems(artists, 50)) {
+		const artistResp = await axios.get(`${spotifyApi}/artists`, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			},
+			params: {
+				ids: artistChunk.join(",")
+			}
+		});
+
+		for (const artist of artistResp.data.artists) {
+			artistGenreMap.set(artist.id, artist.genres);
+		}
+	}
+	return artistGenreMap;
 }
 
 function updateAlgorithmPlaylists(algPlaylists, algSongMap, algorithms) {

@@ -19,7 +19,7 @@ class Condition {
 
 		this.operatorDropdown = new Dropdown(
 			screen,
-			["IN", "NOT IN"],
+			["<", "<=", "=", ">=", ">"],
 			conditionGroup.conditionBox,
 			topOffset,
 			9,
@@ -28,7 +28,7 @@ class Condition {
 		);
 		this.typeDropdown = new TypeDropdown(
 			screen,
-			["Song", "Artist", "Album", "Year", "Added"],
+			["Added", "Album", "Artist", "Genre", "Song", "Year"],
 			conditionGroup.conditionBox,
 			topOffset,
 			0,
@@ -367,26 +367,33 @@ function generateConditions(operatorStr, type, values) {
 	const operator = getOperator(operatorStr);
 	var conditions;
 	switch (type) {
-		case "Song":
-			conditions = values.map(value => `song.name ${operator} '${value}'`);
-			break;
-		case "Artist":
-			conditions = values.map(
-				value => `song.artists.some(artist => artist.name ${operator} '${value}')`
-			);
-			break;
-		case "Album":
-			conditions = values.map(value => `song.album.name ${operator} '${value}'`);
-			break;
-		case "Year":
-			conditions = values.map(value => `song.album.release_year ${operator} '${value}'`);
-			break;
 		case "Added":
 			conditions = values.map(value => {
 				const numericValue = Number(value);
 				const formattedValue = Number.isInteger(numericValue) ? numericValue : `'${value}'`;
 				return `song.addedRank ${operator} ${formattedValue}`;
 			});
+			break;
+		case "Album":
+			conditions = values.map(value => `song.album.name ${operator} '${value}'`);
+			break;
+		case "Artist":
+			conditions = values.map(
+				value => `song.artists.some(artist => artist.name ${operator} '${value}')`
+			);
+			break;
+		case "Genre":
+			const negation = operator === "===" ? "" : "!";
+			conditions = values.map(
+				value =>
+					`${negation}song.artists.some(artist => artist.genres.some(genre => genre === '${value}'.toLowerCase()))`
+			);
+			break;
+		case "Song":
+			conditions = values.map(value => `song.name ${operator} '${value}'`);
+			break;
+		case "Year":
+			conditions = values.map(value => `song.album.release_year ${operator} '${value}'`);
 			break;
 	}
 

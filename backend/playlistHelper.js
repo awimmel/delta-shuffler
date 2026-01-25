@@ -5,6 +5,7 @@ const algorithmHelper = require("./algorithmHelper.js");
 const authHelper = require("./authHelper.js");
 const songHelper = require("./songHelper.js");
 const orderSongs = require("../utilities/orderSongs.js");
+const chunkItems = require("../utilities/chunkItems.js");
 
 const spotifyApi = "https://api.spotify.com/v1";
 const filePath = path.join(__dirname, "../database", "playlists.json");
@@ -147,7 +148,7 @@ exports.getHiddenPlaylists = function () {
 async function insertSongs(songs, playlistId, accessToken) {
 	const spotSongs = songs.map(song => `spotify:track:${song.id}`);
 	let pos = 0;
-	for (const chunk of chunkSongs(spotSongs)) {
+	for (const chunk of chunkItems(spotSongs, 100)) {
 		await axios.post(
 			`${spotifyApi}/playlists/${playlistId}/tracks`,
 			{
@@ -160,12 +161,4 @@ async function insertSongs(songs, playlistId, accessToken) {
 		);
 		pos += 100;
 	}
-}
-
-function chunkSongs(songs) {
-	const chunks = [];
-	for (let chunk = 0; chunk < songs.length; chunk += 100) {
-		chunks.push(songs.slice(chunk, chunk + 100));
-	}
-	return chunks;
 }
