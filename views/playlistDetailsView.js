@@ -116,6 +116,26 @@ class PlaylistDetailsView {
 	getDataCount() {
 		return this.getActiveTable().getDataCount();
 	}
+
+	showAlgorithmsTable() {
+		if (this.algorithmsTable.hidden) {
+			this.songsTable.hide();
+			this.algorithmsTable.show();
+			this.algorithmsTable.focus();
+		} else {
+			this.algorithmsTable.focus();
+		}
+	}
+
+	showSongsTable() {
+		if (this.songsTable.hidden) {
+			this.algorithmsTable.hide();
+			this.songsTable.show();
+			this.songsTable.focus();
+		} else {
+			this.songsTable.focus();
+		}
+	}
 }
 
 module.exports = PlaylistDetailsView;

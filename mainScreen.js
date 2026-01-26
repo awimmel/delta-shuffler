@@ -83,6 +83,14 @@ class MainScreen {
 					} else {
 						this.playlistDetailsView.focus();
 					}
+				} else if (char === "s") {
+					if (this.playlistTable.hidden) {
+						this.playlistDetailsView.showSongsTable();
+					}
+				} else if (char === "a") {
+					if (this.playlistTable.hidden) {
+						this.playlistDetailsView.showAlgorithmsTable();
+					}
 				}
 			}
 		});
