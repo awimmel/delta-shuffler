@@ -231,7 +231,7 @@ function setTypicalKeypresses(
 		},
 		veritcalNavigationFunction(top, ConditionElements.VALUE),
 		veritcalNavigationFunction(bottom, ConditionElements.VALUE),
-		() => {}
+		focusFunction(addButton)
 	);
 	if (addButton != null) {
 		toolbarKeypress(

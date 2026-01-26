@@ -106,7 +106,7 @@ class NameAlgorithmPopover {
 			() => {},
 			() => {},
 			focusFunction(this.closeBox),
-			focusFunction(this.saveBox)
+			focusFunction(this.nextBox)
 		);
 		toolbarKeypress(
 			this.closeBox,
