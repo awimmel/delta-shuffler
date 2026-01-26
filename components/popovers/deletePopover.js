@@ -2,8 +2,7 @@ const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const algorithmHelper = require("../../backend/algorithmHelper.js");
-
-const variables = require("../../database/variables.json");
+const playlistHelper = require("../../backend/playlistHelper.js");
 
 module.exports = function createDeletePopover(mainScreen, algorithmsTable, algorithm) {
 	const screen = mainScreen.screen;
@@ -103,6 +102,7 @@ module.exports = function createDeletePopover(mainScreen, algorithmsTable, algor
 		() => {},
 		() => {
 			algorithmHelper.deleteAlgorithm(algorithm.id);
+			playlistHelper.removeAlgorithmTie(algorithm.id);
 			algorithmsTable.setData(algorithm.playlistId);
 			mainScreen.setFocus(true);
 			deleteBox.destroy();

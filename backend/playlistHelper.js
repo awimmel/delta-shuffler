@@ -145,6 +145,17 @@ exports.getHiddenPlaylists = function () {
 		.map(playlist => playlist.id);
 };
 
+exports.removeAlgorithmTie = function (algorithmId) {
+	const playlists = this.readPlaylists();
+	const modifiedPlaylists = playlists.map(playlist => {
+		if (playlist.algorithmId === algorithmId) {
+			delete playlist.algorithmId;
+		}
+		return playlist;
+	});
+	this.writePlaylists(modifiedPlaylists);
+};
+
 async function insertSongs(songs, playlistId, accessToken) {
 	const spotSongs = songs.map(song => `spotify:track:${song.id}`);
 	let pos = 0;
