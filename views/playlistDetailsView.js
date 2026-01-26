@@ -16,9 +16,9 @@ class PlaylistDetailsView {
 		const parent = mainScreen.screen;
 		this.playlistDetailsView = blessed.box({
 			parent: parent,
-			top: 8,
+			top: 11,
 			left: 0,
-			height: "100%-8",
+			height: "100%-11",
 			width: "100%",
 			keys: true,
 			style: {

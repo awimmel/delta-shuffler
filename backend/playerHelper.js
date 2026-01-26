@@ -42,7 +42,9 @@ exports.getCurrPlaying = async function () {
 	const artistStr = resp.data.item.artists.map(artist => artist.name).join(", ");
 	return {
 		playing: resp.data.is_playing,
-		content: song + " - " + artistStr
+		content: song + " - " + artistStr,
+		spot: resp.data.progress_ms,
+		duration: resp.data.item.duration_ms
 	};
 };
 

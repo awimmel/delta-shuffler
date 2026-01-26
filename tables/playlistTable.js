@@ -12,7 +12,7 @@ class PlaylistTable {
 		this.playlistCount = this.playlists.length;
 		this.playlistTable = createTable(
 			mainScreen,
-			11,
+			14,
 			columns,
 			playlistHelper.displayPlaylists(this.playlists),
 			this.playlists

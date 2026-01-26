@@ -4,6 +4,7 @@ const createSettingsPopover = require("./popovers/settingsPopover.js");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const playerHelper = require("../backend/playerHelper.js");
 const variables = require("../database/variables.json");
+const SongProgressBar = require("../components/songProgressBar.js");
 const primaryColor = variables.primaryColor;
 
 const pause = "||";
@@ -19,7 +20,7 @@ class Menu {
 			parent: this.screen,
 			top: 0,
 			left: 0,
-			height: 5,
+			height: 8,
 			border: "line",
 			style: {
 				bold: true,
@@ -73,7 +74,7 @@ class Menu {
 		});
 		this.pauseSong = blessed.box({
 			parent: this.toolbar,
-			content: pause,
+			content: play,
 			top: 0,
 			left: "50%",
 			height: 3,
@@ -94,7 +95,6 @@ class Menu {
 				bold: true
 			}
 		});
-		updateCurrPlaying(this.screen, this.currPlaying, this.pauseSong);
 
 		this.skipSong = blessed.box({
 			parent: this.toolbar,
@@ -196,6 +196,9 @@ class Menu {
 			}
 		});
 
+		this.songProgressBar = new SongProgressBar(this.toolbar, this.screen);
+		updateCurrPlaying(this.screen, this.currPlaying, this.pauseSong, this.songProgressBar);
+
 		this.prevFocus = this.pauseSong;
 
 		toolbarKeypress(
@@ -212,7 +215,18 @@ class Menu {
 			async () => {
 				this.pauseSong.setContent(pause);
 				await playerHelper.prevSong();
-				await retrieveAndSetCurrPlaying(this.screen, this.currPlaying, this.pauseSong);
+
+				// Give Spotify a tenth of a second to account for the request
+				setTimeout(
+					() =>
+						retrieveAndSetCurrPlaying(
+							this.screen,
+							this.currPlaying,
+							this.pauseSong,
+							this.songProgressBar
+						),
+					100
+				);
 			}
 		);
 		toolbarKeypress(
@@ -241,6 +255,8 @@ class Menu {
 					this.pauseSong.setContent(this.pauseSong.getContent() === pause ? play : pause);
 					this.screen.render();
 				}
+
+				this.songProgressBar.pause();
 			}
 		);
 		toolbarKeypress(
@@ -260,7 +276,18 @@ class Menu {
 			async () => {
 				this.pauseSong.setContent(pause);
 				await playerHelper.skipSong();
-				await retrieveAndSetCurrPlaying(this.screen, this.currPlaying, this.pauseSong);
+
+				// Give Spotify a tenth of a second to account for the request
+				setTimeout(
+					() =>
+						retrieveAndSetCurrPlaying(
+							this.screen,
+							this.currPlaying,
+							this.pauseSong,
+							this.songProgressBar
+						),
+					100
+				);
 			}
 		);
 		toolbarKeypress(
@@ -337,18 +364,26 @@ class Menu {
 
 module.exports = Menu;
 
-async function updateCurrPlaying(screen, currPlaying, pauseSong) {
-	await retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong);
+async function updateCurrPlaying(screen, currPlaying, pauseSong, songProgressBar) {
+	await retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong, songProgressBar);
 
 	setInterval(async () => {
-		await retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong);
-	}, 15_000);
+		await retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong, songProgressBar);
+	}, 5_000);
 }
 
-async function retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong) {
+async function retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong, songProgressBar) {
 	const playingResult = await playerHelper.getCurrPlaying();
 	currPlaying.setContent(playingResult.content);
 	const pauseContent = playingResult.playing ? pause : play;
 	pauseSong.setContent(pauseContent);
+
+	if (playingResult.content && playingResult.playing && playingResult.spot && playingResult.duration) {
+		songProgressBar.setProgress(playingResult.spot, playingResult.duration);
+	} else if (playingResult.content && !playingResult.playing) {
+		songProgressBar.pause();
+	} else {
+		songProgressBar.hide();
+	}
 	screen.render();
 }

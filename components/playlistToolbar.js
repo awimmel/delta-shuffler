@@ -1,6 +1,5 @@
 const blessed = require("blessed");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
-const focusFunction = require("../utilities/focusElement.js");
 const NameAlgorithmPopover = require("../components/popovers/nameAlgorithmPopover.js");
 const playlistHelper = require("../backend/playlistHelper.js");
 const variables = require("../database/variables.json");
