@@ -18,8 +18,8 @@ module.exports = function createWaitingPopover(mainScreen) {
 		parent: waitingPopover,
 		content: "",
 		top: 1,
-		left: 5,
-		width: 7,
+		left: "center",
+		width: 3,
 		height: 1
 	});
 
@@ -42,13 +42,41 @@ async function updateSpinner(mainScreen, waitingPopover, spinner) {
 		return;
 	}
 
-	if (spinner.getContent().length < 5) {
-		const newContent = spinner.getContent() + "•";
-		spinner.setContent(newContent);
-	} else {
-		spinner.setContent("");
+	switch (spinner.getContent()) {
+		case "⠋":
+			spinner.setContent("⠙");
+			break;
+		case "⠙":
+			spinner.setContent("⠹");
+			break;
+		case "⠹":
+			spinner.setContent("⠸");
+			break;
+		case "⠸":
+			spinner.setContent("⠼");
+			break;
+		case "⠼":
+			spinner.setContent("⠴");
+			break;
+		case "⠴":
+			spinner.setContent("⠦");
+			break;
+		case "⠦":
+			spinner.setContent("⠧");
+			break;
+		case "⠧":
+			spinner.setContent("⠇");
+			break;
+		case "⠇":
+			spinner.setContent("⠏");
+			break;
+		case "⠏":
+			spinner.setContent("⠋");
+			break;
+		default:
+			spinner.setContent("⠙");
 	}
 	mainScreen.screen.render();
 
-	setTimeout(() => updateSpinner(mainScreen, waitingPopover, spinner), 750);
+	setTimeout(() => updateSpinner(mainScreen, waitingPopover, spinner), 75);
 }
