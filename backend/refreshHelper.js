@@ -12,10 +12,9 @@ const elementLimit = 50;
 exports.refresh = async function (screen) {
 	authHelper.setRefreshing(true);
 
-	const accessToken = await authHelper.getAccessToken();
 	const hiddenPlaylists = playlistHelper.getHiddenPlaylists();
 	const allPlaylists = [
-		...(await getPlaylists(accessToken, hiddenPlaylists)),
+		...(await getPlaylists(hiddenPlaylists)),
 		{
 			id: "likedSongs",
 			name: "Liked Songs",
@@ -42,7 +41,7 @@ exports.refresh = async function (screen) {
 			playlist.id === "likedSongs"
 				? `${spotifyApi}/me/tracks?offset=0&limit=50`
 				: `${spotifyApi}/playlists/${playlist["id"]}/tracks?offset=0&limit=50`;
-		const currSongs = await getTracks(accessToken, trackUrl);
+		const currSongs = await getTracks(trackUrl);
 		playlist.songCount = currSongs.length;
 		playlistSongMap.set(
 			playlist.id,
@@ -69,7 +68,7 @@ exports.refresh = async function (screen) {
 		songIds = [...songIds, ...filteredSongs.map(song => song.id)];
 	}
 
-	const artistGenres = await grabGenres(songs, accessToken);
+	const artistGenres = await grabGenres(songs);
 	const songsWithGenres = songs.map(song => {
 		for (const artist of song.artists) {
 			artist.genres = artistGenres.get(artist.id);
@@ -104,14 +103,14 @@ exports.refresh = async function (screen) {
 	authHelper.setRefreshing(false);
 };
 
-async function getPlaylists(accessToken, hiddenPlaylists) {
+async function getPlaylists(hiddenPlaylists) {
 	let offset = 0;
-	let resp = await requestPlaylistBatch(accessToken, offset);
+	let resp = await requestPlaylistBatch(offset);
 	let next = resp["data"]["next"];
 	const playlists = resp["data"]["items"];
 	while (next !== null) {
 		offset += elementLimit;
-		resp = await requestPlaylistBatch(accessToken, offset);
+		resp = await requestPlaylistBatch(offset);
 		playlists.push.apply(playlists, resp["data"]["items"]);
 		next = resp["data"]["next"];
 	}
@@ -124,19 +123,19 @@ async function getPlaylists(accessToken, hiddenPlaylists) {
 	return playlistHelper.sortPlaylists(mappedPlayists);
 }
 
-function requestPlaylistBatch(accessToken, offset) {
+async function requestPlaylistBatch(offset) {
 	return axios.get(`${spotifyApi}/me/playlists`, {
 		params: {
 			limit: elementLimit,
 			offset
 		},
 		headers: {
-			Authorization: `Bearer ${accessToken}`
+			Authorization: `Bearer ${await authHelper.getAccessToken()}`
 		}
 	});
 }
 
-async function getTracks(accessToken, initialUrl) {
+async function getTracks(initialUrl) {
 	let trackResp = {
 		data: { next: initialUrl }
 	};
@@ -144,7 +143,7 @@ async function getTracks(accessToken, initialUrl) {
 	while (trackResp?.data?.next) {
 		trackResp = await axios.get(trackResp.data.next, {
 			headers: {
-				Authorization: `Bearer ${accessToken}`
+				Authorization: `Bearer ${await authHelper.getAccessToken()}`
 			}
 		});
 		items = items.concat(trackResp.data.items);
@@ -189,13 +188,13 @@ function updateAlgorithms(matchingAlgs, playlist, currSongs, algSongMap) {
 	return adjAlgs;
 }
 
-async function grabGenres(songs, accessToken) {
+async function grabGenres(songs) {
 	const artists = [...new Set(songs.flatMap(song => song.artists.map(artist => artist.id)))];
 	const artistGenreMap = new Map();
 	for (const artistChunk of chunkItems(artists, 50)) {
 		const artistResp = await axios.get(`${spotifyApi}/artists`, {
 			headers: {
-				Authorization: `Bearer ${accessToken}`
+				Authorization: `Bearer ${await authHelper.getAccessToken()}`
 			},
 			params: {
 				ids: artistChunk.join(",")
