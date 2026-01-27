@@ -1,6 +1,8 @@
 const blessed = require("blessed");
 const authHelper = require("../../backend/authHelper.js");
 
+const variables = require("../../database/variables.json");
+
 module.exports = function createWaitingPopover(mainScreen) {
 	const waitingPopover = blessed.box({
 		parent: mainScreen.screen,
@@ -20,7 +22,10 @@ module.exports = function createWaitingPopover(mainScreen) {
 		top: 1,
 		left: "center",
 		width: 3,
-		height: 1
+		height: 1,
+		style: {
+			fg: variables.primaryColor
+		}
 	});
 
 	updateSpinner(mainScreen, waitingPopover, spinner);
