@@ -38,11 +38,12 @@ exports.getCurrPlaying = async function () {
 		};
 	}
 
-	const song = resp.data.item.name;
+	const song = resp.data.item;
 	const artistStr = resp.data.item.artists.map(artist => artist.name).join(", ");
 	return {
 		playing: resp.data.is_playing,
-		content: song + " - " + artistStr,
+		content: song.name + " - " + artistStr,
+		songId: song.id,
 		spot: resp.data.progress_ms,
 		duration: resp.data.item.duration_ms
 	};

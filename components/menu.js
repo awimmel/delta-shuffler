@@ -119,6 +119,31 @@ class Menu {
 				bold: true
 			}
 		});
+
+		this.queueSong = blessed.box({
+			parent: this.toolbar,
+			content: "+≡",
+			top: 0,
+			left: "50%+8",
+			height: 3,
+			width: 4,
+			border: "line",
+			style: {
+				fg: "white",
+				border: {
+					fg: primaryColor
+				},
+				focus: {
+					fg: "black",
+					bg: primaryColor,
+					border: {
+						fg: "white"
+					}
+				},
+				bold: true
+			}
+		});
+
 		// Refresh button
 		this.refresh = blessed.box({
 			parent: this.toolbar,
@@ -266,8 +291,8 @@ class Menu {
 				this.pauseSong.focus();
 			},
 			() => {
-				this.prevFocus = this.refresh;
-				this.refresh.focus();
+				this.prevFocus = this.queueSong;
+				this.queueSong.focus();
 			},
 			() => {},
 			() => {
@@ -291,10 +316,28 @@ class Menu {
 			}
 		);
 		toolbarKeypress(
-			this.refresh,
+			this.queueSong,
 			() => {
 				this.prevFocus = this.skipSong;
 				this.skipSong.focus();
+			},
+			() => {
+				this.prevFocus = this.refresh;
+				this.refresh.focus();
+			},
+			() => {},
+			() => {
+				this.searchBar.focus();
+			},
+			() => {
+				playerHelper.queueSongs([this.currPlaying.id]);
+			}
+		);
+		toolbarKeypress(
+			this.refresh,
+			() => {
+				this.prevFocus = this.queueSong;
+				this.queueSong.focus();
 			},
 			() => {
 				this.prevFocus = this.settings;
@@ -375,6 +418,7 @@ async function updateCurrPlaying(screen, currPlaying, pauseSong, songProgressBar
 async function retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong, songProgressBar) {
 	const playingResult = await playerHelper.getCurrPlaying();
 	currPlaying.setContent(playingResult.content);
+	currPlaying.id = playingResult.songId;
 	const pauseContent = playingResult.playing ? pause : play;
 	pauseSong.setContent(pauseContent);
 
