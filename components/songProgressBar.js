@@ -31,7 +31,8 @@ class SongProgressBar {
 			top: 4,
 			left: "100%-15",
 			width: 13,
-			height: 1
+			height: 1,
+			hidden: true
 		});
 
 		this.currPos = 0;
@@ -45,10 +46,14 @@ class SongProgressBar {
 		if (this.progressBar.hidden) {
 			this.progressBar.hidden = false;
 		}
+		if (this.durationText.hidden) {
+			this.durationText.hidden = false;
+		}
 		this.currPos = currPos;
 		this.duration = duration;
 		calcAndUpdateProgress(this.currPos, this.duration, this.progressBar);
 		parseAndSetTime(currPos, duration, this.durationText);
+		this.screen.render();
 
 		this.autoUpdate = setInterval(() => {
 			this.currPos += 1000;
@@ -67,6 +72,7 @@ class SongProgressBar {
 		this.duration = 0;
 		this.progressBar.filled = 0;
 		this.progressBar.hidden = true;
+		this.durationText.hidden = true;
 		clearAutoUpdate(this.autoUpdate);
 	}
 }
@@ -90,7 +96,9 @@ function parseAndSetTime(progTime, durationTime, durationText) {
 function parseTime(msTime) {
 	const mins = Math.floor(msTime / 60000);
 	const minStr = (mins > 99 ? 99 : mins).toString().padStart(2, "0");
-	const secStr = Math.floor((msTime % 60000) / 1000).toString().padStart(2, "0");
+	const secStr = Math.floor((msTime % 60000) / 1000)
+		.toString()
+		.padStart(2, "0");
 	return `${minStr}:${secStr}`;
 }
 
