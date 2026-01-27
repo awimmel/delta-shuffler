@@ -6,6 +6,7 @@ const authHelper = require("./authHelper.js");
 const songHelper = require("./songHelper.js");
 const orderSongs = require("../utilities/orderSongs.js");
 const chunkItems = require("../utilities/chunkItems.js");
+const displayString = require("../utilities/displayString.js");
 
 const spotifyApi = "https://api.spotify.com/v1";
 const filePath = path.join(__dirname, "../database", "playlists.json");
@@ -22,10 +23,10 @@ exports.writePlaylists = function (playlists) {
 	fs.writeFile(filePath, JSON.stringify(playlists), err => {});
 };
 
-exports.displayPlaylists = function (playlists) {
+exports.displayPlaylists = function (playlists, width) {
 	const formattedPlaylists = playlists.map(playlist => [
-		playlist.name,
-		playlist.songCount.toString()
+		displayString(playlist.name, Math.floor(width * 0.5)),
+		displayString(playlist.songCount.toString(), Math.floor(width * 0.5))
 	]);
 	formattedPlaylists.sort((first, second) => first[0].localeCompare(second[0]));
 

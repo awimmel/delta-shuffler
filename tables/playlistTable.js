@@ -6,15 +6,16 @@ const playlistHelper = require("../backend/playlistHelper.js");
 const columns = ["PLAYLIST", "SONG COUNT"];
 
 class PlaylistTable {
-	constructor(mainScreen, playlists, search, playlistDetailsView) {
+	constructor(screen, playlists, search, playlistDetailsView) {
+		this.screen = screen;
 		this.playlists = playlistHelper.sortPlaylists(playlists);
 		this.filteredPlaylists = this.playlists;
 		this.playlistCount = this.playlists.length;
 		this.playlistTable = createTable(
-			mainScreen,
+			this.screen,
 			14,
 			columns,
-			playlistHelper.displayPlaylists(this.playlists),
+			playlistHelper.displayPlaylists(this.playlists, this.screen.width),
 			this.playlists
 		);
 		this.hidden = false;
@@ -23,7 +24,10 @@ class PlaylistTable {
 			this.playlistTable,
 			index => {
 				search.setValue("");
-				this.playlistTable.setData([columns, ...playlistHelper.displayPlaylists(this.playlists)]);
+				this.playlistTable.setData([
+					columns,
+					...playlistHelper.displayPlaylists(this.playlists, this.screen.width)
+				]);
 
 				const playlistId = this.filteredPlaylists[index - 1].id;
 				const algorithmsTable = playlistDetailsView.algorithmsTable;
@@ -51,7 +55,10 @@ class PlaylistTable {
 		this.playlists = playlistHelper.sortPlaylists(playlists);
 		this.filteredPlaylists = this.playlists;
 		this.playlistCount = this.playlists.length;
-		this.playlistTable.setData([columns, ...playlistHelper.displayPlaylists(this.playlists)]);
+		this.playlistTable.setData([
+			columns,
+			...playlistHelper.displayPlaylists(this.playlists, this.screen.width)
+		]);
 	}
 
 	getDataCount() {
@@ -63,7 +70,7 @@ class PlaylistTable {
 		this.playlistCount = this.filteredPlaylists.length;
 		this.playlistTable.setData([
 			columns,
-			...playlistHelper.displayPlaylists(this.filteredPlaylists)
+			...playlistHelper.displayPlaylists(this.filteredPlaylists, this.screen.width)
 		]);
 	}
 
