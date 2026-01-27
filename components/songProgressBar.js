@@ -56,7 +56,12 @@ class SongProgressBar {
 		this.screen.render();
 
 		this.autoUpdate = setInterval(() => {
+			const prevPos = currPos;
 			this.currPos += 1000;
+			if (this.currPos > this.duration) {
+				this.currPos = prevPos;
+				this.currPos += this.duration - this.currPos;
+			}
 			calcAndUpdateProgress(this.currPos, this.duration, this.progressBar);
 			parseAndSetTime(this.currPos, this.duration, this.durationText);
 			this.screen.render();
