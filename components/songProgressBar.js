@@ -6,7 +6,7 @@ class SongProgressBar {
 	constructor(menu, screen) {
 		this.menu = menu;
 		this.screen = screen;
-		this.progressBar = blessed.progressbar({
+		this.progressBar = blessed.box({
 			parent: menu,
 			top: 3,
 			left: 0,
@@ -21,8 +21,21 @@ class SongProgressBar {
 					fg: "white"
 				}
 			},
-			filled: 50,
 			hidden: true
+		});
+
+		this.interiorBars = Array.from({ length: Math.floor(this.progressBar.width / 2) - 1 }, (_, index) => {
+			return blessed.box({
+				parent: this.progressBar,
+				top: 0,
+				left: 2 * index,
+				width: 1,
+				height: 1,
+				style: {
+					bg: primaryColor
+				},
+				hidden: true
+			});
 		});
 
 		this.durationText = blessed.text({
@@ -51,7 +64,7 @@ class SongProgressBar {
 		}
 		this.currPos = currPos;
 		this.duration = duration;
-		calcAndUpdateProgress(this.currPos, this.duration, this.progressBar);
+		this.interiorBars = calcAndUpdateProgress(this.currPos, this.duration, this.interiorBars);
 		parseAndSetTime(currPos, duration, this.durationText);
 		this.screen.render();
 
@@ -62,7 +75,7 @@ class SongProgressBar {
 				this.currPos = prevPos;
 				this.currPos += this.duration - this.currPos;
 			}
-			calcAndUpdateProgress(this.currPos, this.duration, this.progressBar);
+			this.interiorBars = calcAndUpdateProgress(this.currPos, this.duration, this.interiorBars);
 			parseAndSetTime(this.currPos, this.duration, this.durationText);
 			this.screen.render();
 		}, 1000);
@@ -88,9 +101,17 @@ function clearAutoUpdate(autoUpdate) {
 	}
 }
 
-function calcAndUpdateProgress(currPos, duration, progressBar) {
-	const progress = (currPos / duration) * 100;
-	progressBar.filled = progress;
+function calcAndUpdateProgress(currPos, duration, interiorBars) {
+	const percent = currPos / duration;
+	const expectedBars = Math.round(percent * interiorBars.length);
+	return interiorBars.map((bar, index) => {
+		if (index < expectedBars) {
+			bar.hidden = false;
+		} else {
+			bar.hidden = true;
+		}
+		return bar;
+	});
 }
 
 function parseAndSetTime(progTime, durationTime, durationText) {
