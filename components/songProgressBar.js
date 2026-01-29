@@ -9,8 +9,8 @@ class SongProgressBar {
 		this.progressBar = blessed.box({
 			parent: menu,
 			top: 3,
-			left: 0,
-			width: "100%-15",
+			left: 14,
+			width: "100%-29",
 			height: 3,
 			border: "line",
 			style: {

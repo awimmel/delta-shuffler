@@ -2,11 +2,14 @@ const blessed = require("blessed");
 const createRefreshPopover = require("./popovers/refreshPopover.js");
 const createSettingsPopover = require("./popovers/settingsPopover.js");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
+const displayString = require("../utilities/displayString.js");
 const playerHelper = require("../backend/playerHelper.js");
 const variables = require("../database/variables.json");
 const SongProgressBar = require("../components/songProgressBar.js");
 const primaryColor = variables.primaryColor;
+const path = require("path");
 
+const imagePath = path.join(__dirname, "../tmp", `album_cover.png`);
 const pause = "||";
 const play = "▷";
 
@@ -35,14 +38,26 @@ class Menu {
 			}
 		});
 
+		this.albumArt = blessed.image({
+			parent: this.toolbar,
+			top: 0,
+			left: 1,
+			width: 12,
+			height: 6,
+			align: "left",
+			file: imagePath,
+			type: "ansi",
+			hidden: true
+		});
+
 		// Currently playing
 		this.currPlaying = blessed.box({
 			parent: this.toolbar,
 			content: "",
 			top: 1,
-			left: 0,
+			left: 14,
 			height: 1,
-			width: "50%-5",
+			width: "50%-19",
 			style: {
 				bold: true
 			}
@@ -222,7 +237,13 @@ class Menu {
 		});
 
 		this.songProgressBar = new SongProgressBar(this.toolbar, this.screen);
-		updateCurrPlaying(this.screen, this.currPlaying, this.pauseSong, this.songProgressBar);
+		updateCurrPlaying(
+			this.screen,
+			this.albumArt,
+			this.currPlaying,
+			this.pauseSong,
+			this.songProgressBar
+		);
 
 		this.prevFocus = this.pauseSong;
 
@@ -246,6 +267,7 @@ class Menu {
 					() =>
 						retrieveAndSetCurrPlaying(
 							this.screen,
+							this.albumArt,
 							this.currPlaying,
 							this.pauseSong,
 							this.songProgressBar
@@ -307,6 +329,7 @@ class Menu {
 					() =>
 						retrieveAndSetCurrPlaying(
 							this.screen,
+							this.albumArt,
 							this.currPlaying,
 							this.pauseSong,
 							this.songProgressBar
@@ -382,6 +405,8 @@ class Menu {
 			},
 			() => process.exit(0)
 		);
+
+		this.screen.render();
 	}
 
 	focus() {
@@ -407,27 +432,45 @@ class Menu {
 
 module.exports = Menu;
 
-async function updateCurrPlaying(screen, currPlaying, pauseSong, songProgressBar) {
-	await retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong, songProgressBar);
+async function updateCurrPlaying(screen, albumArt, currPlaying, pauseSong, songProgressBar) {
+	await retrieveAndSetCurrPlaying(screen, albumArt, currPlaying, pauseSong, songProgressBar);
 
 	setInterval(async () => {
-		await retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong, songProgressBar);
+		await retrieveAndSetCurrPlaying(screen, albumArt, currPlaying, pauseSong, songProgressBar);
 	}, 5_000);
 }
 
-async function retrieveAndSetCurrPlaying(screen, currPlaying, pauseSong, songProgressBar) {
+async function retrieveAndSetCurrPlaying(
+	screen,
+	albumArt,
+	currPlaying,
+	pauseSong,
+	songProgressBar
+) {
 	const playingResult = await playerHelper.getCurrPlaying();
-	currPlaying.setContent(playingResult.content);
+
+	albumArt.clearImage();
+	albumArt.setImage(imagePath);
+
+	currPlaying.setContent(displayString(playingResult.content, currPlaying.width));
 	currPlaying.id = playingResult.songId;
 	const pauseContent = playingResult.playing ? pause : play;
 	pauseSong.setContent(pauseContent);
 
-	if (playingResult.content && playingResult.playing && playingResult.spot && playingResult.duration) {
+	if (
+		playingResult.content &&
+		playingResult.playing &&
+		playingResult.spot &&
+		playingResult.duration
+	) {
 		songProgressBar.setProgress(playingResult.spot, playingResult.duration);
+		albumArt.hidden = false;
 	} else if (playingResult.content && !playingResult.playing) {
 		songProgressBar.pause();
+		albumArt.hidden = false;
 	} else {
 		songProgressBar.hide();
+		albumArt.hidden = true;
 	}
 	screen.render();
 }

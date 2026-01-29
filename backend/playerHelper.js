@@ -1,7 +1,12 @@
 const axios = require("axios");
 const authHelper = require("./authHelper.js");
+const fs = require("fs");
+const path = require("path");
+const sharp = require("sharp");
 
 const spotifyApi = "https://api.spotify.com/v1";
+const imagePath = path.join(__dirname, "../tmp", `album_cover.png`);
+let currPlayingId = "";
 
 exports.queueSongs = async function (songs) {
 	const accessToken = await authHelper.getAccessToken();
@@ -39,7 +44,14 @@ exports.getCurrPlaying = async function () {
 	}
 
 	const song = resp.data.item;
-	const artistStr = resp.data.item.artists.map(artist => artist.name).join(", ");
+	if (currPlayingId !== song.id) {
+		const imageUrl = song.album.images.at(0);
+		const response = await axios.get(imageUrl.url, { responseType: "arraybuffer" });
+		await sharp(response.data).png().toFile(imagePath);
+		currPlayingId = song.id;
+	}
+
+	const artistStr = song.artists.map(artist => artist.name).join(", ");
 	return {
 		playing: resp.data.is_playing,
 		content: song.name + " - " + artistStr,

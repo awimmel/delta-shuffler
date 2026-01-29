@@ -1,12 +1,12 @@
-const express = require('express');
+const express = require("express");
 const blessed = require("blessed");
 const variables = require("./database/variables.json");
 
 const AuthScreen = require("./authScreen.js");
 const MainScreen = require("./mainScreen.js");
 
-const routes = require('./server/routes.js');
-const path = require('path');
+const routes = require("./server/routes.js");
+const path = require("path");
 
 const screen = blessed.screen({
 	smartCSR: true,
