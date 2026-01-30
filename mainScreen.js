@@ -1,3 +1,4 @@
+const blessed = require("blessed");
 const Menu = require("./components/menu");
 const SearchBar = require("./components/searchBar");
 const PlaylistTable = require("./tables/playlistTable");
@@ -24,6 +25,7 @@ class MainScreen {
 			this.searchBar,
 			this.playlistDetailsView
 		);
+		this.footer = createFooter(this.screen);
 
 		this.backButton.on("keypress", (char, key) => {
 			const activeTable = this.playlistDetailsView.getActiveTable();
@@ -49,7 +51,7 @@ class MainScreen {
 		this.setShortcuts();
 
 		this.searchBar.setKeyPresses(this.playlistDetailsView, this.playlistTable, this.menu);
-		this.searchBar.focus();
+		this.playlistTable.focus();
 
 		if (playlistHelper.readPlaylists().length === 0) {
 			refreshHelper.refresh(this);
@@ -72,11 +74,13 @@ class MainScreen {
 				if (char === "/") {
 					this.searchBar.focus();
 				} else if (char === "<") {
-					this.menu.focusBack();
-				} else if (char === "+") {
-					this.menu.focusPause();
+					this.menu.back();
+				} else if (char === ",") {
+					this.menu.togglePlayback();
 				} else if (char === ">") {
-					this.menu.focusSkip();
+					this.menu.skip();
+				} else if (char === ".") {
+					this.menu.queue();
 				} else if (char === "?") {
 					if (!this.playlistTable.hidden) {
 						this.playlistTable.focus();
@@ -97,7 +101,7 @@ class MainScreen {
 
 		this.screen.key("escape", () => {
 			if (this.focus) {
-				this.menu.focusClose();
+				process.exit(0);
 			}
 		});
 	}
@@ -109,6 +113,26 @@ class MainScreen {
 	createWaitingPopover() {
 		createWaitingPopover(this);
 	}
+}
+
+function createFooter(screen) {
+	return blessed.box({
+		parent: screen,
+		bottom: 0,
+		left: "center",
+		width: "100%",
+		height: 1,
+		tags: true,
+		align: "center",
+		style: {
+			bold: true
+		},
+		content:
+			"♫ Powered by Spotify | {cyan-fg}/{/cyan-fg} search | {green-fg}?{/green-fg} table | {blue-fg}s{/blue-fg} songs table | " +
+			"{magenta-fg}a{/magenta-fg} algorithms table | {yellow-fg}<{/yellow-fg} rewind | " +
+			"{yellow-fg},{/yellow-fg} pause/play | {yellow-fg}>{/yellow-fg} skip | " +
+			"{yellow-fg}.{/yellow-fg} queue | {red-fg}esc{/red-fg} close"
+	});
 }
 
 module.exports = MainScreen;

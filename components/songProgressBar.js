@@ -71,8 +71,21 @@ class SongProgressBar {
 		parseAndSetTime(currPos, duration, this.durationText);
 		this.screen.render();
 
+		this.setAutoUpdate();
+	}
+
+	pause() {
+		clearAutoUpdate(this.autoUpdate);
+	}
+
+	pauseWithOverride(currPos, duration) {
+		this.setProgress(currPos, duration);
+		clearAutoUpdate(this.autoUpdate);
+	}
+
+	setAutoUpdate() {
 		this.autoUpdate = setInterval(() => {
-			const prevPos = currPos;
+			const prevPos = this.currPos;
 			this.currPos += 1000;
 			if (this.currPos > this.duration) {
 				this.currPos = prevPos;
@@ -82,11 +95,6 @@ class SongProgressBar {
 			parseAndSetTime(this.currPos, this.duration, this.durationText);
 			this.screen.render();
 		}, 1000);
-	}
-
-	pause(currPos, duration) {
-		this.setProgress(currPos, duration);
-		clearAutoUpdate(this.autoUpdate);
 	}
 
 	hide() {

@@ -45,7 +45,7 @@ class SearchBar {
 				this.screen.render();
 			} else if (key.name === "up") {
 				menu.focus();
-			} else if (key.name !== "escape") {
+			} else if (key.name !== "escape" && this.searchBar._reading) {
 				updateList(this.searchBar, char, playlistDetailsView, playlistTable, this.screen);
 			}
 		});

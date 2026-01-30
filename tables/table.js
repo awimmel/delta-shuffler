@@ -9,7 +9,7 @@ module.exports = function createTable(parent, top, headers, displayItems, rawIte
 		parent: parent,
 		top: top,
 		left: 0,
-		height: `100%-${top}`,
+		height: `100%-${top + 1}`,
 		width: "100%",
 		border: "line",
 		keys: true,

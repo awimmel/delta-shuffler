@@ -259,21 +259,7 @@ class Menu {
 				this.searchBar.focus();
 			},
 			async () => {
-				this.pauseSong.setContent(pause);
-				await playerHelper.prevSong();
-
-				// Give Spotify a tenth of a second to account for the request
-				setTimeout(
-					() =>
-						retrieveAndSetCurrPlaying(
-							this.screen,
-							this.albumArt,
-							this.currPlaying,
-							this.pauseSong,
-							this.songProgressBar
-						),
-					100
-				);
+				await this.back();
 			}
 		);
 		toolbarKeypress(
@@ -291,19 +277,7 @@ class Menu {
 				this.searchBar.focus();
 			},
 			async () => {
-				let modifPlayback = false;
-				if (this.pauseSong.getContent() === pause) {
-					modifPlayback = await playerHelper.pauseSong();
-				} else {
-					modifPlayback = await playerHelper.playSong();
-				}
-
-				if (modifPlayback) {
-					this.pauseSong.setContent(this.pauseSong.getContent() === pause ? play : pause);
-					this.screen.render();
-				}
-
-				this.songProgressBar.pause();
+				await this.togglePlayback();
 			}
 		);
 		toolbarKeypress(
@@ -321,21 +295,7 @@ class Menu {
 				this.searchBar.focus();
 			},
 			async () => {
-				this.pauseSong.setContent(pause);
-				await playerHelper.skipSong();
-
-				// Give Spotify a tenth of a second to account for the request
-				setTimeout(
-					() =>
-						retrieveAndSetCurrPlaying(
-							this.screen,
-							this.albumArt,
-							this.currPlaying,
-							this.pauseSong,
-							this.songProgressBar
-						),
-					100
-				);
+				await this.skip();
 			}
 		);
 		toolbarKeypress(
@@ -413,16 +373,60 @@ class Menu {
 		this.prevFocus.focus();
 	}
 
-	focusBack() {
-		this.backSong.focus();
+	async back() {
+		this.pauseSong.setContent(pause);
+		await playerHelper.prevSong();
+
+		// Give Spotify a tenth of a second to account for the request
+		setTimeout(
+			() =>
+				retrieveAndSetCurrPlaying(
+					this.screen,
+					this.albumArt,
+					this.currPlaying,
+					this.pauseSong,
+					this.songProgressBar
+				),
+			100
+		);
 	}
 
-	focusPause() {
-		this.pauseSong.focus();
+	async togglePlayback() {
+		let modifPlayback = false;
+		if (this.pauseSong.getContent() === pause) {
+			modifPlayback = await playerHelper.pauseSong();
+			this.songProgressBar.pause();
+		} else {
+			modifPlayback = await playerHelper.playSong();
+			this.songProgressBar.setAutoUpdate();
+		}
+
+		if (modifPlayback) {
+			this.pauseSong.setContent(this.pauseSong.getContent() === pause ? play : pause);
+			this.screen.render();
+		}
 	}
 
-	focusSkip() {
-		this.skipSong.focus();
+	async skip() {
+		this.pauseSong.setContent(pause);
+		await playerHelper.skipSong();
+
+		// Give Spotify a tenth of a second to account for the request
+		setTimeout(
+			() =>
+				retrieveAndSetCurrPlaying(
+					this.screen,
+					this.albumArt,
+					this.currPlaying,
+					this.pauseSong,
+					this.songProgressBar
+				),
+			100
+		);
+	}
+
+	queue() {
+		playerHelper.queueSongs([this.currPlaying.id]);
 	}
 
 	focusClose() {
@@ -461,7 +465,7 @@ async function retrieveAndSetCurrPlaying(
 		songProgressBar.setProgress(playingResult.spot, playingResult.duration);
 		albumArt.hidden = false;
 	} else if (playingResult.content && !playingResult.playing && playingResult.spot && playingResult.duration) {
-		songProgressBar.pause(playingResult.spot, playingResult.duration);
+		songProgressBar.pauseWithOverride(playingResult.spot, playingResult.duration);
 		albumArt.hidden = false;
 	} else {
 		songProgressBar.hide();
