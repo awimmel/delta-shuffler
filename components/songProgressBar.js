@@ -24,19 +24,22 @@ class SongProgressBar {
 			hidden: true
 		});
 
-		this.interiorBars = Array.from({ length: Math.floor(this.progressBar.width / 2) - 1 }, (_, index) => {
-			return blessed.box({
-				parent: this.progressBar,
-				top: 0,
-				left: 2 * index,
-				width: 1,
-				height: 1,
-				style: {
-					bg: primaryColor
-				},
-				hidden: true
-			});
-		});
+		this.interiorBars = Array.from(
+			{ length: Math.floor(this.progressBar.width / 2) - 1 },
+			(_, index) => {
+				return blessed.box({
+					parent: this.progressBar,
+					top: 0,
+					left: 2 * index,
+					width: 1,
+					height: 1,
+					style: {
+						bg: primaryColor
+					},
+					hidden: true
+				});
+			}
+		);
 
 		this.durationText = blessed.text({
 			parent: menu,
@@ -81,7 +84,8 @@ class SongProgressBar {
 		}, 1000);
 	}
 
-	pause() {
+	pause(currPos, duration) {
+		this.setProgress(currPos, duration);
 		clearAutoUpdate(this.autoUpdate);
 	}
 

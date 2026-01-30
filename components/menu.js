@@ -457,16 +457,11 @@ async function retrieveAndSetCurrPlaying(
 	const pauseContent = playingResult.playing ? pause : play;
 	pauseSong.setContent(pauseContent);
 
-	if (
-		playingResult.content &&
-		playingResult.playing &&
-		playingResult.spot &&
-		playingResult.duration
-	) {
+	if (playingResult.content && playingResult.playing && playingResult.spot && playingResult.duration) {
 		songProgressBar.setProgress(playingResult.spot, playingResult.duration);
 		albumArt.hidden = false;
-	} else if (playingResult.content && !playingResult.playing) {
-		songProgressBar.pause();
+	} else if (playingResult.content && !playingResult.playing && playingResult.spot && playingResult.duration) {
+		songProgressBar.pause(playingResult.spot, playingResult.duration);
 		albumArt.hidden = false;
 	} else {
 		songProgressBar.hide();
