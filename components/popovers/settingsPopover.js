@@ -2,6 +2,7 @@ const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const playlistHelper = require("../../backend/playlistHelper.js");
 const focusFunction = require("../../utilities/focusElement.js");
+const escapeKeypress = require("../../utilities/escapeKeypress.js");
 
 const variables = require("../../database/variables.json");
 const primaryColor = variables.primaryColor;
@@ -138,6 +139,8 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 	playlistList.key("up", () => {
 		prevSelected = playlistList.selected;
 	});
+
+	escapeKeypress([playlistList], closeBox);
 
 	mainScreen.setFocus(false);
 	playlistList.focus();

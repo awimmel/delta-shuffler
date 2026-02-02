@@ -1,6 +1,7 @@
 const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
+const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const refreshHelper = require("../../backend/refreshHelper.js");
 
 module.exports = function createRefreshPopover(mainScreen, refreshButton) {
@@ -107,6 +108,8 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 			mainScreen.screen.render();
 		}
 	);
+
+	escapeKeypress([yesBox], noBox);
 
 	noBox.focus();
 	mainScreen.setFocus(false);

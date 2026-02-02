@@ -1,6 +1,7 @@
 const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
+const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const displayString = require("../../utilities/displayString.js");
 const createQueuePopover = require("./queuePopover.js");
 const createDeletePopover = require("./deletePopover");
@@ -92,6 +93,7 @@ module.exports = function createAlgorithmPopover(
 	let deleteBox;
 	let createPlaylistBox;
 	let prevSelected = runAlgorithmBox;
+	const elementsArray = [runAlgorithmBox];
 	if (!algorithm.id.includes("trueRandom")) {
 		const shouldAddPlaylistBox =
 			!playlistHelper.algorithmPlaylistPresent(algorithm.id) &&
@@ -123,6 +125,7 @@ module.exports = function createAlgorithmPopover(
 				}
 			}
 		});
+		elementsArray.push(deleteBox);
 
 		toolbarKeypress(
 			deleteBox,
@@ -174,6 +177,7 @@ module.exports = function createAlgorithmPopover(
 					}
 				}
 			});
+			elementsArray.push(createPlaylistBox);
 
 			toolbarKeypress(
 				createPlaylistBox,
@@ -232,6 +236,8 @@ module.exports = function createAlgorithmPopover(
 			screen.render();
 		}
 	);
+
+	escapeKeypress(elementsArray, closeBox);
 
 	mainScreen.setFocus(false);
 

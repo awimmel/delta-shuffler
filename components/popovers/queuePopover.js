@@ -2,6 +2,7 @@ const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const focusText = require("../../utilities/focusText.js");
+const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const algorithmHelper = require("../../backend/algorithmHelper.js");
 const songHelper = require("../../backend/songHelper.js");
 
@@ -163,6 +164,8 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 			screen.render();
 		}
 	);
+
+	escapeKeypress([songCountInput, queueSongsBox], cancelBox);
 
 	focusText(songCountInput);
 	mainScreen.setFocus(false);

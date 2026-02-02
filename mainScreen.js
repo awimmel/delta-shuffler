@@ -101,7 +101,7 @@ class MainScreen {
 
 		this.screen.key("escape", () => {
 			if (this.focus) {
-				process.exit(0);
+				this.menu.focusClose();
 			}
 		});
 	}

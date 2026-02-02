@@ -1,6 +1,7 @@
 const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
+const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const algorithmHelper = require("../../backend/algorithmHelper.js");
 const playlistHelper = require("../../backend/playlistHelper.js");
 
@@ -110,6 +111,8 @@ module.exports = function createDeletePopover(mainScreen, algorithmsTable, algor
 			screen.render();
 		}
 	);
+
+	escapeKeypress([yesBox], noBox);
 
 	mainScreen.setFocus(false);
 	noBox.focus();

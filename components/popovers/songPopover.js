@@ -1,6 +1,7 @@
 const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
+const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const songHelper = require("../../backend/songHelper.js");
 const playerHelper = require("../../backend/playerHelper.js");
 
@@ -19,9 +20,9 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 	});
 
 	let songStr = `Artist: ${songHelper.getArtistString(song)}\n\nAlbum: ${song.album.name}`;
-	const genreStr =[...new Set(
-		song.artists.flatMap(artist => artist.genres.map(genre => adjustCasing(genre)))
-	)].join(", ");
+	const genreStr = [
+		...new Set(song.artists.flatMap(artist => artist.genres.map(genre => adjustCasing(genre))))
+	].join(", ");
 	if (genreStr.length !== 0) {
 		songStr += `\n\nGenres: ${genreStr}`;
 	}
@@ -119,6 +120,8 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 			screen.render();
 		}
 	);
+
+	escapeKeypress([queueBox], closeBox);
 
 	mainScreen.setFocus(false);
 

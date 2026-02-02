@@ -4,11 +4,12 @@ const TypeDropdown = require("../typeDropdown.js");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const focusText = require("../../utilities/focusText.js");
+const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const variables = require("../../database/variables.json");
 const primaryColor = variables.primaryColor;
 
 class Condition {
-	constructor(index, screen, conditionGroup, topOffset, allowAdd, allowDelete, bottom) {
+	constructor(index, screen, conditionGroup, topOffset, allowAdd, allowDelete, bottom, closeBox) {
 		this.index = index;
 		this.screen = screen;
 		this.conditionGroup = conditionGroup;
@@ -16,6 +17,7 @@ class Condition {
 		this.allowAdd = allowAdd;
 		this.allowDelete = allowDelete;
 		this.bottom = bottom;
+		this.closeBox = closeBox;
 
 		this.operatorDropdown = new Dropdown(
 			screen,
@@ -60,14 +62,18 @@ class Condition {
 			}
 		});
 
+		const elementArray = [this.operatorDropdown.button, this.typeDropdown.button, this.valueBox];
+
 		this.addButton = null;
 		if (allowAdd) {
 			this.addButton = createAddButton(conditionGroup.conditionBox, topOffset);
+			elementArray.push(this.addButton);
 		}
 
 		this.deleteButton = null;
 		if (allowDelete) {
 			this.deleteButton = createDeleteButton(conditionGroup.conditionBox, topOffset, allowAdd);
+			elementArray.push(this.deleteButton);
 		}
 		this.joinDropdown = null;
 
@@ -83,6 +89,8 @@ class Condition {
 			this.index,
 			this.conditionGroup
 		);
+
+		escapeKeypress(elementArray, closeBox);
 	}
 
 	toString() {
@@ -156,21 +164,27 @@ class Condition {
 			lastDropdown.bringListToFront();
 		}
 		this.adjustVerticalNavigation(top, bottom);
+
+		escapeKeypress([this.joinDropdown.button], this.closeBox);
 	}
 
 	deleteJoinOperator(top, bottom) {
 		this.addButton = createAddButton(this.conditionGroup.conditionBox, this.topOffset);
+		const elementsToEsc = [this.addButton];
 		if (this.allowDelete) {
 			this.deleteButton = createDeleteButton(
 				this.conditionGroup.conditionBox,
 				this.topOffset,
 				this.allowAdd
 			);
+			elementsToEsc.push(this.deleteButton);
 		}
 
 		this.joinDropdown.destroy();
 		this.joinDropdown = null;
 		this.adjustVerticalNavigation(top, bottom);
+
+		escapeKeypress(elementsToEsc, this.closeBox);
 	}
 }
 

@@ -2,6 +2,7 @@ const blessed = require("blessed");
 const focusText = require("../../utilities/focusText.js");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
+const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const playlistHelper = require("../../backend/playlistHelper.js");
 
 const variables = require("../../database/variables.json");
@@ -145,6 +146,8 @@ class NamePlaylistPopover {
 			}
 		);
 		focusText(this.nameBox);
+
+		escapeKeypress([this.nameBox, this.closeBox, this.nextBox], this.closeBox);
 
 		this.mainScreen.setFocus(false);
 		this.screen.render();

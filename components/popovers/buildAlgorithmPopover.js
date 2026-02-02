@@ -1,6 +1,7 @@
 const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
+const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const ConditionGroup = require("../conditions/conditionGroup.js");
 const algorithmHelper = require("../../backend/algorithmHelper.js");
 
@@ -84,7 +85,7 @@ class BuildAlgorithmPopover {
 		});
 
 		this.conditionGroups = [
-			new ConditionGroup(this.screen, this, null, this.addConditionButton, 0)
+			new ConditionGroup(this.screen, this, null, this.addConditionButton, 0, this.closeBox)
 		];
 
 		toolbarKeypress(
@@ -97,6 +98,8 @@ class BuildAlgorithmPopover {
 		);
 		setAddConditionNavigation(this);
 		setBottomBoxesNavigation(this);
+
+		escapeKeypress([this.addConditionButton, this.saveBox], this.closeBox);
 
 		this.mainScreen.setFocus(false);
 
@@ -186,7 +189,8 @@ function setAddConditionNavigation(buildAlgPopover) {
 				buildAlgPopover,
 				prevConditionGroup,
 				bottomElement,
-				12 * buildAlgPopover.conditionGroups.length + offsetAdjustment
+				12 * buildAlgPopover.conditionGroups.length + offsetAdjustment,
+				buildAlgPopover.closeBox
 			);
 			newGroup.focus();
 			if (prevConditionGroup?.joinDropdown != null) {

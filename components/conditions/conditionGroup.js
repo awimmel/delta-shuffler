@@ -4,16 +4,18 @@ const Dropdown = require("../dropdown.js");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const joinOperator = require("../../utilities/joinOperator.js");
+const escapeKeypress = require("../../utilities/escapeKeypress.js");
 
 const variables = require("../../database/variables.json");
 const primaryColor = variables.primaryColor;
 
 class ConditionGroup {
-	constructor(screen, buildAlgorithmPopover, top, bottom, topOffset) {
+	constructor(screen, buildAlgorithmPopover, top, bottom, topOffset, closeBox) {
 		this.screen = screen;
 		this.buildAlgorithmPopover = buildAlgorithmPopover;
 		this.bottom = bottom;
 		this.topOffset = topOffset;
+		this.closeBox = closeBox;
 		this.heightAdjustment = this.topOffset !== 0 ? 1 : 0;
 		this.conditionBox = blessed.box({
 			parent: this.buildAlgorithmPopover.buildAlgBox,
@@ -35,7 +37,7 @@ class ConditionGroup {
 		});
 
 		this.conditions = [
-			new Condition(0, this.screen, this, this.heightAdjustment, true, false, this.bottom)
+			new Condition(0, this.screen, this, this.heightAdjustment, true, false, this.bottom, closeBox)
 		];
 		this.closeButton = null;
 		this.joinDropdown = null;
@@ -94,6 +96,8 @@ class ConditionGroup {
 					this.joinDropdown.open();
 				}
 			);
+
+			escapeKeypress([this.closeButton, this.joinDropdown.button], closeBox);
 		}
 	}
 
@@ -109,7 +113,8 @@ class ConditionGroup {
 			this.conditions.length * 3 + this.heightAdjustment,
 			this.conditions.length !== 2,
 			true,
-			this.bottom
+			this.bottom,
+			this.closeBox
 		);
 
 		const secondLastCondition = this.conditions.at(-2) ?? null;
@@ -134,7 +139,7 @@ class ConditionGroup {
 		this.conditions.push(newCondition);
 		newCondition.focus();
 
-		this.joinDropdown.bringListToFront();
+		this.joinDropdown?.bringListToFront();
 
 		this.screen.render();
 	}
@@ -201,8 +206,7 @@ class ConditionGroup {
 
 	toString() {
 		const join = this.conditions.length > 1 ? this.conditions[0].joinDropdown.getSelectedItem() : "";
-		return this.conditions.map(condition => `(${condition.toString()})`)
-		.join(joinOperator(join));
+		return this.conditions.map(condition => `(${condition.toString()})`).join(joinOperator(join));
 	}
 }
 

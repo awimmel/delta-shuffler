@@ -2,6 +2,7 @@ const blessed = require("blessed");
 const focusText = require("../../utilities/focusText.js");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
+const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const BuildAlgorithmPopover = require("./buildAlgorithmPopover.js");
 
 const variables = require("../../database/variables.json");
@@ -143,6 +144,8 @@ class NameAlgorithmPopover {
 			}
 		);
 		focusText(this.nameBox);
+
+		escapeKeypress([this.nameBox, this.nextBox], this.closeBox);
 
 		this.mainScreen.setFocus(false);
 		this.screen.render();
