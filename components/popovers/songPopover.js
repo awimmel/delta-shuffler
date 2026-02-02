@@ -26,7 +26,7 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 	if (genreStr.length !== 0) {
 		songStr += `\n\nGenres: ${genreStr}`;
 	}
-	songStr += `\n\nRelease Date: ${song.album.release_date}\n\nAdded On: ${song.addedAt.split("T")[0]}`;
+	songStr += `\n\nRelease Date: ${song.album.release_date}\n\nAdded Rank: ${song.addedRank} (${song.addedAt.split("T")[0]})`;
 
 	// Info about the current song
 	blessed.text({
