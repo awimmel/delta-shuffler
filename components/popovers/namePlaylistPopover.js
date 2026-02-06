@@ -4,9 +4,7 @@ const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const playlistHelper = require("../../backend/playlistHelper.js");
-
-const variables = require("../../database/variables.json");
-const primaryColor = variables.primaryColor;
+const themeHelper = require("../../backend/themeHelper.js");
 
 class NamePlaylistPopover {
 	constructor(mainScreen, closeElement, title, algorithm) {
@@ -23,7 +21,13 @@ class NamePlaylistPopover {
 			left: "center",
 			label: ` {bold}${title}:{/bold} `,
 			tags: true,
-			hidden: false
+			hidden: false,
+			style: {
+				fg: themeHelper.getText(),
+				border: {
+					fg: themeHelper.getFocus()
+				}
+			}
 		});
 
 		this.nameBox = blessed.textbox({
@@ -37,14 +41,14 @@ class NamePlaylistPopover {
 			border: "line",
 			keys: true,
 			style: {
-				fg: "white",
+				fg: themeHelper.getText(),
+				border: {
+					fg: themeHelper.getPrimary()
+				},
 				focus: {
 					border: {
-						fg: "white"
+						fg: themeHelper.getFocus()
 					}
-				},
-				border: {
-					fg: primaryColor
 				}
 			}
 		});
@@ -62,15 +66,14 @@ class NamePlaylistPopover {
 			border: "line",
 			keys: true,
 			style: {
-				fg: "white",
-				bg: "default",
+				fg: themeHelper.getText(),
 				border: {
-					fg: "red"
+					fg: themeHelper.getDecline()
 				},
 				focus: {
-					bg: "red",
+					bg: themeHelper.getDecline(),
 					border: {
-						fg: "white"
+						fg: themeHelper.getFocus()
 					}
 				}
 			}
@@ -89,15 +92,14 @@ class NamePlaylistPopover {
 			border: "line",
 			keys: true,
 			style: {
-				fg: "white",
-				bg: "default",
+				fg: themeHelper.getText(),
 				border: {
-					fg: "blue"
+					fg: themeHelper.getConfirmation()
 				},
 				focus: {
-					bg: "blue",
+					bg: themeHelper.getConfirmation(),
 					border: {
-						fg: "white"
+						fg: themeHelper.getFocus()
 					}
 				}
 			}

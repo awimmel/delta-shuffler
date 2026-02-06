@@ -5,9 +5,7 @@ const focusText = require("../../utilities/focusText.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const algorithmHelper = require("../../backend/algorithmHelper.js");
 const songHelper = require("../../backend/songHelper.js");
-
-const variables = require("../../database/variables.json");
-const primaryColor = variables.primaryColor;
+const themeHelper = require("../../backend/themeHelper.js");
 
 module.exports = function createQueuePopover(mainScreen, algorithmsTable, algorithm) {
 	const screen = mainScreen.screen;
@@ -20,7 +18,13 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		left: "center",
 		label: ` {bold}${algorithm.name}{/bold} `,
 		tags: true,
-		hidden: false
+		hidden: false,
+		style: {
+			fg: themeHelper.getText(),
+			border: {
+				fg: themeHelper.getFocus()
+			}
+		}
 	});
 
 	const songCountInput = blessed.textbox({
@@ -34,14 +38,14 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		border: "line",
 		keys: true,
 		style: {
-			fg: "white",
+			fg: themeHelper.getText(),
 			focus: {
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			},
 			border: {
-				fg: primaryColor
+				fg: themeHelper.getPrimary()
 			}
 		}
 	});
@@ -55,7 +59,7 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		width: "85%",
 		content: "",
 		style: {
-			fg: "white"
+			fg: themeHelper.getText()
 		}
 	});
 
@@ -63,7 +67,7 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		parent: queueBox,
 		content: "Cancel",
 		top: 6,
-		left: 15,
+		left: 11,
 		height: 3,
 		width: 8,
 		tags: true,
@@ -72,15 +76,14 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		border: "line",
 		keys: true,
 		style: {
-			fg: "white",
-			bg: "default",
+			fg: themeHelper.getText(),
 			border: {
-				fg: "red"
+				fg: themeHelper.getDecline()
 			},
 			focus: {
-				bg: "red",
+				bg: themeHelper.getDecline(),
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			}
 		}
@@ -90,7 +93,7 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		parent: queueBox,
 		content: "Queue",
 		top: 6,
-		left: 35,
+		left: 41,
 		height: 3,
 		width: 7,
 		tags: true,
@@ -99,15 +102,14 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		border: "line",
 		keys: true,
 		style: {
-			fg: "white",
-			bg: "default",
+			fg: themeHelper.getText(),
 			border: {
-				fg: "blue"
+				fg: themeHelper.getConfirmation()
 			},
 			focus: {
-				bg: "blue",
+				bg: themeHelper.getConfirmation(),
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			}
 		}

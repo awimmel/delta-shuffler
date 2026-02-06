@@ -15,40 +15,12 @@ class PlaylistTable {
 			this.screen,
 			14,
 			columns,
-			playlistHelper.displayPlaylists(this.playlists, this.screen.width),
-			this.playlists
+			playlistHelper.displayPlaylists(this.playlists, this.screen.width)
 		);
+		this.search = search;
+		this.playlistDetailsView = playlistDetailsView;
+		this.setKeypresses();
 		this.hidden = false;
-
-		setTableKeypress(
-			this.playlistTable,
-			index => {
-				search.setValue("");
-				this.playlistTable.setData([
-					columns,
-					...playlistHelper.displayPlaylists(this.playlists, this.screen.width)
-				]);
-
-				const playlistId = this.filteredPlaylists[index - 1].id;
-				const algorithmsTable = playlistDetailsView.algorithmsTable;
-				algorithmsTable.setData(playlistId);
-
-				const songsTable = playlistDetailsView.songsTable;
-				songsTable.setData(playlistId);
-
-				playlistDetailsView.playlistToolbar.setPlaylistId(playlistId);
-
-				this.playlistTable.hide();
-				this.hidden = true;
-
-				playlistDetailsView.show();
-				algorithmsTable.show();
-				algorithmsTable.focus();
-			},
-			() => {
-				search.focus();
-			}
-		);
 	}
 
 	setData(playlists) {
@@ -81,6 +53,49 @@ class PlaylistTable {
 	show() {
 		this.playlistTable.show();
 		this.hidden = false;
+	}
+
+	setColors() {
+		this.playlistTable.destroy();
+		this.playlistTable = createTable(
+			this.screen,
+			14,
+			columns,
+			playlistHelper.displayPlaylists(this.filteredPlaylists, this.screen.width)
+		);
+		this.setKeypresses();
+	}
+
+	setKeypresses() {
+		setTableKeypress(
+			this.playlistTable,
+			index => {
+				this.search.setValue("");
+				this.playlistTable.setData([
+					columns,
+					...playlistHelper.displayPlaylists(this.playlists, this.screen.width)
+				]);
+
+				const playlistId = this.filteredPlaylists[index - 1].id;
+				const algorithmsTable = this.playlistDetailsView.algorithmsTable;
+				algorithmsTable.setData(playlistId);
+
+				const songsTable = this.playlistDetailsView.songsTable;
+				songsTable.setData(playlistId);
+
+				this.playlistDetailsView.playlistToolbar.setPlaylistId(playlistId);
+
+				this.playlistTable.hide();
+				this.hidden = true;
+
+				this.playlistDetailsView.show();
+				algorithmsTable.show();
+				algorithmsTable.focus();
+			},
+			() => {
+				this.search.focus();
+			}
+		);
 	}
 }
 

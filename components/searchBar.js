@@ -1,6 +1,5 @@
 const blessed = require("blessed");
-const variables = require("../database/variables.json");
-const primaryColor = variables.primaryColor;
+const themeHelper = require("../backend/themeHelper.js");
 const focusText = require("../utilities/focusText");
 
 class SearchBar {
@@ -15,19 +14,10 @@ class SearchBar {
 			width: "100%",
 			content: "",
 			border: "line",
-			keys: true,
-			style: {
-				fg: "white",
-				focus: {
-					border: {
-						fg: "white"
-					}
-				},
-				border: {
-					fg: primaryColor
-				}
-			}
+			keys: true
 		});
+
+		this.setColors();
 	}
 
 	focus() {
@@ -57,6 +47,30 @@ class SearchBar {
 
 	setValue(newVal) {
 		this.searchBar.setValue(newVal);
+	}
+
+	setColors() {
+		this.searchBar.style = {
+			fg: themeHelper.getText(),
+			focus: {
+				border: {
+					fg: themeHelper.getFocus()
+				}
+			},
+			border: {
+				fg: themeHelper.getPrimary()
+			}
+		};
+
+		this.searchBar.on("focus", function () {
+			this.style.border.fg = themeHelper.getFocus();
+			this.screen.render();
+		});
+
+		this.searchBar.on("blur", function () {
+			this.style.border.fg = themeHelper.getPrimary();
+			this.screen.render();
+		});
 	}
 }
 

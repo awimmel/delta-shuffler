@@ -10,7 +10,7 @@ class SongsTable {
 		this.songs = [];
 		this.filteredSongs = this.songs;
 		this.songCount = 0;
-		this.table = createTable(parent, 3, columns, [], []);
+		this.table = createTable(this.parent, 3, columns, []);
 		this.hidden = false;
 	}
 
@@ -54,6 +54,16 @@ class SongsTable {
 	show() {
 		this.table.show();
 		this.hidden = false;
+	}
+
+	setColors() {
+		this.table.destroy();
+		this.table = createTable(
+			this.parent,
+			3,
+			columns,
+			songHelper.displaySongs(this.filteredSongs, this.width)
+		);
 	}
 }
 

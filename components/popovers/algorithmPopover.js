@@ -7,12 +7,12 @@ const createQueuePopover = require("./queuePopover.js");
 const createDeletePopover = require("./deletePopover");
 const NamePlaylistPopover = require("./namePlaylistPopover.js");
 const playlistHelper = require("../../backend/playlistHelper.js");
+const themeHelper = require("../../backend/themeHelper.js");
 
 module.exports = function createAlgorithmPopover(
 	mainScreen,
 	algorithmsTable,
-	algorithm,
-	searchBar
+	algorithm
 ) {
 	const screen = mainScreen.screen;
 	const algorithmBox = blessed.box({
@@ -24,7 +24,13 @@ module.exports = function createAlgorithmPopover(
 		left: "center",
 		label: ` {bold}${algorithm.name}{/bold} `,
 		tags: true,
-		hidden: false
+		hidden: false,
+		style: {
+			fg: themeHelper.getText(),
+			border: {
+				fg: themeHelper.getFocus()
+			}
+		}
 	});
 
 	blessed.text({
@@ -33,7 +39,10 @@ module.exports = function createAlgorithmPopover(
 		top: 1,
 		left: 2,
 		width: "100%-4",
-		height: 5
+		height: 5,
+		style: {
+			fg: themeHelper.getText()
+		}
 	});
 
 	const closeBox = blessed.box({
@@ -49,15 +58,14 @@ module.exports = function createAlgorithmPopover(
 		border: "line",
 		keys: true,
 		style: {
-			fg: "white",
-			bg: "default",
+			fg: themeHelper.getText(),
 			border: {
-				fg: "red"
+				fg: themeHelper.getDecline()
 			},
 			focus: {
-				bg: "red",
+				bg: themeHelper.getDecline(),
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			}
 		}
@@ -76,15 +84,14 @@ module.exports = function createAlgorithmPopover(
 		border: "line",
 		keys: true,
 		style: {
-			fg: "white",
-			bg: "default",
+			fg: themeHelper.getText(),
 			border: {
-				fg: "blue"
+				fg: themeHelper.getConfirmation()
 			},
 			focus: {
-				bg: "blue",
+				bg: themeHelper.getConfirmation(),
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			}
 		}
@@ -112,15 +119,14 @@ module.exports = function createAlgorithmPopover(
 			border: "line",
 			keys: true,
 			style: {
-				fg: "white",
-				bg: "default",
+				fg: themeHelper.getText(),
 				border: {
-					fg: "red"
+					fg: themeHelper.getDecline()
 				},
 				focus: {
-					bg: "red",
+					bg: themeHelper.getDecline(),
 					border: {
-						fg: "white"
+						fg: themeHelper.getFocus()
 					}
 				}
 			}
@@ -164,15 +170,14 @@ module.exports = function createAlgorithmPopover(
 				border: "line",
 				keys: true,
 				style: {
-					fg: "white",
-					bg: "default",
+					fg: themeHelper.getText(),
 					border: {
-						fg: "blue"
+						fg: themeHelper.getConfirmation()
 					},
 					focus: {
-						bg: "blue",
+						bg: themeHelper.getConfirmation(),
 						border: {
-							fg: "white"
+							fg: themeHelper.getFocus()
 						}
 					}
 				}
@@ -232,7 +237,7 @@ module.exports = function createAlgorithmPopover(
 		() => {},
 		() => {
 			algorithmBox.destroy();
-			createQueuePopover(mainScreen, algorithmsTable, algorithm, searchBar);
+			createQueuePopover(mainScreen, algorithmsTable, algorithm);
 			screen.render();
 		}
 	);

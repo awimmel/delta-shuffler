@@ -1,6 +1,5 @@
 const blessed = require("blessed");
-const variables = require("../database/variables.json");
-const primaryColor = variables.primaryColor;
+const themeHelper = require("../backend/themeHelper.js");
 
 class SongProgressBar {
 	constructor(menu, screen) {
@@ -13,14 +12,6 @@ class SongProgressBar {
 			width: "100%-29",
 			height: 3,
 			border: "line",
-			style: {
-				bar: {
-					bg: primaryColor
-				},
-				border: {
-					fg: "white"
-				}
-			},
 			hidden: true
 		});
 
@@ -33,9 +24,6 @@ class SongProgressBar {
 					left: 2 * index,
 					width: 1,
 					height: 1,
-					style: {
-						bg: primaryColor
-					},
 					hidden: true
 				});
 			}
@@ -54,6 +42,8 @@ class SongProgressBar {
 		this.currPos = 0;
 		this.duration = 0;
 		this.autoUpdate = null;
+
+		this.setColors();
 	}
 
 	setProgress(currPos, duration) {
@@ -104,6 +94,29 @@ class SongProgressBar {
 		this.progressBar.hidden = true;
 		this.durationText.hidden = true;
 		clearAutoUpdate(this.autoUpdate);
+	}
+
+	setColors() {
+		this.progressBar.style = {
+			bar: {
+				bg: themeHelper.getPrimary()
+			},
+			border: {
+				fg: themeHelper.getFocus()
+			}
+		};
+
+		for (const interiorBar of this.interiorBars) {
+			interiorBar.style = {
+				bg: themeHelper.getPrimary()
+			};
+		}
+
+		this.durationText.style = {
+			fg: themeHelper.getText()
+		};
+
+		this.screen.render();
 	}
 }
 

@@ -1,7 +1,6 @@
 const blessed = require("blessed");
 const authHelper = require("../../backend/authHelper.js");
-
-const variables = require("../../database/variables.json");
+const themeHelper = require("../../backend/themeHelper.js");
 
 module.exports = function createWaitingPopover(mainScreen) {
 	const waitingPopover = blessed.box({
@@ -13,7 +12,13 @@ module.exports = function createWaitingPopover(mainScreen) {
 		left: "center",
 		label: ` {bold}Refreshing...{/bold} `,
 		tags: true,
-		hidden: false
+		hidden: false,
+		style: {
+			fg: themeHelper.getText(),
+			border: {
+				fg: themeHelper.getFocus()
+			}
+		}
 	});
 
 	const spinner = blessed.text({
@@ -24,7 +29,7 @@ module.exports = function createWaitingPopover(mainScreen) {
 		width: 3,
 		height: 1,
 		style: {
-			fg: variables.primaryColor
+			fg: themeHelper.getText()
 		}
 	});
 

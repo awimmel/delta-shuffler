@@ -1,6 +1,4 @@
 const blessed = require("blessed");
-const variables = require("../database/variables.json");
-const primaryColor = variables.primaryColor;
 
 const createSongPopover = require("../components/popovers/songPopover");
 const createAlgorithmPopover = require("../components/popovers/algorithmPopover");
@@ -11,8 +9,11 @@ const SongsTable = require("../tables/songsTable");
 const setTableKeypress = require("../utilities/setTableKeypress");
 const focusFunction = require("../utilities/focusElement.js");
 
+const themeHelper = require("../backend/themeHelper.js");
+
 class PlaylistDetailsView {
 	constructor(mainScreen, searchBar) {
+		this.mainScreen = mainScreen;
 		const parent = mainScreen.screen;
 		this.playlistDetailsView = blessed.box({
 			parent: parent,
@@ -20,21 +21,7 @@ class PlaylistDetailsView {
 			left: 0,
 			height: "100%-11",
 			width: "100%",
-			keys: true,
-			style: {
-				header: {
-					fg: primaryColor,
-					bold: true
-				},
-				cell: {
-					bold: true,
-					selected: {
-						bg: primaryColor,
-						fg: "black",
-						bold: true
-					}
-				}
-			}
+			keys: true
 		});
 
 		this.algorithmsTable = new AlgorithmsTable(this.playlistDetailsView);
@@ -63,24 +50,10 @@ class PlaylistDetailsView {
 			}
 		});
 
-		setTableKeypress(
-			this.algorithmsTable.table,
-			index => {
-				const algorithm = this.algorithmsTable.filteredAlgorithms[index - 1];
-				createAlgorithmPopover(mainScreen, this.algorithmsTable, algorithm, searchBar);
-			},
-			focusFunction(this.playlistToolbar)
-		);
-		setTableKeypress(
-			this.songsTable.table,
-			index => {
-				createSongPopover(mainScreen, this.songsTable, this.songsTable.filteredSongs[index - 1]);
-			},
-			focusFunction(this.playlistToolbar)
-		);
-
 		this.playlistDetailsView.hide();
 		this.hidden = true;
+
+		this.setColors();
 	}
 
 	show() {
@@ -135,6 +108,37 @@ class PlaylistDetailsView {
 		} else {
 			this.songsTable.focus();
 		}
+	}
+
+	setColors() {
+		this.algorithmsTable.setColors();
+		this.algorithmsTable.hide();
+		this.songsTable.setColors();
+		this.songsTable.hide();
+		this.playlistToolbar.setColors();
+		this.setTableKeypresses();
+	}
+
+	setTableKeypresses() {
+		setTableKeypress(
+			this.algorithmsTable.table,
+			index => {
+				const algorithm = this.algorithmsTable.filteredAlgorithms[index - 1];
+				createAlgorithmPopover(this.mainScreen, this.algorithmsTable, algorithm);
+			},
+			focusFunction(this.playlistToolbar)
+		);
+		setTableKeypress(
+			this.songsTable.table,
+			index => {
+				createSongPopover(
+					this.mainScreen,
+					this.songsTable,
+					this.songsTable.filteredSongs[index - 1]
+				);
+			},
+			focusFunction(this.playlistToolbar)
+		);
 	}
 }
 

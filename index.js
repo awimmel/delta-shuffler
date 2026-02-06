@@ -10,7 +10,7 @@ const path = require("path");
 
 const screen = blessed.screen({
 	smartCSR: true,
-	title: "Spotify Companion",
+	title: "Delta Shuffler",
 	term: "xterm-256color"
 });
 

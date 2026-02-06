@@ -1,10 +1,7 @@
 const blessed = require("blessed");
-const variables = require("../database/variables.json");
-const primaryColor = variables.primaryColor;
+const themeHelper = require("../backend/themeHelper.js");
 
-module.exports = function createTable(parent, top, headers, displayItems, rawItems) {
-	this.rawData = rawItems;
-
+module.exports = function createTable(parent, top, headers, displayItems) {
 	return blessed.listtable({
 		parent: parent,
 		top: top,
@@ -17,23 +14,23 @@ module.exports = function createTable(parent, top, headers, displayItems, rawIte
 		data: [headers, ...displayItems],
 		style: {
 			header: {
-				fg: primaryColor,
+				fg: themeHelper.getPrimary(),
 				bold: true
 			},
 			cell: {
 				bold: true,
 				selected: {
-					bg: primaryColor,
+					bg: themeHelper.getPrimary(),
 					fg: "black",
 					bold: true
 				}
 			},
 			border: {
-				fg: primaryColor
+				fg: themeHelper.getPrimary()
 			},
 			focus: {
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			}
 		}

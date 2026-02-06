@@ -27,37 +27,18 @@ class MainScreen {
 		);
 		this.footer = createFooter(this.screen);
 
-		this.backButton.on("keypress", (char, key) => {
-			const activeTable = this.playlistDetailsView.getActiveTable();
-			if (key.name === "enter") {
-				this.searchBar.setValue("");
-				this.playlistDetailsView.hide();
-				this.algorithmsTable.hide();
-				this.songsTable.hide();
-
-				this.playlistTable.show();
-				this.playlistTable.focus();
-			} else if (key.name === "right") {
-				const createAlgorithm = this.playlistDetailsView.playlistToolbar.createAlgorithm;
-				this.playlistDetailsView.playlistToolbar.prevFocus = createAlgorithm;
-				createAlgorithm.focus();
-			} else if (key.name === "up") {
-				this.searchBar.focus();
-			} else if (key.name === "down") {
-				activeTable.focus();
-			}
-		});
-
 		this.setShortcuts();
 
+		this.setBackKeypress();
 		this.searchBar.setKeyPresses(this.playlistDetailsView, this.playlistTable, this.menu);
-		this.playlistTable.focus();
 
 		if (playlistHelper.readPlaylists().length === 0) {
 			refreshHelper.refresh(this);
 			this.createWaitingPopover();
 		}
 
+		this.setColors();
+		this.playlistTable.focus();
 		this.screen.render();
 	}
 
@@ -112,6 +93,41 @@ class MainScreen {
 
 	createWaitingPopover() {
 		createWaitingPopover(this);
+	}
+
+	setColors() {
+		this.menu.setColors();
+		this.searchBar.setColors();
+		this.playlistTable.setColors();
+		this.playlistDetailsView.setColors();
+		this.searchBar.setKeyPresses(this.playlistDetailsView, this.playlistTable, this.menu);
+		this.setBackKeypress();
+		this.screen.render();
+	}
+
+	setBackKeypress() {
+		this.backButton.removeAllListeners("keypress");
+		this.backButton.on("keypress", (char, key) => {
+			const activeTable = this.playlistDetailsView.getActiveTable();
+			if (key.name === "enter") {
+				this.playlistDetailsView.hide();
+				this.algorithmsTable.hide();
+				this.songsTable.hide();
+
+				this.searchBar.setValue("");
+				this.playlistTable.filterData("");
+				this.playlistTable.show();
+				this.playlistTable.focus();
+			} else if (key.name === "right") {
+				const createAlgorithm = this.playlistDetailsView.playlistToolbar.createAlgorithm;
+				this.playlistDetailsView.playlistToolbar.prevFocus = createAlgorithm;
+				createAlgorithm.focus();
+			} else if (key.name === "up") {
+				this.searchBar.focus();
+			} else if (key.name === "down") {
+				activeTable.focus();
+			}
+		});
 	}
 }
 

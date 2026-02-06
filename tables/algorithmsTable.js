@@ -11,7 +11,7 @@ class AlgorithmsTable {
 		this.filteredAlgorithms = this.algorithms;
 		this.algorithmCount = 0;
 		this.playlistId = "";
-		this.table = createTable(parent, 3, columns, [], []);
+		this.table = createTable(this.parent, 3, columns, []);
 		this.hidden = false;
 	}
 
@@ -20,7 +20,10 @@ class AlgorithmsTable {
 		this.algorithms = algorithmHelper.readAlgorithms(playlistId);
 		this.filteredAlgorithms = this.algorithms;
 		this.algorithmCount = this.algorithms.length;
-		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.algorithms, this.width)]);
+		this.table.setData([
+			columns,
+			...algorithmHelper.displayAlgorithms(this.algorithms, this.width)
+		]);
 	}
 
 	getDataCount() {
@@ -32,13 +35,19 @@ class AlgorithmsTable {
 			item.name.toLowerCase().includes(query)
 		);
 		this.algorithmCount = this.filteredAlgorithms.length;
-		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.filteredAlgorithms, this.width)]);
+		this.table.setData([
+			columns,
+			...algorithmHelper.displayAlgorithms(this.filteredAlgorithms, this.width)
+		]);
 	}
 
 	addAlgorithm(newAlg) {
 		this.algorithms = [...this.algorithms, newAlg];
 		this.filteredAlgorithms = this.algorithms;
-		this.table.setData([columns, ...algorithmHelper.displayAlgorithms(this.algorithms, this.width)]);
+		this.table.setData([
+			columns,
+			...algorithmHelper.displayAlgorithms(this.algorithms, this.width)
+		]);
 	}
 
 	hide() {
@@ -53,6 +62,16 @@ class AlgorithmsTable {
 	show() {
 		this.table.show();
 		this.hidden = false;
+	}
+
+	setColors() {
+		this.table.destroy();
+		this.table = createTable(
+			this.parent,
+			3,
+			columns,
+			algorithmHelper.displayAlgorithms(this.filteredAlgorithms, this.width)
+		);
 	}
 }
 

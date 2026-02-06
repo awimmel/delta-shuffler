@@ -1,6 +1,5 @@
 const blessed = require("blessed");
-const variables = require("../database/variables.json");
-const primaryColor = variables.primaryColor;
+const themeHelper = require("../backend/themeHelper.js");
 
 class Dropdown {
 	constructor(screen, options, parent, top, left, width, siblings) {
@@ -24,11 +23,11 @@ class Dropdown {
 			border: "line",
 			style: {
 				border: {
-					fg: primaryColor
+					fg: themeHelper.getPrimary()
 				},
 				focus: {
 					border: {
-						fg: "white"
+						fg: themeHelper.getFocus()
 					}
 				}
 			}
@@ -122,16 +121,16 @@ function createList(parent, top, left, width, options) {
 		border: "line",
 		style: {
 			selected: {
-				bg: primaryColor,
+				bg: themeHelper.getPrimary(),
 				fg: "black",
 				bold: true
 			},
 			border: {
-				fg: primaryColor
+				fg: themeHelper.getPrimary()
 			},
 			focus: {
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			}
 		}

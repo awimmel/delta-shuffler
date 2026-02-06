@@ -4,9 +4,7 @@ const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const BuildAlgorithmPopover = require("./buildAlgorithmPopover.js");
-
-const variables = require("../../database/variables.json");
-const primaryColor = variables.primaryColor;
+const themeHelper = require("../../backend/themeHelper.js");
 
 class NameAlgorithmPopover {
 	constructor(mainScreen, createAlgorithmButton, searchBar, algorithmsTable) {
@@ -21,12 +19,18 @@ class NameAlgorithmPopover {
 			left: "center",
 			label: ` {bold}Build Algorithm:{/bold} `,
 			tags: true,
-			hidden: false
+			hidden: false,
+			style: {
+				fg: themeHelper.getText(),
+				border: {
+					fg: themeHelper.getFocus()
+				}
+			}
 		});
 
 		this.nameBox = blessed.textbox({
 			parent: this.nameAlgBox,
-			label: " Name:",
+			label: " Name: ",
 			top: 1,
 			left: 0,
 			height: 3,
@@ -35,14 +39,14 @@ class NameAlgorithmPopover {
 			border: "line",
 			keys: true,
 			style: {
-				fg: "white",
+				fg: themeHelper.getText(),
 				focus: {
 					border: {
-						fg: "white"
+						fg: themeHelper.getFocus()
 					}
 				},
 				border: {
-					fg: primaryColor
+					fg: themeHelper.getPrimary()
 				}
 			}
 		});
@@ -60,15 +64,14 @@ class NameAlgorithmPopover {
 			border: "line",
 			keys: true,
 			style: {
-				fg: "white",
-				bg: "default",
+				fg: themeHelper.getText(),
 				border: {
-					fg: "red"
+					fg: themeHelper.getDecline()
 				},
 				focus: {
-					bg: "red",
+					bg: themeHelper.getDecline(),
 					border: {
-						fg: "white"
+						fg: themeHelper.getFocus()
 					}
 				}
 			}
@@ -87,15 +90,14 @@ class NameAlgorithmPopover {
 			border: "line",
 			keys: true,
 			style: {
-				fg: "white",
-				bg: "default",
+				fg: themeHelper.getText(),
 				border: {
-					fg: "blue"
+					fg: themeHelper.getConfirmation()
 				},
 				focus: {
-					bg: "blue",
+					bg: themeHelper.getConfirmation(),
 					border: {
-						fg: "white"
+						fg: themeHelper.getFocus()
 					}
 				}
 			}

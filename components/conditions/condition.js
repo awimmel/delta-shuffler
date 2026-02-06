@@ -5,8 +5,7 @@ const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const focusText = require("../../utilities/focusText.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
-const variables = require("../../database/variables.json");
-const primaryColor = variables.primaryColor;
+const themeHelper = require("../../backend/themeHelper.js");
 
 class Condition {
 	constructor(index, screen, conditionGroup, topOffset, allowAdd, allowDelete, bottom, closeBox) {
@@ -50,14 +49,14 @@ class Condition {
 			border: "line",
 			keys: true,
 			style: {
-				fg: "white",
+				fg: themeHelper.getText(),
 				focus: {
 					border: {
-						fg: "white"
+						fg: themeHelper.getFocus()
 					}
 				},
 				border: {
-					fg: primaryColor
+					fg: themeHelper.getPrimary()
 				}
 			}
 		});
@@ -341,11 +340,11 @@ function createAddButton(parent, topOffset) {
 		border: "line",
 		style: {
 			border: {
-				fg: primaryColor
+				fg: themeHelper.getPrimary()
 			},
 			focus: {
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			}
 		}
@@ -362,15 +361,14 @@ function createDeleteButton(parent, topOffset, allowAdd) {
 		width: 3,
 		border: "line",
 		style: {
-			fg: "white",
-			bg: "default",
+			fg: themeHelper.getText(),
 			border: {
-				fg: "red"
+				fg: themeHelper.getDecline()
 			},
 			focus: {
-				bg: "red",
+				bg: themeHelper.getDecline(),
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			}
 		}

@@ -4,6 +4,7 @@ const focusFunction = require("../../utilities/focusElement.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const algorithmHelper = require("../../backend/algorithmHelper.js");
 const playlistHelper = require("../../backend/playlistHelper.js");
+const themeHelper = require("../../backend/themeHelper.js");
 
 module.exports = function createDeletePopover(mainScreen, algorithmsTable, algorithm) {
 	const screen = mainScreen.screen;
@@ -16,7 +17,13 @@ module.exports = function createDeletePopover(mainScreen, algorithmsTable, algor
 		left: "center",
 		label: ` {bold}${algorithm.name}{/bold} `,
 		tags: true,
-		hidden: false
+		hidden: false,
+		style: {
+			fg: themeHelper.getText(),
+			border: {
+				fg: themeHelper.getFocus()
+			}
+		}
 	});
 
 	blessed.text({
@@ -25,7 +32,10 @@ module.exports = function createDeletePopover(mainScreen, algorithmsTable, algor
 		top: 1,
 		left: 2,
 		width: "100%-4",
-		height: 1
+		height: 1,
+		style: {
+			fg: themeHelper.getText()
+		}
 	});
 
 	const noBox = blessed.box({
@@ -41,15 +51,14 @@ module.exports = function createDeletePopover(mainScreen, algorithmsTable, algor
 		border: "line",
 		keys: true,
 		style: {
-			fg: "white",
-			bg: "default",
+			fg: themeHelper.getText(),
 			border: {
-				fg: "red"
+				fg: themeHelper.getDecline()
 			},
 			focus: {
-				bg: "red",
+				bg: themeHelper.getDecline(),
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			}
 		}
@@ -68,15 +77,14 @@ module.exports = function createDeletePopover(mainScreen, algorithmsTable, algor
 		border: "line",
 		keys: true,
 		style: {
-			fg: "white",
-			bg: "default",
+			fg: themeHelper.getText(),
 			border: {
-				fg: "blue"
+				fg: themeHelper.getConfirmation()
 			},
 			focus: {
-				bg: "blue",
+				bg: themeHelper.getConfirmation(),
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			}
 		}

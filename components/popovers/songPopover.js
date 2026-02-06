@@ -4,6 +4,7 @@ const focusFunction = require("../../utilities/focusElement.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const songHelper = require("../../backend/songHelper.js");
 const playerHelper = require("../../backend/playerHelper.js");
+const themeHelper = require("../../backend/themeHelper.js");
 
 module.exports = function createSongPopover(mainScreen, songsTable, song) {
 	const screen = mainScreen.screen;
@@ -16,7 +17,13 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 		left: "center",
 		label: ` {bold}${song.name}{/bold} `,
 		tags: true,
-		hidden: false
+		hidden: false,
+		style: {
+			fg: themeHelper.getText(),
+			border: {
+				fg: themeHelper.getFocus()
+			}
+		}
 	});
 
 	let songStr = `Artist: ${songHelper.getArtistString(song)}\n\nAlbum: ${song.album.name}`;
@@ -35,7 +42,10 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 		top: 1,
 		left: 2,
 		width: "100%-4",
-		height: 11
+		height: 11,
+		style: {
+			fg: themeHelper.getText()
+		}
 	});
 
 	const closeBox = blessed.box({
@@ -51,15 +61,14 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: "white",
-			bg: "default",
+			fg: themeHelper.getText(),
 			border: {
-				fg: "red"
+				fg: themeHelper.getDecline()
 			},
 			focus: {
-				bg: "red",
+				bg: themeHelper.getDecline(),
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			}
 		}
@@ -78,15 +87,14 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: "white",
-			bg: "default",
+			fg: themeHelper.getText(),
 			border: {
-				fg: "blue"
+				fg: themeHelper.getConfirmation()
 			},
 			focus: {
-				bg: "blue",
+				bg: themeHelper.getConfirmation(),
 				border: {
-					fg: "white"
+					fg: themeHelper.getFocus()
 				}
 			}
 		}

@@ -2,11 +2,11 @@ const blessed = require("blessed");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const NameAlgorithmPopover = require("../components/popovers/nameAlgorithmPopover.js");
 const playlistHelper = require("../backend/playlistHelper.js");
-const variables = require("../database/variables.json");
-const primaryColor = variables.primaryColor;
+const themeHelper = require("../backend/themeHelper.js");
 
 class PlaylistToolbar {
 	constructor(mainScreen, parent, searchBar, algorithmsTable, songsTable) {
+		this.mainScreen = mainScreen;
 		this.searchBar = searchBar;
 		this.algorithmsTable = algorithmsTable;
 		this.songsTable = songsTable;
@@ -38,20 +38,7 @@ class PlaylistToolbar {
 			width: 6,
 			content: "Back",
 			border: "line",
-			keys: true,
-			style: {
-				fg: "white",
-				focus: {
-					fg: "black",
-					bg: primaryColor,
-					border: {
-						fg: "white"
-					}
-				},
-				border: {
-					fg: primaryColor
-				}
-			}
+			keys: true
 		});
 
 		this.createAlgorithm = blessed.box({
@@ -62,20 +49,7 @@ class PlaylistToolbar {
 			width: 19,
 			content: "Create Algorithm",
 			border: "line",
-			keys: true,
-			style: {
-				fg: "white",
-				focus: {
-					fg: "black",
-					bg: primaryColor,
-					border: {
-						fg: "white"
-					}
-				},
-				border: {
-					fg: primaryColor
-				}
-			}
+			keys: true
 		});
 
 		this.showAlgorithms = blessed.box({
@@ -86,20 +60,7 @@ class PlaylistToolbar {
 			width: 17,
 			content: "Show Algorithms",
 			border: "line",
-			keys: true,
-			style: {
-				fg: "white",
-				focus: {
-					fg: "black",
-					bg: primaryColor,
-					border: {
-						fg: "white"
-					}
-				},
-				border: {
-					fg: primaryColor
-				}
-			}
+			keys: true
 		});
 
 		this.showSongs = blessed.box({
@@ -110,20 +71,7 @@ class PlaylistToolbar {
 			width: 12,
 			content: "Show Songs",
 			border: "line",
-			keys: true,
-			style: {
-				fg: "white",
-				focus: {
-					fg: "black",
-					bg: primaryColor,
-					border: {
-						fg: "white"
-					}
-				},
-				border: {
-					fg: primaryColor
-				}
-			}
+			keys: true
 		});
 
 		this.prevFocus = this.backButton;
@@ -146,7 +94,7 @@ class PlaylistToolbar {
 			},
 			() => {
 				new NameAlgorithmPopover(
-					mainScreen,
+					this.mainScreen,
 					this.createAlgorithm,
 					this.searchBar,
 					this.algorithmsTable
@@ -216,6 +164,49 @@ class PlaylistToolbar {
 		const playlistName = playlistHelper.getPlaylistName(playlistId);
 		this.playlistName.setContent(playlistName);
 	}
+
+	setColors() {
+		this.playlistName.style = {
+			fg: themeHelper.getText(),
+			bold: true
+		};
+
+		const buttonStyle = {
+			fg: themeHelper.getText(),
+			border: {
+				fg: themeHelper.getPrimary()
+			}
+		};
+		this.backButton.style = JSON.parse(JSON.stringify(buttonStyle));
+		setFocus(this.backButton);
+
+		this.createAlgorithm.style = JSON.parse(JSON.stringify(buttonStyle));
+		setFocus(this.createAlgorithm);
+
+		this.showAlgorithms.style = JSON.parse(JSON.stringify(buttonStyle));
+		setFocus(this.showAlgorithms);
+
+		this.showSongs.style = JSON.parse(JSON.stringify(buttonStyle));
+		setFocus(this.showSongs);
+
+		this.mainScreen.screen.render();
+	}
+}
+
+function setFocus(el) {
+	el.on("focus", function () {
+		this.style.fg = "black";
+		this.style.bg = themeHelper.getPrimary();
+		this.style.border.fg = themeHelper.getFocus();
+		this.screen.render();
+	});
+
+	el.on("blur", function () {
+		this.style.fg = themeHelper.getText();
+		this.style.bg = "none";
+		this.style.border.fg = themeHelper.getPrimary();
+		this.screen.render();
+	});
 }
 
 module.exports = PlaylistToolbar;

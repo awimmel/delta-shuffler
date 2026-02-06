@@ -4,9 +4,8 @@ const createSettingsPopover = require("./popovers/settingsPopover.js");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const displayString = require("../utilities/displayString.js");
 const playerHelper = require("../backend/playerHelper.js");
-const variables = require("../database/variables.json");
+const themeHelper = require("../backend/themeHelper.js");
 const SongProgressBar = require("../components/songProgressBar.js");
-const primaryColor = variables.primaryColor;
 const path = require("path");
 
 const imagePath = path.join(__dirname, "../tmp", `album_cover.png`);
@@ -24,18 +23,7 @@ class Menu {
 			top: 0,
 			left: 0,
 			height: 8,
-			border: "line",
-			style: {
-				bold: true,
-				border: {
-					fg: primaryColor
-				},
-				focus: {
-					border: {
-						fg: "white"
-					}
-				}
-			}
+			border: "line"
 		});
 
 		this.albumArt = blessed.image({
@@ -57,10 +45,7 @@ class Menu {
 			top: 1,
 			left: 14,
 			height: 1,
-			width: "50%-19",
-			style: {
-				bold: true
-			}
+			width: "50%-19"
 		});
 
 		// Playback tools
@@ -71,21 +56,7 @@ class Menu {
 			left: "50%-4",
 			height: 3,
 			width: 4,
-			border: "line",
-			style: {
-				fg: "white",
-				border: {
-					fg: primaryColor
-				},
-				focus: {
-					fg: "black",
-					bg: primaryColor,
-					border: {
-						fg: "white"
-					}
-				},
-				bold: true
-			}
+			border: "line"
 		});
 		this.pauseSong = blessed.box({
 			parent: this.toolbar,
@@ -94,21 +65,7 @@ class Menu {
 			left: "50%",
 			height: 3,
 			width: 4,
-			border: "line",
-			style: {
-				fg: "white",
-				border: {
-					fg: primaryColor
-				},
-				focus: {
-					fg: "black",
-					bg: primaryColor,
-					border: {
-						fg: "white"
-					}
-				},
-				bold: true
-			}
+			border: "line"
 		});
 
 		this.skipSong = blessed.box({
@@ -118,21 +75,7 @@ class Menu {
 			left: "50%+4",
 			height: 3,
 			width: 4,
-			border: "line",
-			style: {
-				fg: "white",
-				border: {
-					fg: primaryColor
-				},
-				focus: {
-					fg: "black",
-					bg: primaryColor,
-					border: {
-						fg: "white"
-					}
-				},
-				bold: true
-			}
+			border: "line"
 		});
 
 		this.queueSong = blessed.box({
@@ -142,21 +85,7 @@ class Menu {
 			left: "50%+8",
 			height: 3,
 			width: 4,
-			border: "line",
-			style: {
-				fg: "white",
-				border: {
-					fg: primaryColor
-				},
-				focus: {
-					fg: "black",
-					bg: primaryColor,
-					border: {
-						fg: "white"
-					}
-				},
-				bold: true
-			}
+			border: "line"
 		});
 
 		// Refresh button
@@ -169,20 +98,7 @@ class Menu {
 			width: 9,
 			align: "center",
 			valign: "middle",
-			border: "line",
-			style: {
-				fg: "white",
-				border: {
-					fg: "blue"
-				},
-				focus: {
-					bg: "blue",
-					border: {
-						fg: "white"
-					}
-				},
-				bold: true
-			}
+			border: "line"
 		});
 
 		// Settings button
@@ -195,20 +111,7 @@ class Menu {
 			width: 10,
 			align: "center",
 			valign: "middle",
-			border: "line",
-			style: {
-				fg: "white",
-				border: {
-					fg: "gray"
-				},
-				focus: {
-					bg: "gray",
-					border: {
-						fg: "white"
-					}
-				},
-				bold: true
-			}
+			border: "line"
 		});
 		// Close button
 		this.close = blessed.box({
@@ -220,20 +123,7 @@ class Menu {
 			width: 7,
 			align: "center",
 			valign: "middle",
-			border: "line",
-			style: {
-				fg: "white",
-				border: {
-					fg: "red"
-				},
-				focus: {
-					bg: "red",
-					border: {
-						fg: "white"
-					}
-				},
-				bold: true
-			}
+			border: "line"
 		});
 
 		this.songProgressBar = new SongProgressBar(this.toolbar, this.screen);
@@ -366,6 +256,8 @@ class Menu {
 			() => process.exit(0)
 		);
 
+		this.setColors();
+
 		this.screen.render();
 	}
 
@@ -432,6 +324,69 @@ class Menu {
 	focusClose() {
 		this.close.focus();
 	}
+
+	setColors() {
+		this.toolbar.style = {
+			bold: true,
+			border: {
+				fg: themeHelper.getPrimary()
+			}
+		};
+		this.currPlaying.style = {
+			fg: themeHelper.getText(),
+			bold: true
+		};
+
+		const playerButtonStyle = {
+			fg: themeHelper.getText(),
+			border: {
+				fg: themeHelper.getPrimary()
+			},
+			bold: true
+		};
+		this.backSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
+		setFocus(this.backSong, true, themeHelper.getPrimary());
+
+		this.pauseSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
+		setFocus(this.pauseSong, true, themeHelper.getPrimary());
+
+		this.skipSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
+		setFocus(this.skipSong, true, themeHelper.getPrimary());
+
+		this.queueSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
+		setFocus(this.queueSong, true, themeHelper.getPrimary());
+
+		this.refresh.style = {
+			fg: themeHelper.getText(),
+			border: {
+				fg: themeHelper.getConfirmation()
+			},
+			bold: true
+		};
+		setFocus(this.refresh, false, themeHelper.getConfirmation());
+
+		this.settings.style = {
+			fg: themeHelper.getText(),
+			border: {
+				fg: themeHelper.getUtility()
+			},
+			bold: true
+		};
+		setFocus(this.settings, false, themeHelper.getUtility());
+
+		this.close.style = {
+			fg: themeHelper.getText(),
+			border: {
+				fg: themeHelper.getDecline()
+			},
+			bold: true
+		};
+		setFocus(this.close, false, themeHelper.getDecline());
+
+		this.songProgressBar.setColors();
+
+		this.screen.render();
+	}
 }
 
 module.exports = Menu;
@@ -461,10 +416,20 @@ async function retrieveAndSetCurrPlaying(
 	const pauseContent = playingResult.playing ? pause : play;
 	pauseSong.setContent(pauseContent);
 
-	if (playingResult.content && playingResult.playing && playingResult.spot && playingResult.duration) {
+	if (
+		playingResult.content &&
+		playingResult.playing &&
+		playingResult.spot &&
+		playingResult.duration
+	) {
 		songProgressBar.setProgress(playingResult.spot, playingResult.duration);
 		albumArt.hidden = false;
-	} else if (playingResult.content && !playingResult.playing && playingResult.spot && playingResult.duration) {
+	} else if (
+		playingResult.content &&
+		!playingResult.playing &&
+		playingResult.spot &&
+		playingResult.duration
+	) {
 		songProgressBar.pauseWithOverride(playingResult.spot, playingResult.duration);
 		albumArt.hidden = false;
 	} else {
@@ -472,4 +437,24 @@ async function retrieveAndSetCurrPlaying(
 		albumArt.hidden = true;
 	}
 	screen.render();
+}
+
+function setFocus(el, setFg, focusColor) {
+	el.on("focus", function () {
+		if (setFg) {
+			this.style.fg = "black";
+		}
+		this.style.bg = focusColor;
+		this.style.border.fg = themeHelper.getFocus();
+		this.screen.render();
+	});
+
+	el.on("blur", function () {
+		if (setFg) {
+			this.style.fg = themeHelper.getText();
+		}
+		this.style.bg = "none";
+		this.style.border.fg = focusColor;
+		this.screen.render();
+	});
 }
