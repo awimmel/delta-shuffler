@@ -70,10 +70,12 @@ class MainScreen {
 					}
 				} else if (char === "s") {
 					if (this.playlistTable.hidden) {
+						this.searchBar.setValue("");
 						this.playlistDetailsView.showSongsTable();
 					}
 				} else if (char === "a") {
 					if (this.playlistTable.hidden) {
+						this.searchBar.setValue("");
 						this.playlistDetailsView.showAlgorithmsTable();
 					}
 				}

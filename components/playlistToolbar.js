@@ -120,7 +120,9 @@ class PlaylistToolbar {
 			() => {
 				this.searchBar.setValue("");
 
+				this.songsTable.filterData("");
 				this.songsTable.hide();
+
 				this.algorithmsTable.show();
 				this.algorithmsTable.focus();
 			}
@@ -141,7 +143,9 @@ class PlaylistToolbar {
 			() => {
 				this.searchBar.setValue("");
 
+				this.algorithmsTable.filterData("");
 				this.algorithmsTable.hide();
+
 				this.songsTable.show();
 				this.songsTable.focus();
 			}

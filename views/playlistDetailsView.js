@@ -77,6 +77,7 @@ class PlaylistDetailsView {
 	}
 
 	showAlgorithmsTable() {
+		this.algorithmsTable.filterData("");
 		if (this.algorithmsTable.hidden) {
 			this.songsTable.hide();
 			this.algorithmsTable.show();
@@ -87,6 +88,7 @@ class PlaylistDetailsView {
 	}
 
 	showSongsTable() {
+		this.songsTable.filterData("");
 		if (this.songsTable.hidden) {
 			this.algorithmsTable.hide();
 			this.songsTable.show();
