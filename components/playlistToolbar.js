@@ -195,7 +195,7 @@ class PlaylistToolbar {
 
 function setFocus(el) {
 	el.on("focus", function () {
-		this.style.fg = "black";
+		this.style.fg = themeHelper.getSecondary();
 		this.style.bg = themeHelper.getPrimary();
 		this.style.border.fg = themeHelper.getFocus();
 		this.screen.render();

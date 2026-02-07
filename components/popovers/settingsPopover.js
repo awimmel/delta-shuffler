@@ -208,7 +208,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		style: {
 			selected: {
 				bg: themeHelper.getPrimary(),
-				fg: "black",
+				fg: themeHelper.getSecondary(),
 				bold: true
 			},
 			border: {

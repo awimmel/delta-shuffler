@@ -122,7 +122,7 @@ function createList(parent, top, left, width, options) {
 		style: {
 			selected: {
 				bg: themeHelper.getPrimary(),
-				fg: "black",
+				fg: themeHelper.getSecondary(),
 				bold: true
 			},
 			border: {

@@ -21,7 +21,7 @@ module.exports = function createTable(parent, top, headers, displayItems) {
 				bold: true,
 				selected: {
 					bg: themeHelper.getPrimary(),
-					fg: "black",
+					fg: themeHelper.getSecondary(),
 					bold: true
 				}
 			},

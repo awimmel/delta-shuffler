@@ -442,7 +442,7 @@ async function retrieveAndSetCurrPlaying(
 function setFocus(el, setFg, focusColor) {
 	el.on("focus", function () {
 		if (setFg) {
-			this.style.fg = "black";
+			this.style.fg = themeHelper.getSecondary();
 		}
 		this.style.bg = focusColor;
 		this.style.border.fg = themeHelper.getFocus();
