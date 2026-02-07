@@ -88,6 +88,16 @@ class Menu {
 			border: "line"
 		});
 
+		this.reshuffle = blessed.box({
+			parent: this.toolbar,
+			content: "Reshuffle",
+			top: 0,
+			left: "50%+12",
+			height: 3,
+			width: 11,
+			border: "line"
+		});
+
 		// Refresh button
 		this.refresh = blessed.box({
 			parent: this.toolbar,
@@ -195,8 +205,8 @@ class Menu {
 				this.skipSong.focus();
 			},
 			() => {
-				this.prevFocus = this.refresh;
-				this.refresh.focus();
+				this.prevFocus = this.reshuffle;
+				this.reshuffle.focus();
 			},
 			() => {},
 			() => {
@@ -207,10 +217,28 @@ class Menu {
 			}
 		);
 		toolbarKeypress(
-			this.refresh,
+			this.reshuffle,
 			() => {
 				this.prevFocus = this.queueSong;
 				this.queueSong.focus();
+			},
+			() => {
+				this.prevFocus = this.refresh;
+				this.refresh.focus();
+			},
+			() => {},
+			() => {
+				this.searchBar.focus();
+			},
+			() => {
+				playerHelper.reshuffleSongs();
+			}
+		);
+		toolbarKeypress(
+			this.refresh,
+			() => {
+				this.prevFocus = this.reshuffle;
+				this.reshuffle.focus();
 			},
 			() => {
 				this.prevFocus = this.settings;
@@ -321,6 +349,10 @@ class Menu {
 		playerHelper.queueSongs([this.currPlaying.id]);
 	}
 
+	reshuffleSongs() {
+		playerHelper.reshuffleSongs();
+	}
+
 	focusClose() {
 		this.close.focus();
 	}
@@ -355,6 +387,9 @@ class Menu {
 
 		this.queueSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
 		setFocus(this.queueSong, true, themeHelper.getPrimary());
+
+		this.reshuffle.style = JSON.parse(JSON.stringify(playerButtonStyle));
+		setFocus(this.reshuffle, true, themeHelper.getPrimary());
 
 		this.refresh.style = {
 			fg: themeHelper.getText(),

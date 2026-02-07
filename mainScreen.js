@@ -62,6 +62,8 @@ class MainScreen {
 					this.menu.skip();
 				} else if (char === ".") {
 					this.menu.queue();
+				} else if (char === "'") {
+					this.menu.reshuffleSongs();
 				} else if (char === "?") {
 					if (!this.playlistTable.hidden && this.playlistTable.getDataCount() > 0) {
 						this.playlistTable.focus();
@@ -147,9 +149,10 @@ function createFooter(screen) {
 		},
 		content:
 			"♫ Powered by Spotify | {cyan-fg}/{/cyan-fg} search | {green-fg}?{/green-fg} table | {blue-fg}s{/blue-fg} songs table | " +
-			"{magenta-fg}a{/magenta-fg} algorithms table | {yellow-fg}<{/yellow-fg} rewind | " +
+			"{magenta-fg}a{/magenta-fg} alg. table | {yellow-fg}<{/yellow-fg} rewind | " +
 			"{yellow-fg},{/yellow-fg} pause/play | {yellow-fg}>{/yellow-fg} skip | " +
-			"{yellow-fg}.{/yellow-fg} queue | {red-fg}esc{/red-fg} back/close"
+			"{yellow-fg}.{/yellow-fg} queue | {yellow-fg}'{/yellow-fg} reshuffle | " +
+			"{red-fg}esc{/red-fg} back/close"
 	});
 }
 

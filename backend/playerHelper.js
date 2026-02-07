@@ -115,3 +115,13 @@ exports.prevSong = async function () {
 		}
 	} catch {}
 };
+
+exports.reshuffleSongs = async function () {
+	const accessToken = await authHelper.getAccessToken();
+	await axios.put(`${spotifyApi}/me/player/shuffle?state=false`, null, {
+		headers: { Authorization: `Bearer ${accessToken}` }
+	});
+	await axios.put(`${spotifyApi}/me/player/shuffle?state=true`, null, {
+		headers: { Authorization: `Bearer ${accessToken}` }
+	});
+};
