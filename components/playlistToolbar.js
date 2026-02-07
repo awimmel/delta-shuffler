@@ -149,10 +149,9 @@ class PlaylistToolbar {
 	}
 
 	focusTable() {
-		if (!this.algorithmsTable.hidden) {
-			this.algorithmsTable.focus();
-		} else {
-			this.songsTable.focus();
+		const activeTable = this.algorithmsTable.hidden ? this.songsTable : this.algorithmsTable;
+		if (activeTable.getDataCount() > 0) {
+			activeTable.focus();
 		}
 	}
 

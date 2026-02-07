@@ -36,18 +36,6 @@ class PlaylistDetailsView {
 			this.songsTable
 		);
 
-		this.playlistToolbar.toolbar.on("keypress", (char, key) => {
-			if (key.name === "up") {
-				searchBar.focus();
-			} else if (key.name === "down") {
-				if (!this.algorithmsTable.hidden) {
-					this.algorithmsTable.focus();
-				} else {
-					this.songsTable.focus();
-				}
-			}
-		});
-
 		this.playlistDetailsView.hide();
 		this.hidden = true;
 

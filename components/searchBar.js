@@ -27,7 +27,7 @@ class SearchBar {
 	setKeyPresses(playlistDetailsView, playlistTable, menu) {
 		this.searchBar.on("keypress", (char, key) => {
 			if (key.name === "enter" || key.name === "down") {
-				if (!playlistDetailsView.hidden && playlistDetailsView.getDataCount() !== 0) {
+				if (!playlistDetailsView.hidden) {
 					playlistDetailsView.focus(key.name);
 				} else if (!playlistTable.hidden && playlistTable.getDataCount() !== 0) {
 					playlistTable.focus();

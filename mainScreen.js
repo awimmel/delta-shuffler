@@ -63,9 +63,9 @@ class MainScreen {
 				} else if (char === ".") {
 					this.menu.queue();
 				} else if (char === "?") {
-					if (!this.playlistTable.hidden) {
+					if (!this.playlistTable.hidden && this.playlistTable.getDataCount() > 0) {
 						this.playlistTable.focus();
-					} else {
+					} else if (this.playlistDetailsView.getActiveTable().getDataCount() > 0) {
 						this.playlistDetailsView.focus();
 					}
 				} else if (char === "s") {
@@ -124,7 +124,7 @@ class MainScreen {
 				createAlgorithm.focus();
 			} else if (key.name === "up") {
 				this.searchBar.focus();
-			} else if (key.name === "down") {
+			} else if (key.name === "down" && activeTable.getDataCount() > 0) {
 				activeTable.focus();
 			}
 		});
