@@ -147,7 +147,7 @@ function createFooter(screen) {
 			"♫ Powered by Spotify | {cyan-fg}/{/cyan-fg} search | {green-fg}?{/green-fg} table | {blue-fg}s{/blue-fg} songs table | " +
 			"{magenta-fg}a{/magenta-fg} algorithms table | {yellow-fg}<{/yellow-fg} rewind | " +
 			"{yellow-fg},{/yellow-fg} pause/play | {yellow-fg}>{/yellow-fg} skip | " +
-			"{yellow-fg}.{/yellow-fg} queue | {red-fg}esc{/red-fg} close"
+			"{yellow-fg}.{/yellow-fg} queue | {red-fg}esc{/red-fg} back/close"
 	});
 }
 

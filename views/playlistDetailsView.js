@@ -9,8 +9,6 @@ const SongsTable = require("../tables/songsTable");
 const setTableKeypress = require("../utilities/setTableKeypress");
 const focusFunction = require("../utilities/focusElement.js");
 
-const themeHelper = require("../backend/themeHelper.js");
-
 class PlaylistDetailsView {
 	constructor(mainScreen, searchBar) {
 		this.mainScreen = mainScreen;
@@ -126,7 +124,8 @@ class PlaylistDetailsView {
 				const algorithm = this.algorithmsTable.filteredAlgorithms[index - 1];
 				createAlgorithmPopover(this.mainScreen, this.algorithmsTable, algorithm);
 			},
-			focusFunction(this.playlistToolbar)
+			focusFunction(this.playlistToolbar),
+			this.playlistToolbar.backButton
 		);
 		setTableKeypress(
 			this.songsTable.table,
@@ -137,7 +136,8 @@ class PlaylistDetailsView {
 					this.songsTable.filteredSongs[index - 1]
 				);
 			},
-			focusFunction(this.playlistToolbar)
+			focusFunction(this.playlistToolbar),
+			this.playlistToolbar.backButton
 		);
 	}
 }
