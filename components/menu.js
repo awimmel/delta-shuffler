@@ -22,7 +22,7 @@ class Menu {
 			parent: this.screen,
 			top: 0,
 			left: 0,
-			height: 8,
+			height: 12,
 			border: "line"
 		});
 
@@ -30,8 +30,8 @@ class Menu {
 			parent: this.toolbar,
 			top: 0,
 			left: 1,
-			width: 12,
-			height: 6,
+			width: 20,
+			height: 10,
 			align: "left",
 			file: imagePath,
 			type: "ansi",
@@ -43,17 +43,17 @@ class Menu {
 			parent: this.toolbar,
 			content: "",
 			top: 1,
-			left: 14,
-			height: 1,
-			width: "50%-19"
+			left: 23,
+			height: 3,
+			width: "100%-52"
 		});
 
 		// Playback tools
 		this.backSong = blessed.box({
 			parent: this.toolbar,
 			content: "<<",
-			top: 0,
-			left: "50%-4",
+			bottom: 0,
+			left: "50%-6",
 			height: 3,
 			width: 4,
 			border: "line"
@@ -61,8 +61,8 @@ class Menu {
 		this.pauseSong = blessed.box({
 			parent: this.toolbar,
 			content: play,
-			top: 0,
-			left: "50%",
+			bottom: 0,
+			left: "50%-2",
 			height: 3,
 			width: 4,
 			border: "line"
@@ -71,8 +71,8 @@ class Menu {
 		this.skipSong = blessed.box({
 			parent: this.toolbar,
 			content: ">>",
-			top: 0,
-			left: "50%+4",
+			bottom: 0,
+			left: "50%+2",
 			height: 3,
 			width: 4,
 			border: "line"
@@ -81,8 +81,8 @@ class Menu {
 		this.queueSong = blessed.box({
 			parent: this.toolbar,
 			content: "+≡",
-			top: 0,
-			left: "50%+8",
+			bottom: 0,
+			left: "50%+6",
 			height: 3,
 			width: 4,
 			border: "line"
@@ -91,8 +91,8 @@ class Menu {
 		this.reshuffle = blessed.box({
 			parent: this.toolbar,
 			content: "Reshuffle",
-			top: 0,
-			left: "50%+12",
+			bottom: 0,
+			left: "50%+10",
 			height: 3,
 			width: 11,
 			border: "line"
@@ -446,13 +446,15 @@ async function retrieveAndSetCurrPlaying(
 	albumArt.clearImage();
 	albumArt.setImage(imagePath);
 
-	currPlaying.setContent(displayString(playingResult.content, currPlaying.width));
+	const songAndArtist = displayString(playingResult.songAndArtist, currPlaying.width);
+	const album = displayString(playingResult.album, currPlaying.width);
+	currPlaying.setContent(`${songAndArtist}\n\n${album}`);
 	currPlaying.id = playingResult.songId;
 	const pauseContent = playingResult.playing ? pause : play;
 	pauseSong.setContent(pauseContent);
 
 	if (
-		playingResult.content &&
+		playingResult.songAndArtist &&
 		playingResult.playing &&
 		playingResult.spot &&
 		playingResult.duration
@@ -460,7 +462,7 @@ async function retrieveAndSetCurrPlaying(
 		songProgressBar.setProgress(playingResult.spot, playingResult.duration);
 		albumArt.hidden = false;
 	} else if (
-		playingResult.content &&
+		playingResult.songAndArtist &&
 		!playingResult.playing &&
 		playingResult.spot &&
 		playingResult.duration

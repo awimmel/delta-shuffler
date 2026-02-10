@@ -7,9 +7,9 @@ class SongProgressBar {
 		this.screen = screen;
 		this.progressBar = blessed.box({
 			parent: menu,
-			top: 3,
-			left: 14,
-			width: "100%-29",
+			top: 4,
+			left: 22,
+			width: "100%-37",
 			height: 3,
 			border: "line",
 			hidden: true
@@ -32,7 +32,7 @@ class SongProgressBar {
 		this.durationText = blessed.text({
 			parent: menu,
 			content: "",
-			top: 4,
+			top: 5,
 			left: "100%-15",
 			width: 13,
 			height: 1,

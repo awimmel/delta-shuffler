@@ -54,7 +54,8 @@ exports.getCurrPlaying = async function () {
 	const artistStr = song.artists.map(artist => artist.name).join(", ");
 	return {
 		playing: resp.data.is_playing,
-		content: song.name + " - " + artistStr,
+		songAndArtist: song.name + " - " + artistStr,
+		album: song.album.name ?? "",
 		songId: song.id,
 		spot: resp.data.progress_ms,
 		duration: resp.data.item.duration_ms
