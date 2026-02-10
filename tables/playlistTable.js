@@ -11,12 +11,7 @@ class PlaylistTable {
 		this.playlists = playlistHelper.sortPlaylists(playlists);
 		this.filteredPlaylists = this.playlists;
 		this.playlistCount = this.playlists.length;
-		this.playlistTable = createTable(
-			this.screen,
-			14,
-			columns,
-			playlistHelper.displayPlaylists(this.playlists, this.screen.width)
-		);
+		this.playlistTable = createPlaylistTable(this.screen, this.playlists, this.screen.width);
 		this.search = search;
 		this.playlistDetailsView = playlistDetailsView;
 		this.setKeypresses();
@@ -57,12 +52,7 @@ class PlaylistTable {
 
 	setColors() {
 		this.playlistTable.destroy();
-		this.playlistTable = createTable(
-			this.screen,
-			14,
-			columns,
-			playlistHelper.displayPlaylists(this.filteredPlaylists, this.screen.width)
-		);
+		this.playlistTable = createPlaylistTable(this.screen, this.playlists, this.screen.width);
 		this.setKeypresses();
 	}
 
@@ -97,6 +87,15 @@ class PlaylistTable {
 			}
 		);
 	}
+}
+
+function createPlaylistTable(parent, playlists, width) {
+	return createTable(
+		parent,
+		17,
+		columns,
+		playlistHelper.displayPlaylists(playlists, width)
+	);
 }
 
 module.exports = PlaylistTable;

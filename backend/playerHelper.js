@@ -39,7 +39,8 @@ exports.getCurrPlaying = async function () {
 	if (resp.data === "") {
 		return {
 			playing: false,
-			content: ""
+			songAndArtist: "",
+			album: ""
 		};
 	}
 

@@ -32,13 +32,14 @@ class MainScreen {
 		this.setBackKeypress();
 		this.searchBar.setKeyPresses(this.playlistDetailsView, this.playlistTable, this.menu);
 
+		this.setColors();
+		this.playlistTable.focus();
+
 		if (playlistHelper.readPlaylists().length === 0) {
 			refreshHelper.refresh(this);
 			this.createWaitingPopover();
 		}
 
-		this.setColors();
-		this.playlistTable.focus();
 		this.screen.render();
 	}
 

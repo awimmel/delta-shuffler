@@ -8,7 +8,7 @@ class SearchBar {
 		this.searchBar = blessed.textbox({
 			parent: screen,
 			label: " Search: ",
-			top: 8,
+			top: 12,
 			left: 0,
 			height: 3,
 			width: "100%",
