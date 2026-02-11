@@ -2,7 +2,7 @@ const blessed = require("blessed");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const NameAlgorithmPopover = require("../components/popovers/nameAlgorithmPopover.js");
 const playlistHelper = require("../backend/playlistHelper.js");
-const themeHelper = require("../backend/themeHelper.js");
+const settingsHelper = require("../backend/settingsHelper.js");
 
 class PlaylistToolbar {
 	constructor(mainScreen, parent, searchBar, algorithmsTable, songsTable) {
@@ -170,14 +170,14 @@ class PlaylistToolbar {
 
 	setColors() {
 		this.playlistName.style = {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			bold: true
 		};
 
 		const buttonStyle = {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			}
 		};
 		this.backButton.style = JSON.parse(JSON.stringify(buttonStyle));
@@ -198,16 +198,16 @@ class PlaylistToolbar {
 
 function setFocus(el) {
 	el.on("focus", function () {
-		this.style.fg = themeHelper.getSecondary();
-		this.style.bg = themeHelper.getPrimary();
-		this.style.border.fg = themeHelper.getFocus();
+		this.style.fg = settingsHelper.getSecondary();
+		this.style.bg = settingsHelper.getPrimary();
+		this.style.border.fg = settingsHelper.getFocus();
 		this.screen.render();
 	});
 
 	el.on("blur", function () {
-		this.style.fg = themeHelper.getText();
+		this.style.fg = settingsHelper.getText();
 		this.style.bg = "none";
-		this.style.border.fg = themeHelper.getPrimary();
+		this.style.border.fg = settingsHelper.getPrimary();
 		this.screen.render();
 	});
 }

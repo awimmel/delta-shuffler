@@ -1,6 +1,6 @@
 const blessed = require("blessed");
 const playlistHelper = require("../../backend/playlistHelper.js");
-const themeHelper = require("../../backend/themeHelper.js");
+const settingsHelper = require("../../backend/settingsHelper.js");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
@@ -22,11 +22,33 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		hidden: false
 	});
 
-	const hexCodes = themeHelper.getHexCodes();
+	const albumArtCheckbox = blessed.checkbox({
+		parent: settingsBox,
+		content: "Display album art?",
+		checked: settingsHelper.getShowAlbumArt(),
+		top: 0,
+		left: 0,
+		width: "50%",
+		height: 3,
+		border: "line",
+		style: {
+			fg: settingsHelper.getText(),
+			focus: {
+				border: {
+					fg: settingsHelper.getFocus()
+				}
+			},
+			border: {
+				fg: settingsHelper.getPrimary()
+			}
+		}
+	});
+
+	const hexCodes = settingsHelper.getHexCodes();
 	const primaryBox = blessed.textbox({
 		parent: settingsBox,
 		label: " Primary: ",
-		top: 1,
+		top: 3,
 		left: 0,
 		height: 3,
 		width: "50%-1",
@@ -34,14 +56,14 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			},
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			}
 		}
 	});
@@ -49,7 +71,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 	const secondaryBox = blessed.textbox({
 		parent: settingsBox,
 		label: " Secondary: ",
-		top: 1,
+		top: 3,
 		left: "50%-1",
 		height: 3,
 		width: "50%-1",
@@ -57,14 +79,14 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			},
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			}
 		}
 	});
@@ -72,7 +94,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 	const confirmationBox = blessed.textbox({
 		parent: settingsBox,
 		label: " Confirmation: ",
-		top: 4,
+		top: 6,
 		left: 0,
 		height: 3,
 		width: "50%-1",
@@ -80,14 +102,14 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			},
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			}
 		}
 	});
@@ -95,7 +117,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 	const declineBox = blessed.textbox({
 		parent: settingsBox,
 		label: " Decline: ",
-		top: 4,
+		top: 6,
 		left: "50%-1",
 		height: 3,
 		width: "50%-1",
@@ -103,14 +125,14 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			},
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			}
 		}
 	});
@@ -118,7 +140,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 	const focusBox = blessed.textbox({
 		parent: settingsBox,
 		label: " Focus: ",
-		top: 7,
+		top: 9,
 		left: 0,
 		height: 3,
 		width: "33%",
@@ -126,14 +148,14 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			},
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			}
 		}
 	});
@@ -141,7 +163,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 	const textBox = blessed.textbox({
 		parent: settingsBox,
 		label: " Text: ",
-		top: 7,
+		top: 9,
 		left: "33%",
 		height: 3,
 		width: "34%",
@@ -149,14 +171,14 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			},
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			}
 		}
 	});
@@ -164,7 +186,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 	const utilityBox = blessed.textbox({
 		parent: settingsBox,
 		label: " Utility: ",
-		top: 7,
+		top: 9,
 		left: "66%",
 		height: 3,
 		width: "33%",
@@ -172,14 +194,14 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			},
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			}
 		}
 	});
@@ -196,10 +218,10 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 	const playlistList = blessed.list({
 		parent: settingsBox,
 		label: " Hide Playlists: ",
-		top: 11,
+		top: 12,
 		left: 1,
 		width: `100%-4`,
-		height: "100%-14",
+		height: "100%-15",
 		items: playlists.map(playlist =>
 			playlist.visible ? `[x] ${playlist.name}` : `[ ] ${playlist.name}`
 		),
@@ -207,16 +229,16 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		border: "line",
 		style: {
 			selected: {
-				bg: themeHelper.getPrimary(),
-				fg: themeHelper.getSecondary(),
+				bg: settingsHelper.getPrimary(),
+				fg: settingsHelper.getSecondary(),
 				bold: true
 			},
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			},
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		}
@@ -235,14 +257,14 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			bg: "default",
 			border: {
-				fg: themeHelper.getConfirmation()
+				fg: settingsHelper.getConfirmation()
 			},
 			focus: {
 				fg: "white",
-				bg: themeHelper.getConfirmation(),
+				bg: settingsHelper.getConfirmation(),
 				border: {
 					fg: "white"
 				}
@@ -250,18 +272,30 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		}
 	});
 
+	toolbarKeypress(
+		albumArtCheckbox,
+		() => {},
+		() => {},
+		() => {},
+		() => focusText(primaryBox),
+		() => {
+			albumArtCheckbox.toggle();
+			screen.render();
+		}
+	);
+
 	setTextboxKeypress(
 		primaryBox,
 		null,
 		() => focusText(secondaryBox),
-		null,
+		focusFunction(albumArtCheckbox),
 		() => focusText(confirmationBox)
 	);
 	setTextboxKeypress(
 		secondaryBox,
 		() => focusText(primaryBox),
 		null,
-		null,
+		focusFunction(albumArtCheckbox),
 		() => focusText(declineBox)
 	);
 	setTextboxKeypress(
@@ -307,6 +341,8 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		focusFunction(playlistList),
 		() => {},
 		() => {
+			settingsHelper.saveShowAlbumArt(albumArtCheckbox.checked);
+
 			readAndSaveColors([
 				primaryBox,
 				secondaryBox,
@@ -316,7 +352,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 				textBox,
 				utilityBox
 			]);
-			mainScreen.setColors();
+			mainScreen.resizeAndSetColors();
 
 			const hiddenIds = playlists
 				.filter((playlist, index) => hidden.has(index))
@@ -362,12 +398,12 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 	});
 
 	escapeKeypress(
-		[primaryBox, secondaryBox, focusBox, confirmationBox, declineBox, utilityBox, playlistList],
+		[albumArtCheckbox, primaryBox, secondaryBox, focusBox, confirmationBox, declineBox, utilityBox, playlistList],
 		saveBox
 	);
 
 	mainScreen.setFocus(false);
-	focusText(primaryBox);
+	albumArtCheckbox.focus();
 	screen.render();
 
 	return settingsBox;
@@ -391,7 +427,7 @@ function readAndSaveColors(colorTextboxes) {
 	colorTextboxes.forEach((colorTextbox, index) => {
 		const currVal = colorTextbox.getValue();
 		if (hexRegex.test(currVal)) {
-			themeHelper.saveHexCode(currVal, index);
+			settingsHelper.saveHexCode(currVal, index);
 		}
 	});
 }

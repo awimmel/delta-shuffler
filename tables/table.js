@@ -1,5 +1,5 @@
 const blessed = require("blessed");
-const themeHelper = require("../backend/themeHelper.js");
+const settingsHelper = require("../backend/settingsHelper.js");
 
 module.exports = function createTable(parent, top, headers, displayItems) {
 	return blessed.listtable({
@@ -14,23 +14,23 @@ module.exports = function createTable(parent, top, headers, displayItems) {
 		data: [headers, ...displayItems],
 		style: {
 			header: {
-				fg: themeHelper.getPrimary(),
+				fg: settingsHelper.getPrimary(),
 				bold: true
 			},
 			cell: {
 				bold: true,
 				selected: {
-					bg: themeHelper.getPrimary(),
-					fg: themeHelper.getSecondary(),
+					bg: settingsHelper.getPrimary(),
+					fg: settingsHelper.getSecondary(),
 					bold: true
 				}
 			},
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			},
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		}

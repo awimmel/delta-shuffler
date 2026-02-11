@@ -5,7 +5,7 @@ const focusText = require("../../utilities/focusText.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const algorithmHelper = require("../../backend/algorithmHelper.js");
 const songHelper = require("../../backend/songHelper.js");
-const themeHelper = require("../../backend/themeHelper.js");
+const settingsHelper = require("../../backend/settingsHelper.js");
 
 module.exports = function createQueuePopover(mainScreen, algorithmsTable, algorithm) {
 	const screen = mainScreen.screen;
@@ -20,9 +20,9 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		tags: true,
 		hidden: false,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getFocus()
+				fg: settingsHelper.getFocus()
 			}
 		}
 	});
@@ -38,14 +38,14 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			},
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			}
 		}
 	});
@@ -59,7 +59,7 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		width: "85%",
 		content: "",
 		style: {
-			fg: themeHelper.getText()
+			fg: settingsHelper.getText()
 		}
 	});
 
@@ -76,14 +76,14 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getDecline()
+				fg: settingsHelper.getDecline()
 			},
 			focus: {
-				bg: themeHelper.getDecline(),
+				bg: settingsHelper.getDecline(),
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		}
@@ -102,14 +102,14 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getConfirmation()
+				fg: settingsHelper.getConfirmation()
 			},
 			focus: {
-				bg: themeHelper.getConfirmation(),
+				bg: settingsHelper.getConfirmation(),
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		}

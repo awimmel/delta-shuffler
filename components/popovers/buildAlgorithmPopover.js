@@ -4,7 +4,7 @@ const focusFunction = require("../../utilities/focusElement.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const ConditionGroup = require("../conditions/conditionGroup.js");
 const algorithmHelper = require("../../backend/algorithmHelper.js");
-const themeHelper = require("../../backend/themeHelper.js");
+const settingsHelper = require("../../backend/settingsHelper.js");
 
 class BuildAlgorithmPopover {
 	constructor(name, mainScreen, createAlgorithmButton, searchBar, algorithmsTable) {
@@ -41,14 +41,14 @@ class BuildAlgorithmPopover {
 			border: "line",
 			keys: true,
 			style: {
-				fg: themeHelper.getText(),
+				fg: settingsHelper.getText(),
 				border: {
-					fg: themeHelper.getDecline()
+					fg: settingsHelper.getDecline()
 				},
 				focus: {
-					bg: themeHelper.getDecline(),
+					bg: settingsHelper.getDecline(),
 					border: {
-						fg: themeHelper.getFocus()
+						fg: settingsHelper.getFocus()
 					}
 				}
 			}
@@ -67,14 +67,14 @@ class BuildAlgorithmPopover {
 			border: "line",
 			keys: true,
 			style: {
-				fg: themeHelper.getText(),
+				fg: settingsHelper.getText(),
 				border: {
-					fg: themeHelper.getConfirmation()
+					fg: settingsHelper.getConfirmation()
 				},
 				focus: {
-					bg: themeHelper.getConfirmation(),
+					bg: settingsHelper.getConfirmation(),
 					border: {
-						fg: themeHelper.getFocus()
+						fg: settingsHelper.getFocus()
 					}
 				}
 			}
@@ -147,11 +147,11 @@ function createAddConditionButton(buildAlgBox, conditionGroupCount) {
 		border: "line",
 		style: {
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			},
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		}

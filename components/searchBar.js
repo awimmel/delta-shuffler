@@ -1,5 +1,5 @@
 const blessed = require("blessed");
-const themeHelper = require("../backend/themeHelper.js");
+const settingsHelper = require("../backend/settingsHelper.js");
 const focusText = require("../utilities/focusText");
 
 class SearchBar {
@@ -8,7 +8,6 @@ class SearchBar {
 		this.searchBar = blessed.textbox({
 			parent: screen,
 			label: " Search: ",
-			top: 12,
 			left: 0,
 			height: 3,
 			width: "100%",
@@ -17,7 +16,7 @@ class SearchBar {
 			keys: true
 		});
 
-		this.setColors();
+		this.resizeAndSetColors();
 	}
 
 	focus() {
@@ -49,26 +48,28 @@ class SearchBar {
 		this.searchBar.setValue(newVal);
 	}
 
-	setColors() {
+	resizeAndSetColors() {
+		this.searchBar.top = settingsHelper.getShowAlbumArt() ? 12 : 9;
+
 		this.searchBar.style = {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			},
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			}
 		};
 
 		this.searchBar.on("focus", function () {
-			this.style.border.fg = themeHelper.getFocus();
+			this.style.border.fg = settingsHelper.getFocus();
 			this.screen.render();
 		});
 
 		this.searchBar.on("blur", function () {
-			this.style.border.fg = themeHelper.getPrimary();
+			this.style.border.fg = settingsHelper.getPrimary();
 			this.screen.render();
 		});
 	}

@@ -5,7 +5,7 @@ const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const joinOperator = require("../../utilities/joinOperator.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
-const themeHelper = require("../../backend/themeHelper.js");
+const settingsHelper = require("../../backend/settingsHelper.js");
 
 class ConditionGroup {
 	constructor(screen, buildAlgorithmPopover, top, bottom, topOffset, closeBox) {
@@ -24,11 +24,11 @@ class ConditionGroup {
 			border: "line",
 			style: {
 				border: {
-					fg: themeHelper.getPrimary()
+					fg: settingsHelper.getPrimary()
 				},
 				focus: {
 					border: {
-						fg: themeHelper.getFocus()
+						fg: settingsHelper.getFocus()
 					}
 				}
 			}
@@ -49,14 +49,14 @@ class ConditionGroup {
 				width: 3,
 				border: "line",
 				style: {
-					fg: themeHelper.getText(),
+					fg: settingsHelper.getText(),
 					border: {
-						fg: themeHelper.getDecline()
+						fg: settingsHelper.getDecline()
 					},
 					focus: {
-						bg: themeHelper.getDecline(),
+						bg: settingsHelper.getDecline(),
 						border: {
-							fg: themeHelper.getFocus()
+							fg: settingsHelper.getFocus()
 						}
 					}
 				}

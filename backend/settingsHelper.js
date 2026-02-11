@@ -3,6 +3,17 @@ const fs = require("fs");
 
 const filePath = path.join(__dirname, "../database", "variables.json");
 
+exports.getShowAlbumArt = function () {
+	return JSON.parse(fs.readFileSync(filePath, "utf8")).showAlbumArt;
+};
+
+exports.saveShowAlbumArt = function (showAlbumArt) {
+	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	variables.showAlbumArt = showAlbumArt;
+
+	fs.writeFileSync(filePath, JSON.stringify(variables), err => {});
+};
+
 exports.getHexCodes = function () {
 	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
 	return [

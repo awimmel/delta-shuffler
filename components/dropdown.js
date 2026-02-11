@@ -1,5 +1,5 @@
 const blessed = require("blessed");
-const themeHelper = require("../backend/themeHelper.js");
+const settingsHelper = require("../backend/settingsHelper.js");
 
 class Dropdown {
 	constructor(screen, options, parent, top, left, width, siblings) {
@@ -23,11 +23,11 @@ class Dropdown {
 			border: "line",
 			style: {
 				border: {
-					fg: themeHelper.getPrimary()
+					fg: settingsHelper.getPrimary()
 				},
 				focus: {
 					border: {
-						fg: themeHelper.getFocus()
+						fg: settingsHelper.getFocus()
 					}
 				}
 			}
@@ -121,16 +121,16 @@ function createList(parent, top, left, width, options) {
 		border: "line",
 		style: {
 			selected: {
-				bg: themeHelper.getPrimary(),
-				fg: themeHelper.getSecondary(),
+				bg: settingsHelper.getPrimary(),
+				fg: settingsHelper.getSecondary(),
 				bold: true
 			},
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			},
 			focus: {
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		}

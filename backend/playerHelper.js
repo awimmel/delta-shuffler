@@ -1,6 +1,6 @@
 const axios = require("axios");
 const authHelper = require("./authHelper.js");
-const fs = require("fs");
+const settingsHelper = require("./settingsHelper.js");
 const path = require("path");
 const sharp = require("sharp");
 
@@ -45,7 +45,7 @@ exports.getCurrPlaying = async function () {
 	}
 
 	const song = resp.data.item;
-	if (currPlayingId !== song.id) {
+	if (settingsHelper.getShowAlbumArt() && currPlayingId !== song.id) {
 		const imageUrl = song.album.images.at(0);
 		const response = await axios.get(imageUrl.url, { responseType: "arraybuffer" });
 		await sharp(response.data).png().toFile(imagePath);

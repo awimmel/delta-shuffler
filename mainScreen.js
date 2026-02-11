@@ -32,7 +32,7 @@ class MainScreen {
 		this.setBackKeypress();
 		this.searchBar.setKeyPresses(this.playlistDetailsView, this.playlistTable, this.menu);
 
-		this.setColors();
+		this.resizeAndSetColors();
 		this.playlistTable.focus();
 
 		if (playlistHelper.readPlaylists().length === 0) {
@@ -100,11 +100,11 @@ class MainScreen {
 		createWaitingPopover(this);
 	}
 
-	setColors() {
-		this.menu.setColors();
-		this.searchBar.setColors();
-		this.playlistTable.setColors();
-		this.playlistDetailsView.setColors();
+	resizeAndSetColors() {
+		this.menu.resizeAndSetColors();
+		this.searchBar.resizeAndSetColors();
+		this.playlistTable.resizeAndSetColors();
+		this.playlistDetailsView.resizeAndSetColors();
 		this.searchBar.setKeyPresses(this.playlistDetailsView, this.playlistTable, this.menu);
 		this.setBackKeypress();
 		this.screen.render();

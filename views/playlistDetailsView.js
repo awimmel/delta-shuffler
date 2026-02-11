@@ -6,6 +6,8 @@ const AlgorithmsTable = require("../tables/algorithmsTable");
 const PlaylistToolbar = require("../components/playlistToolbar");
 const SongsTable = require("../tables/songsTable");
 
+const settingsHelper = require("../backend/settingsHelper.js");
+
 const setTableKeypress = require("../utilities/setTableKeypress");
 const focusFunction = require("../utilities/focusElement.js");
 
@@ -15,9 +17,7 @@ class PlaylistDetailsView {
 		const parent = mainScreen.screen;
 		this.playlistDetailsView = blessed.box({
 			parent: parent,
-			top: 15,
 			left: 0,
-			height: "100%-15",
 			width: "100%",
 			keys: true
 		});
@@ -39,7 +39,7 @@ class PlaylistDetailsView {
 		this.playlistDetailsView.hide();
 		this.hidden = true;
 
-		this.setColors();
+		this.resizeAndSetColors();
 	}
 
 	show() {
@@ -96,6 +96,17 @@ class PlaylistDetailsView {
 		} else {
 			this.songsTable.focus();
 		}
+	}
+
+	resizeAndSetColors() {
+		this.adjAlbumArt();
+		this.setColors();
+	}
+
+	adjAlbumArt() {
+		const showAlbumArt = settingsHelper.getShowAlbumArt();
+		this.playlistDetailsView.top = showAlbumArt ? 15 : 12;
+		this.playlistDetailsView.height = showAlbumArt ? "100%-15" : "100%-12";
 	}
 
 	setColors() {

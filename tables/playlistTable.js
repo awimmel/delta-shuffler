@@ -2,6 +2,7 @@ const createTable = require("./table.js");
 const setTableKeypress = require("../utilities/setTableKeypress");
 
 const playlistHelper = require("../backend/playlistHelper.js");
+const settingsHelper = require("../backend/settingsHelper.js");
 
 const columns = ["PLAYLIST", "SONG COUNT"];
 
@@ -50,7 +51,7 @@ class PlaylistTable {
 		this.hidden = false;
 	}
 
-	setColors() {
+	resizeAndSetColors() {
 		this.playlistTable.destroy();
 		this.playlistTable = createPlaylistTable(this.screen, this.playlists, this.screen.width);
 		this.setKeypresses();
@@ -92,7 +93,7 @@ class PlaylistTable {
 function createPlaylistTable(parent, playlists, width) {
 	return createTable(
 		parent,
-		17,
+		settingsHelper.getShowAlbumArt() ? 17 : 15,
 		columns,
 		playlistHelper.displayPlaylists(playlists, width)
 	);

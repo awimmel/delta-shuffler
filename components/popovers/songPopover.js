@@ -4,7 +4,7 @@ const focusFunction = require("../../utilities/focusElement.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const songHelper = require("../../backend/songHelper.js");
 const playerHelper = require("../../backend/playerHelper.js");
-const themeHelper = require("../../backend/themeHelper.js");
+const settingsHelper = require("../../backend/settingsHelper.js");
 
 module.exports = function createSongPopover(mainScreen, songsTable, song) {
 	const screen = mainScreen.screen;
@@ -19,9 +19,9 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 		tags: true,
 		hidden: false,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getFocus()
+				fg: settingsHelper.getFocus()
 			}
 		}
 	});
@@ -44,7 +44,7 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 		width: "100%-4",
 		height: 11,
 		style: {
-			fg: themeHelper.getText()
+			fg: settingsHelper.getText()
 		}
 	});
 
@@ -61,14 +61,14 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getDecline()
+				fg: settingsHelper.getDecline()
 			},
 			focus: {
-				bg: themeHelper.getDecline(),
+				bg: settingsHelper.getDecline(),
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		}
@@ -87,14 +87,14 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getConfirmation()
+				fg: settingsHelper.getConfirmation()
 			},
 			focus: {
-				bg: themeHelper.getConfirmation(),
+				bg: settingsHelper.getConfirmation(),
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		}

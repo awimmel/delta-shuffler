@@ -4,7 +4,7 @@ const focusFunction = require("../../utilities/focusElement.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const algorithmHelper = require("../../backend/algorithmHelper.js");
 const playlistHelper = require("../../backend/playlistHelper.js");
-const themeHelper = require("../../backend/themeHelper.js");
+const settingsHelper = require("../../backend/settingsHelper.js");
 
 module.exports = function createDeletePopover(mainScreen, algorithmsTable, algorithm) {
 	const screen = mainScreen.screen;
@@ -19,9 +19,9 @@ module.exports = function createDeletePopover(mainScreen, algorithmsTable, algor
 		tags: true,
 		hidden: false,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getFocus()
+				fg: settingsHelper.getFocus()
 			}
 		}
 	});
@@ -34,7 +34,7 @@ module.exports = function createDeletePopover(mainScreen, algorithmsTable, algor
 		width: "100%-4",
 		height: 1,
 		style: {
-			fg: themeHelper.getText()
+			fg: settingsHelper.getText()
 		}
 	});
 
@@ -51,14 +51,14 @@ module.exports = function createDeletePopover(mainScreen, algorithmsTable, algor
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getDecline()
+				fg: settingsHelper.getDecline()
 			},
 			focus: {
-				bg: themeHelper.getDecline(),
+				bg: settingsHelper.getDecline(),
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		}
@@ -77,14 +77,14 @@ module.exports = function createDeletePopover(mainScreen, algorithmsTable, algor
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getConfirmation()
+				fg: settingsHelper.getConfirmation()
 			},
 			focus: {
-				bg: themeHelper.getConfirmation(),
+				bg: settingsHelper.getConfirmation(),
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		}

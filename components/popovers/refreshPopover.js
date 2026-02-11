@@ -3,7 +3,7 @@ const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const refreshHelper = require("../../backend/refreshHelper.js");
-const themeHelper = require("../../backend/themeHelper.js");
+const settingsHelper = require("../../backend/settingsHelper.js");
 
 module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 	const refreshBox = blessed.box({
@@ -17,9 +17,9 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 		tags: true,
 		hidden: false,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getFocus()
+				fg: settingsHelper.getFocus()
 			}
 		}
 	});
@@ -32,7 +32,7 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 		width: "100%-4",
 		height: 1,
 		style: {
-			fg: themeHelper.getText()
+			fg: settingsHelper.getText()
 		}
 	});
 
@@ -49,14 +49,14 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getDecline()
+				fg: settingsHelper.getDecline()
 			},
 			focus: {
-				bg: themeHelper.getDecline(),
+				bg: settingsHelper.getDecline(),
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		}
@@ -75,14 +75,14 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 		border: "line",
 		keys: true,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getConfirmation()
+				fg: settingsHelper.getConfirmation()
 			},
 			focus: {
-				bg: themeHelper.getConfirmation(),
+				bg: settingsHelper.getConfirmation(),
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		}

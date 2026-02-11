@@ -1,6 +1,6 @@
 const blessed = require("blessed");
 const authHelper = require("../../backend/authHelper.js");
-const themeHelper = require("../../backend/themeHelper.js");
+const settingsHelper = require("../../backend/settingsHelper.js");
 
 module.exports = function createWaitingPopover(mainScreen) {
 	const waitingPopover = blessed.box({
@@ -14,9 +14,9 @@ module.exports = function createWaitingPopover(mainScreen) {
 		tags: true,
 		hidden: false,
 		style: {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getFocus()
+				fg: settingsHelper.getFocus()
 			}
 		}
 	});
@@ -29,7 +29,7 @@ module.exports = function createWaitingPopover(mainScreen) {
 		width: 3,
 		height: 1,
 		style: {
-			fg: themeHelper.getText()
+			fg: settingsHelper.getText()
 		}
 	});
 

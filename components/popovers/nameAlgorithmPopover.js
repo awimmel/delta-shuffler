@@ -4,7 +4,7 @@ const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const BuildAlgorithmPopover = require("./buildAlgorithmPopover.js");
-const themeHelper = require("../../backend/themeHelper.js");
+const settingsHelper = require("../../backend/settingsHelper.js");
 
 class NameAlgorithmPopover {
 	constructor(mainScreen, createAlgorithmButton, searchBar, algorithmsTable) {
@@ -21,9 +21,9 @@ class NameAlgorithmPopover {
 			tags: true,
 			hidden: false,
 			style: {
-				fg: themeHelper.getText(),
+				fg: settingsHelper.getText(),
 				border: {
-					fg: themeHelper.getFocus()
+					fg: settingsHelper.getFocus()
 				}
 			}
 		});
@@ -39,14 +39,14 @@ class NameAlgorithmPopover {
 			border: "line",
 			keys: true,
 			style: {
-				fg: themeHelper.getText(),
+				fg: settingsHelper.getText(),
 				focus: {
 					border: {
-						fg: themeHelper.getFocus()
+						fg: settingsHelper.getFocus()
 					}
 				},
 				border: {
-					fg: themeHelper.getPrimary()
+					fg: settingsHelper.getPrimary()
 				}
 			}
 		});
@@ -64,14 +64,14 @@ class NameAlgorithmPopover {
 			border: "line",
 			keys: true,
 			style: {
-				fg: themeHelper.getText(),
+				fg: settingsHelper.getText(),
 				border: {
-					fg: themeHelper.getDecline()
+					fg: settingsHelper.getDecline()
 				},
 				focus: {
-					bg: themeHelper.getDecline(),
+					bg: settingsHelper.getDecline(),
 					border: {
-						fg: themeHelper.getFocus()
+						fg: settingsHelper.getFocus()
 					}
 				}
 			}
@@ -90,14 +90,14 @@ class NameAlgorithmPopover {
 			border: "line",
 			keys: true,
 			style: {
-				fg: themeHelper.getText(),
+				fg: settingsHelper.getText(),
 				border: {
-					fg: themeHelper.getConfirmation()
+					fg: settingsHelper.getConfirmation()
 				},
 				focus: {
-					bg: themeHelper.getConfirmation(),
+					bg: settingsHelper.getConfirmation(),
 					border: {
-						fg: themeHelper.getFocus()
+						fg: settingsHelper.getFocus()
 					}
 				}
 			}

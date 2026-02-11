@@ -1,5 +1,5 @@
 const blessed = require("blessed");
-const themeHelper = require("../backend/themeHelper.js");
+const settingsHelper = require("../backend/settingsHelper.js");
 
 class SongProgressBar {
 	constructor(menu, screen) {
@@ -8,27 +8,12 @@ class SongProgressBar {
 		this.progressBar = blessed.box({
 			parent: menu,
 			top: 4,
-			left: 22,
-			width: "100%-37",
 			height: 3,
 			border: "line",
 			hidden: true
 		});
 
-		this.interiorBars = Array.from(
-			{ length: Math.floor(this.progressBar.width / 2) - 1 },
-			(_, index) => {
-				return blessed.box({
-					parent: this.progressBar,
-					top: 0,
-					left: 2 * index,
-					width: 1,
-					height: 1,
-					hidden: true
-				});
-			}
-		);
-
+		this.interiorBars = createProgressBars(this.progressBar);
 		this.durationText = blessed.text({
 			parent: menu,
 			content: "",
@@ -43,7 +28,7 @@ class SongProgressBar {
 		this.duration = 0;
 		this.autoUpdate = null;
 
-		this.setColors();
+		this.resizeAndSetColors();
 	}
 
 	setProgress(currPos, duration) {
@@ -96,24 +81,37 @@ class SongProgressBar {
 		clearAutoUpdate(this.autoUpdate);
 	}
 
+	resizeAndSetColors() {
+		this.adjAlbumArt();
+		this.setColors();
+	}
+
+	adjAlbumArt() {
+		const showAlbumArt = settingsHelper.getShowAlbumArt();
+		this.progressBar.left = showAlbumArt ? 22 : 0;
+		this.progressBar.width = showAlbumArt ? "100%-37" : "100%-15";
+		this.interiorBars.forEach(bar => (bar.hidden = true));
+		this.interiorBars = createProgressBars(this.progressBar);
+	}
+
 	setColors() {
 		this.progressBar.style = {
 			bar: {
-				bg: themeHelper.getPrimary()
+				bg: settingsHelper.getPrimary()
 			},
 			border: {
-				fg: themeHelper.getFocus()
+				fg: settingsHelper.getFocus()
 			}
 		};
 
 		for (const interiorBar of this.interiorBars) {
 			interiorBar.style = {
-				bg: themeHelper.getPrimary()
+				bg: settingsHelper.getPrimary()
 			};
 		}
 
 		this.durationText.style = {
-			fg: themeHelper.getText()
+			fg: settingsHelper.getText()
 		};
 
 		this.screen.render();
@@ -151,6 +149,19 @@ function parseTime(msTime) {
 		.toString()
 		.padStart(2, "0");
 	return `${minStr}:${secStr}`;
+}
+
+function createProgressBars(progressBar) {
+	return Array.from({ length: Math.floor(progressBar.width / 2) - 1 }, (_, index) => {
+		return blessed.box({
+			parent: progressBar,
+			top: 0,
+			left: 2 * index,
+			width: 1,
+			height: 1,
+			hidden: true
+		});
+	});
 }
 
 module.exports = SongProgressBar;

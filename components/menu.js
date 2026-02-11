@@ -4,7 +4,7 @@ const createSettingsPopover = require("./popovers/settingsPopover.js");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const displayString = require("../utilities/displayString.js");
 const playerHelper = require("../backend/playerHelper.js");
-const themeHelper = require("../backend/themeHelper.js");
+const settingsHelper = require("../backend/settingsHelper.js");
 const SongProgressBar = require("../components/songProgressBar.js");
 const path = require("path");
 
@@ -22,7 +22,6 @@ class Menu {
 			parent: this.screen,
 			top: 0,
 			left: 0,
-			height: 12,
 			border: "line"
 		});
 
@@ -43,16 +42,13 @@ class Menu {
 			parent: this.toolbar,
 			content: "",
 			top: 1,
-			left: 23,
-			height: 3,
-			width: "100%-52"
+			height: 3
 		});
 
 		// Playback tools
 		this.backSong = blessed.box({
 			parent: this.toolbar,
 			content: "<<",
-			bottom: 0,
 			left: "50%-6",
 			height: 3,
 			width: 4,
@@ -61,7 +57,6 @@ class Menu {
 		this.pauseSong = blessed.box({
 			parent: this.toolbar,
 			content: play,
-			bottom: 0,
 			left: "50%-2",
 			height: 3,
 			width: 4,
@@ -71,7 +66,6 @@ class Menu {
 		this.skipSong = blessed.box({
 			parent: this.toolbar,
 			content: ">>",
-			bottom: 0,
 			left: "50%+2",
 			height: 3,
 			width: 4,
@@ -81,7 +75,6 @@ class Menu {
 		this.queueSong = blessed.box({
 			parent: this.toolbar,
 			content: "+≡",
-			bottom: 0,
 			left: "50%+6",
 			height: 3,
 			width: 4,
@@ -91,7 +84,6 @@ class Menu {
 		this.reshuffle = blessed.box({
 			parent: this.toolbar,
 			content: "Reshuffle",
-			bottom: 0,
 			left: "50%+10",
 			height: 3,
 			width: 11,
@@ -284,7 +276,7 @@ class Menu {
 			() => process.exit(0)
 		);
 
-		this.setColors();
+		this.resizeAndSetColors();
 
 		this.screen.render();
 	}
@@ -357,68 +349,90 @@ class Menu {
 		this.close.focus();
 	}
 
+	resizeAndSetColors() {
+		this.adjAlbumArt();
+		this.setColors();
+		this.songProgressBar.resizeAndSetColors();
+	}
+
+	adjAlbumArt() {
+		const showAlbumArt = settingsHelper.getShowAlbumArt();
+		if (!showAlbumArt) {
+			this.albumArt.hidden = true;
+		}
+
+		this.toolbar.height = showAlbumArt ? 12 : 9;
+		this.currPlaying.left = showAlbumArt ? 23 : 1;
+		this.currPlaying.width = showAlbumArt ? "100%-52" : "50%-6";
+
+		const playerButtonTop = showAlbumArt ? "100%-5" : 0;
+		this.backSong.top = playerButtonTop;
+		this.pauseSong.top = playerButtonTop;
+		this.skipSong.top = playerButtonTop;
+		this.queueSong.top = playerButtonTop;
+		this.reshuffle.top = playerButtonTop;
+	}
+
 	setColors() {
 		this.toolbar.style = {
 			bold: true,
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			}
 		};
 		this.currPlaying.style = {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			bold: true
 		};
 
 		const playerButtonStyle = {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getPrimary()
+				fg: settingsHelper.getPrimary()
 			},
 			bold: true
 		};
 		this.backSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.backSong, true, themeHelper.getPrimary());
+		setFocus(this.backSong, true, settingsHelper.getPrimary());
 
 		this.pauseSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.pauseSong, true, themeHelper.getPrimary());
+		setFocus(this.pauseSong, true, settingsHelper.getPrimary());
 
 		this.skipSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.skipSong, true, themeHelper.getPrimary());
+		setFocus(this.skipSong, true, settingsHelper.getPrimary());
 
 		this.queueSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.queueSong, true, themeHelper.getPrimary());
+		setFocus(this.queueSong, true, settingsHelper.getPrimary());
 
 		this.reshuffle.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.reshuffle, true, themeHelper.getPrimary());
+		setFocus(this.reshuffle, true, settingsHelper.getPrimary());
 
 		this.refresh.style = {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getConfirmation()
+				fg: settingsHelper.getConfirmation()
 			},
 			bold: true
 		};
-		setFocus(this.refresh, false, themeHelper.getConfirmation());
+		setFocus(this.refresh, false, settingsHelper.getConfirmation());
 
 		this.settings.style = {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getUtility()
+				fg: settingsHelper.getUtility()
 			},
 			bold: true
 		};
-		setFocus(this.settings, false, themeHelper.getUtility());
+		setFocus(this.settings, false, settingsHelper.getUtility());
 
 		this.close.style = {
-			fg: themeHelper.getText(),
+			fg: settingsHelper.getText(),
 			border: {
-				fg: themeHelper.getDecline()
+				fg: settingsHelper.getDecline()
 			},
 			bold: true
 		};
-		setFocus(this.close, false, themeHelper.getDecline());
-
-		this.songProgressBar.setColors();
+		setFocus(this.close, false, settingsHelper.getDecline());
 
 		this.screen.render();
 	}
@@ -443,8 +457,11 @@ async function retrieveAndSetCurrPlaying(
 ) {
 	const playingResult = await playerHelper.getCurrPlaying();
 
-	albumArt.clearImage();
-	albumArt.setImage(imagePath);
+	const showAlbumArt = settingsHelper.getShowAlbumArt();
+	if (showAlbumArt) {
+		albumArt.clearImage();
+		albumArt.setImage(imagePath);
+	}
 
 	const songAndArtist = displayString(playingResult.songAndArtist, currPlaying.width);
 	const album = displayString(playingResult.album, currPlaying.width);
@@ -460,7 +477,7 @@ async function retrieveAndSetCurrPlaying(
 		playingResult.duration
 	) {
 		songProgressBar.setProgress(playingResult.spot, playingResult.duration);
-		albumArt.hidden = false;
+		albumArt.hidden = !showAlbumArt;
 	} else if (
 		playingResult.songAndArtist &&
 		!playingResult.playing &&
@@ -468,7 +485,7 @@ async function retrieveAndSetCurrPlaying(
 		playingResult.duration
 	) {
 		songProgressBar.pauseWithOverride(playingResult.spot, playingResult.duration);
-		albumArt.hidden = false;
+		albumArt.hidden = !showAlbumArt;
 	} else {
 		songProgressBar.hide();
 		albumArt.hidden = true;
@@ -479,16 +496,16 @@ async function retrieveAndSetCurrPlaying(
 function setFocus(el, setFg, focusColor) {
 	el.on("focus", function () {
 		if (setFg) {
-			this.style.fg = themeHelper.getSecondary();
+			this.style.fg = settingsHelper.getSecondary();
 		}
 		this.style.bg = focusColor;
-		this.style.border.fg = themeHelper.getFocus();
+		this.style.border.fg = settingsHelper.getFocus();
 		this.screen.render();
 	});
 
 	el.on("blur", function () {
 		if (setFg) {
-			this.style.fg = themeHelper.getText();
+			this.style.fg = settingsHelper.getText();
 		}
 		this.style.bg = "none";
 		this.style.border.fg = focusColor;
