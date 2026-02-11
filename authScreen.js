@@ -1,8 +1,8 @@
 const blessed = require("blessed");
 const crypto = require("crypto");
 const querystring = require("querystring");
-const variables = require("./database/variables.json");
-const primaryColor = variables.primaryColor;
+const settings = require("./database/settings.json");
+const primaryColor = settings.primaryColor;
 
 const MainScreen = require("./mainScreen.js");
 

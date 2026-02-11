@@ -1,29 +1,29 @@
 const path = require("path");
 const fs = require("fs");
 
-const filePath = path.join(__dirname, "../database", "variables.json");
+const filePath = path.join(__dirname, "../database", "settings.json");
 
 exports.getShowAlbumArt = function () {
 	return JSON.parse(fs.readFileSync(filePath, "utf8")).showAlbumArt;
 };
 
 exports.saveShowAlbumArt = function (showAlbumArt) {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	variables.showAlbumArt = showAlbumArt;
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	settings.showAlbumArt = showAlbumArt;
 
-	fs.writeFileSync(filePath, JSON.stringify(variables), err => {});
+	fs.writeFileSync(filePath, JSON.stringify(settings), err => {});
 };
 
 exports.getHexCodes = function () {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
 	return [
-		variables.primaryColor,
-		variables.secondaryColor,
-		variables.confirmationColor,
-		variables.declineColor,
-		variables.focusColor,
-		variables.textColor,
-		variables.utilityColor
+		settings.primaryColor,
+		settings.secondaryColor,
+		settings.confirmationColor,
+		settings.declineColor,
+		settings.focusColor,
+		settings.textColor,
+		settings.utilityColor
 	];
 };
 
@@ -47,10 +47,10 @@ exports.saveHexCode = function (val, index) {
 		}
 	})();
 
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	variables[property] = val;
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	settings[property] = val;
 
-	fs.writeFileSync(filePath, JSON.stringify(variables), err => {});
+	fs.writeFileSync(filePath, JSON.stringify(settings), err => {});
 };
 
 exports.getPrimary = function () {

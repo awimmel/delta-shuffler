@@ -2,11 +2,11 @@ const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
 
-const filePath = path.join(__dirname, "../database", "variables.json");
+const filePath = path.join(__dirname, "../database", "settings.json");
 
 exports.getAccessToken = async function () {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	const accessToken = variables.accessToken;
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	const accessToken = settings.accessToken;
 	const lastRefresh = new Date(accessToken.lastRefresh);
 	const currDate = new Date();
 	const diff = currDate - lastRefresh;
@@ -18,13 +18,13 @@ exports.getAccessToken = async function () {
 		"https://accounts.spotify.com/api/token",
 		{
 			grant_type: "refresh_token",
-			refresh_token: variables.refreshToken
+			refresh_token: settings.refreshToken
 		},
 		{
 			headers: {
 				"content-type": "application/x-www-form-urlencoded",
 				Authorization: `Basic ${new Buffer.from(
-					`${variables.clientId}:${variables.clientSecret}`
+					`${settings.clientId}:${settings.clientSecret}`
 				).toString("base64")}`
 			}
 		}
@@ -37,9 +37,9 @@ exports.getAccessToken = async function () {
 		value: refreshResp.data.access_token,
 		lastRefresh: currDate
 	};
-	variables.accessToken = newAccessToken;
+	settings.accessToken = newAccessToken;
 
-	fs.writeFileSync(filePath, JSON.stringify(variables), err => {
+	fs.writeFileSync(filePath, JSON.stringify(settings), err => {
 		if (err) {
 			console.error(err);
 			return;
@@ -50,85 +50,85 @@ exports.getAccessToken = async function () {
 };
 
 exports.getState = function () {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	return variables.state;
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	return settings.state;
 };
 
 exports.setState = function (newState) {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	variables.state = newState;
-	fs.writeFileSync(filePath, JSON.stringify(variables), err => {
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	settings.state = newState;
+	fs.writeFileSync(filePath, JSON.stringify(settings), err => {
 		throw new Error(err);
 	});
 };
 
 exports.getClientId = function () {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	return variables.clientId;
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	return settings.clientId;
 };
 
 exports.setClientId = function (newClientId) {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	variables.clientId = newClientId;
-	fs.writeFileSync(filePath, JSON.stringify(variables), err => {
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	settings.clientId = newClientId;
+	fs.writeFileSync(filePath, JSON.stringify(settings), err => {
 		throw new Error(err);
 	});
 };
 
 exports.getClientSecret = function () {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	return variables.clientSecret;
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	return settings.clientSecret;
 };
 
 exports.setClientSecret = function (newClientSecret) {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	variables.clientSecret = newClientSecret;
-	fs.writeFileSync(filePath, JSON.stringify(variables), err => {
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	settings.clientSecret = newClientSecret;
+	fs.writeFileSync(filePath, JSON.stringify(settings), err => {
 		throw new Error(err);
 	});
 };
 
 exports.setTokens = function (accessToken, refreshToken) {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
-	variables.accessToken = {
+	settings.accessToken = {
 		value: accessToken,
 		lastRefresh: new Date()
 	};
-	variables.refreshToken = refreshToken;
+	settings.refreshToken = refreshToken;
 
-	fs.writeFileSync(filePath, JSON.stringify(variables), err => {
+	fs.writeFileSync(filePath, JSON.stringify(settings), err => {
 		throw new Error(err);
 	});
 };
 
 exports.getUserId = function () {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	return variables.userId;
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	return settings.userId;
 };
 
 exports.setUserId = function (newUserId) {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	variables.userId = newUserId;
-	fs.writeFileSync(filePath, JSON.stringify(variables), err => {
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	settings.userId = newUserId;
+	fs.writeFileSync(filePath, JSON.stringify(settings), err => {
 		throw new Error(err);
 	});
 };
 
 exports.getRefreshToken = function () {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	return variables.refreshToken;
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	return settings.refreshToken;
 };
 
 exports.getRefreshing = function () {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	return variables.refreshing;
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	return settings.refreshing;
 };
 
 exports.setRefreshing = function (newRefreshing) {
-	const variables = JSON.parse(fs.readFileSync(filePath, "utf8"));
-	variables.refreshing = newRefreshing;
-	fs.writeFileSync(filePath, JSON.stringify(variables), err => {
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	settings.refreshing = newRefreshing;
+	fs.writeFileSync(filePath, JSON.stringify(settings), err => {
 		throw new Error(err);
 	});
 };

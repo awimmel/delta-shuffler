@@ -1,6 +1,6 @@
 const express = require("express");
 const blessed = require("blessed");
-const variables = require("./database/variables.json");
+const settings = require("./database/settings.json");
 
 const AuthScreen = require("./authScreen.js");
 const MainScreen = require("./mainScreen.js");
@@ -14,7 +14,7 @@ const screen = blessed.screen({
 	term: "xterm-256color"
 });
 
-if (!variables.clientId || !variables.clientSecret || !variables.accessToken || !variables.refreshToken) {
+if (!settings.clientId || !settings.clientSecret || !settings.accessToken || !settings.refreshToken) {
 	const app = express();
 	app.use(express.json());
 	app.use('/', routes);
