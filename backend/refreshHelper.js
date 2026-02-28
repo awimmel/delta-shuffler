@@ -215,7 +215,7 @@ function updateAlgorithmPlaylists(algPlaylists, algSongMap, algorithms) {
 		const songs = algSongMap.get(algPlaylist.algorithmId);
 		algPlaylist.songCount = songs.length;
 
-		playlistHelper.setPlaylistItems(algPlaylist.id, songs);
+		playlistHelper.setPlaylistItems(algPlaylist.id, songs.reverse());
 
 		const currPlaylistSongs = orderSongs(songs, "addedAt", false).map((song, index) => {
 			return {
