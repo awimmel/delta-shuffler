@@ -49,9 +49,8 @@ exports.getPlaylistName = function (playlistId) {
 
 exports.createAlgorithmPlaylist = async function (playlistName, algorithm) {
 	const accessToken = await authHelper.getAccessToken();
-	const userId = await authHelper.getUserId();
 	const playlistResp = await axios.post(
-		`${spotifyApi}/users/${userId}/playlists`,
+		`${spotifyApi}/me/playlists`,
 		{
 			name: playlistName,
 			description: "",
@@ -115,7 +114,7 @@ exports.getAlgorithmPlaylists = function () {
 exports.setPlaylistItems = async function (playlistId, songs) {
 	const accessToken = await authHelper.getAccessToken();
 	await axios.put(
-		`${spotifyApi}/playlists/${playlistId}/tracks`,
+		`${spotifyApi}/playlists/${playlistId}/items`,
 		{
 			uris: []
 		},
@@ -162,7 +161,7 @@ async function insertSongs(songs, playlistId, accessToken) {
 	let pos = 0;
 	for (const chunk of chunkItems(spotSongs, 100)) {
 		await axios.post(
-			`${spotifyApi}/playlists/${playlistId}/tracks`,
+			`${spotifyApi}/playlists/${playlistId}/items`,
 			{
 				uris: chunk,
 				position: pos
