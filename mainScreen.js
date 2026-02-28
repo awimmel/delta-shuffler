@@ -5,7 +5,7 @@ const PlaylistTable = require("./tables/playlistTable");
 const PlaylistDetailsView = require("./views/playlistDetailsView");
 
 const playlistHelper = require("./backend/playlistHelper.js");
-const refreshHelper = require("./backend/refreshHelper.js");
+const createRefreshPopover = require("./components/popovers/refreshPopover.js");
 const createWaitingPopover = require("./components/popovers/waitingPopover.js");
 
 class MainScreen {
@@ -36,8 +36,7 @@ class MainScreen {
 		this.playlistTable.focus();
 
 		if (playlistHelper.readPlaylists().length === 0) {
-			refreshHelper.refresh(this);
-			this.createWaitingPopover();
+			createRefreshPopover(this, this.searchBar, false);
 		}
 
 		this.screen.render();

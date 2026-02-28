@@ -5,6 +5,7 @@ const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
 const focusText = require("../../utilities/focusText.js");
+const setListKeypresses = require("../../utilities/setListKeypresses.js");
 
 const hexRegex = /^#[0-9A-Fa-f]{6}$/;
 
@@ -189,7 +190,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		top: 9,
 		left: "66%",
 		height: 3,
-		width: "33%",
+		width: "33%-1",
 		value: hexCodes[6],
 		border: "line",
 		keys: true,
@@ -368,34 +369,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		}
 	);
 
-	playlistList.key("enter", () => {
-		const index = playlistList.selected;
-		if (hidden.has(index)) {
-			hidden.delete(index);
-		} else {
-			hidden.add(index);
-		}
-		const checkbox = hidden.has(index) ? "[ ]" : "[x]";
-		playlistList.setItem(index, `${checkbox} ${playlists[index].name}`);
-		screen.render();
-	});
-	let prevSelected;
-	playlistList.key("down", () => {
-		if (prevSelected === playlistList.items.length - 1) {
-			saveBox.focus();
-			return;
-		} else {
-			prevSelected = playlistList.selected;
-		}
-	});
-	playlistList.key("up", () => {
-		if (!prevSelected || prevSelected === 0) {
-			focusText(focusBox);
-			return;
-		} else {
-			prevSelected = playlistList.selected;
-		}
-	});
+	setListKeypresses(screen, playlistList, playlists, hidden, focusBox, saveBox);
 
 	escapeKeypress(
 		[albumArtCheckbox, primaryBox, secondaryBox, focusBox, confirmationBox, declineBox, utilityBox, playlistList],

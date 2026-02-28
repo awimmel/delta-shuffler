@@ -9,25 +9,48 @@ const chunkItems = require("../utilities/chunkItems.js");
 const spotifyApi = "https://api.spotify.com/v1";
 const elementLimit = 50;
 
-exports.refresh = async function (screen) {
-	authHelper.setRefreshing(true);
+exports.getPlaylists = async function () {
+	let offset = 0;
+	let resp = await requestPlaylistBatch(offset);
+	let next = resp["data"]["next"];
+	const playlists = resp["data"]["items"];
+	while (next !== null) {
+		offset += elementLimit;
+		resp = await requestPlaylistBatch(offset);
+		playlists.push.apply(playlists, resp["data"]["items"]);
+		next = resp["data"]["next"];
+	}
 
 	const hiddenPlaylists = playlistHelper.getHiddenPlaylists();
-	const allPlaylists = [
-		...(await getPlaylists(hiddenPlaylists)),
+	const mappedPlayists = playlists
+		.filter(playlist => playlist.collaborative || playlist.owner.id === authHelper.getUserId())
+		.map(playlist => ({
+			id: playlist.id,
+			name: playlist.name,
+			visible: !hiddenPlaylists.includes(playlist.id)
+		}));
+	return playlistHelper.sortPlaylists([
+		...mappedPlayists,
 		{
 			id: "likedSongs",
 			name: "Liked Songs",
 			visible: !hiddenPlaylists.includes("likedSongs")
 		}
-	];
-	const playlistIds = allPlaylists.map(playlist => playlist.id);
+	]);
+};
+
+exports.refresh = async function (screen, playlistsToRetrieve) {
+	authHelper.setRefreshing(true);
+
+	const playlistIds = playlistsToRetrieve.map(playlist => playlist.id);
 
 	const algPlaylists = playlistHelper
 		.getAlgorithmPlaylists()
 		.filter(algPlaylist => playlistIds.includes(algPlaylist.id));
 	const algPlaylistIds = algPlaylists.map(algPlaylist => algPlaylist.id);
-	const playlistsToQuery = allPlaylists.filter(playlist => !algPlaylistIds.includes(playlist.id));
+	const playlistsToQuery = playlistsToRetrieve.filter(
+		playlist => !algPlaylistIds.includes(playlist.id)
+	);
 
 	let algorithms = algorithmHelper.readAllAlgorithms();
 
@@ -99,29 +122,6 @@ exports.refresh = async function (screen) {
 
 	authHelper.setRefreshing(false);
 };
-
-async function getPlaylists(hiddenPlaylists) {
-	let offset = 0;
-	let resp = await requestPlaylistBatch(offset);
-	let next = resp["data"]["next"];
-	const playlists = resp["data"]["items"];
-	while (next !== null) {
-		offset += elementLimit;
-		resp = await requestPlaylistBatch(offset);
-		playlists.push.apply(playlists, resp["data"]["items"]);
-		next = resp["data"]["next"];
-	}
-
-	const mappedPlayists = playlists
-		.filter(playlist => playlist.collaborative || playlist.owner.id === authHelper.getUserId())
-		// .filter(playlist => playlist.id === "740mEpwHIHAnfZHePHnbd5")
-		.map(playlist => ({
-			id: playlist.id,
-			name: playlist.name,
-			visible: !hiddenPlaylists.includes(playlist.id)
-		}));
-	return playlistHelper.sortPlaylists(mappedPlayists);
-}
 
 async function requestPlaylistBatch(offset) {
 	return axios.get(`${spotifyApi}/me/playlists`, {

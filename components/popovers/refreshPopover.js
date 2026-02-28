@@ -2,14 +2,17 @@ const blessed = require("blessed");
 const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
+const playlistHelper = require("../../backend/playlistHelper.js");
 const refreshHelper = require("../../backend/refreshHelper.js");
 const settingsHelper = require("../../backend/settingsHelper.js");
+const setListKeypresses = require("../../utilities/setListKeypresses.js");
 
-module.exports = function createRefreshPopover(mainScreen, refreshButton) {
-	const refreshBox = blessed.box({
-		parent: mainScreen.screen,
+module.exports = async function createRefreshPopover(mainScreen, elOnExit, showCancel) {
+	const screen = mainScreen.screen;
+	const refreshPopover = blessed.box({
+		parent: screen,
 		border: "line",
-		height: 5,
+		height: "60%",
 		width: 60,
 		top: "center",
 		left: "center",
@@ -24,37 +27,35 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 		}
 	});
 
-	blessed.text({
-		parent: refreshBox,
-		content: `Refresh playlists?\n(this may take a while)`,
+	const playlists = await refreshHelper.getPlaylists();
+	const downloadedPlaylistIds = playlistHelper.readPlaylists().map(playlist => playlist.id);
+	const hiddenIndexes = new Set(
+		playlists
+			.map((playlist, index) => (!downloadedPlaylistIds.includes(playlist.id) ? index : -1))
+			.filter(index => index !== -1)
+	);
+	const playlistList = blessed.list({
+		parent: refreshPopover,
+		label: " Refresh Playlists: ",
 		top: 1,
-		left: 2,
-		width: "100%-4",
-		height: 1,
-		style: {
-			fg: settingsHelper.getText()
-		}
-	});
-
-	const noBox = blessed.box({
-		parent: refreshBox,
-		content: "No",
-		top: 2,
-		left: 15,
-		height: 3,
-		width: 4,
-		tags: true,
-		align: "center",
-		valign: "middle",
-		border: "line",
+		left: 1,
+		width: `100%-4`,
+		height: "100%-4",
+		items: playlists.map((playlist, index) =>
+			!hiddenIndexes.has(index) ? `[x] ${playlist.name}` : `[ ] ${playlist.name}`
+		),
 		keys: true,
+		border: "line",
 		style: {
-			fg: settingsHelper.getText(),
+			selected: {
+				bg: settingsHelper.getPrimary(),
+				fg: settingsHelper.getSecondary(),
+				bold: true
+			},
 			border: {
-				fg: settingsHelper.getDecline()
+				fg: settingsHelper.getPrimary()
 			},
 			focus: {
-				bg: settingsHelper.getDecline(),
 				border: {
 					fg: settingsHelper.getFocus()
 				}
@@ -62,13 +63,13 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 		}
 	});
 
-	const yesBox = blessed.box({
-		parent: refreshBox,
-		content: "Yes",
-		top: 2,
-		left: 35,
+	const refreshBox = blessed.box({
+		parent: refreshPopover,
+		content: "Refresh",
+		bottom: -2,
+		left: showCancel ? 35 : "center",
 		height: 3,
-		width: 5,
+		width: 9,
 		tags: true,
 		align: "center",
 		valign: "middle",
@@ -88,40 +89,79 @@ module.exports = function createRefreshPopover(mainScreen, refreshButton) {
 		}
 	});
 
+	let cancelBox;
+	if (showCancel) {
+		cancelBox = blessed.box({
+			parent: refreshPopover,
+			content: "Cancel",
+			bottom: -2,
+			left: 15,
+			height: 3,
+			width: 8,
+			tags: true,
+			align: "center",
+			valign: "middle",
+			border: "line",
+			keys: true,
+			style: {
+				fg: settingsHelper.getText(),
+				border: {
+					fg: settingsHelper.getDecline()
+				},
+				focus: {
+					bg: settingsHelper.getDecline(),
+					border: {
+						fg: settingsHelper.getFocus()
+					}
+				}
+			}
+		});
+		toolbarKeypress(
+			cancelBox,
+			() => {},
+			focusFunction(refreshBox),
+			focusFunction(playlistList),
+			() => {},
+			() => {
+				mainScreen.setFocus(true);
+				refreshPopover.destroy();
+				elOnExit.focus();
+				mainScreen.screen.render();
+			}
+		);
+	}
+
 	toolbarKeypress(
-		noBox,
+		refreshBox,
+		showCancel ? focusFunction(cancelBox) : () => {},
 		() => {},
-		focusFunction(yesBox),
-		() => {},
+		focusFunction(playlistList),
 		() => {},
 		() => {
-			mainScreen.setFocus(true);
-			refreshBox.destroy();
-			refreshButton.focus();
-			mainScreen.screen.render();
-		}
-	);
-	toolbarKeypress(
-		yesBox,
-		focusFunction(noBox),
-		() => {},
-		() => {},
-		() => {},
-		async () => {
-			refreshHelper.refresh(mainScreen);
+			const playlistsToDownload = playlists.filter((playlist, index) => !hiddenIndexes.has(index));
+			refreshHelper.refresh(mainScreen, playlistsToDownload);
 			mainScreen.createWaitingPopover();
 
-			refreshBox.destroy();
-			refreshButton.focus();
+			refreshPopover.destroy();
+			elOnExit.focus();
 			mainScreen.screen.render();
 		}
 	);
 
-	escapeKeypress([yesBox], noBox);
+	setListKeypresses(
+		screen,
+		playlistList,
+		playlists,
+		hiddenIndexes,
+		null,
+		showCancel ? cancelBox : refreshBox
+	);
 
-	noBox.focus();
+	escapeKeypress([playlistList, refreshBox], showCancel ? cancelBox : refreshBox);
+
+	playlistList.focus();
 	mainScreen.setFocus(false);
 	mainScreen.screen.render();
 
-	return refreshBox;
+	return refreshPopover;
 };

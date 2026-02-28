@@ -240,8 +240,8 @@ class Menu {
 			() => {
 				this.searchBar.focus();
 			},
-			() => {
-				createRefreshPopover(mainScreen, this.refresh);
+			async () => {
+				await createRefreshPopover(mainScreen, this.refresh, true);
 			}
 		);
 		toolbarKeypress(
