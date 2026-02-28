@@ -37,11 +37,11 @@ exports.refresh = async function (screen) {
 	let adjAlgs = [];
 	let playlistSongMap = new Map();
 	for (const playlist of playlistsToQuery) {
-		const trackUrl =
-			playlist.id === "likedSongs"
-				? `${spotifyApi}/me/tracks?offset=0&limit=50`
-				: `${spotifyApi}/playlists/${playlist["id"]}/tracks?offset=0&limit=50`;
-		const currSongs = await getTracks(trackUrl);
+		const isPlaylist = playlist.id !== "likedSongs";
+		const trackUrl = isPlaylist
+			? `${spotifyApi}/playlists/${playlist["id"]}/items?offset=0&limit=50`
+			: `${spotifyApi}/me/tracks?offset=0&limit=50`;
+		const currSongs = await getTracks(trackUrl, isPlaylist);
 		playlist.songCount = currSongs.length;
 		playlistSongMap.set(
 			playlist.id,
@@ -68,13 +68,13 @@ exports.refresh = async function (screen) {
 		songIds = [...songIds, ...filteredSongs.map(song => song.id)];
 	}
 
-	const artistGenres = await grabGenres(songs);
-	const songsWithGenres = songs.map(song => {
-		for (const artist of song.artists) {
-			artist.genres = artistGenres.get(artist.id);
-		}
-		return song;
-	});
+	// const artistGenres = await grabGenres(songs);
+	// const songsWithGenres = songs.map(song => {
+	// 	for (const artist of song.artists) {
+	// 		artist.genres = artistGenres.get(artist.id);
+	// 	}
+	// 	return song;
+	// });
 
 	/*
 	 * Second iteration over playlistsToQuery. While obviously not ideal, this allows algorithms with genre conditions to be updated
@@ -83,7 +83,7 @@ exports.refresh = async function (screen) {
 	let algSongMap = new Map();
 	for (const playlist of playlistsToQuery) {
 		const playlistSongIds = playlistSongMap.get(playlist.id);
-		const fullSongs = songsWithGenres.filter(song => playlistSongIds.includes(song.id));
+		const fullSongs = songs.filter(song => playlistSongIds.includes(song.id));
 		const matchingAlgs = algorithmHelper.filterAlgorithms(playlist.id, algorithms);
 		adjAlgs = [...adjAlgs, ...updateAlgorithms(matchingAlgs, playlist, fullSongs, algSongMap)];
 	}
@@ -93,10 +93,7 @@ exports.refresh = async function (screen) {
 	const playlists = [...playlistsToQuery, ...algPlaylistsUpdate.algPlaylists];
 	playlistHelper.writePlaylists(playlists);
 	algorithmHelper.writeAlgorithms([...adjAlgs, ...algPlaylistsUpdate.algPlaylistAlgs]);
-	songHelper.writeSongs(songsWithGenres, [
-		...playlistSongs,
-		...algPlaylistsUpdate.algPlaylistSongs
-	]);
+	songHelper.writeSongs(songs, [...playlistSongs, ...algPlaylistsUpdate.algPlaylistSongs]);
 
 	screen.setPlaylists(playlists.filter(playlist => playlist.visible));
 
@@ -115,11 +112,14 @@ async function getPlaylists(hiddenPlaylists) {
 		next = resp["data"]["next"];
 	}
 
-	const mappedPlayists = playlists.map(playlist => ({
-		id: playlist.id,
-		name: playlist.name,
-		visible: !hiddenPlaylists.includes(playlist.id)
-	}));
+	const mappedPlayists = playlists
+		.filter(playlist => playlist.collaborative || playlist.owner.id === authHelper.getUserId())
+		// .filter(playlist => playlist.id === "740mEpwHIHAnfZHePHnbd5")
+		.map(playlist => ({
+			id: playlist.id,
+			name: playlist.name,
+			visible: !hiddenPlaylists.includes(playlist.id)
+		}));
 	return playlistHelper.sortPlaylists(mappedPlayists);
 }
 
@@ -135,7 +135,7 @@ async function requestPlaylistBatch(offset) {
 	});
 }
 
-async function getTracks(initialUrl) {
+async function getTracks(initialUrl, isPlaylist) {
 	let trackResp = {
 		data: { next: initialUrl }
 	};
@@ -149,24 +149,28 @@ async function getTracks(initialUrl) {
 		items = items.concat(trackResp.data.items);
 	}
 
-	const songs = Array.from(items.reduce((map, item) => map.set(item.track.id, item), new Map()).values());
-	return orderSongs(songs, "added_at", false)
-		.map((item, index) => ({
-			id: item.track.id,
-			name: item.track.name,
-			artists: item.track.artists.map(artist => ({
+	const trackVar = isPlaylist ? "item" : "track";
+	const songs = Array.from(
+		items.reduce((map, item) => map.set(item[trackVar].id, item), new Map()).values()
+	).filter(item => !isPlaylist || item[trackVar].track);
+	return orderSongs(songs, "added_at", false).map((item, index) => {
+		return {
+			id: item[trackVar].id,
+			name: item[trackVar].name,
+			artists: item[trackVar].artists.map(artist => ({
 				id: artist.id,
 				name: artist.name
 			})),
 			album: {
-				id: item.track.album.id,
-				name: item.track.album.name,
-				release_date: item.track.album.release_date,
-				release_year: item.track.album.release_date.split("-")[0]
+				id: item[trackVar].album.id,
+				name: item[trackVar].album.name,
+				release_date: item[trackVar].album.release_date,
+				release_year: item[trackVar].album.release_date.split("-")[0]
 			},
 			addedAt: item.added_at,
 			addedRank: index + 1
-		}));
+		};
+	});
 }
 
 function updateAlgorithms(matchingAlgs, playlist, currSongs, algSongMap) {
@@ -191,19 +195,15 @@ function updateAlgorithms(matchingAlgs, playlist, currSongs, algSongMap) {
 async function grabGenres(songs) {
 	const artists = [...new Set(songs.flatMap(song => song.artists.map(artist => artist.id)))];
 	const artistGenreMap = new Map();
-	for (const artistChunk of chunkItems(artists, 50)) {
-		const artistResp = await axios.get(`${spotifyApi}/artists`, {
+	for (const artist of artists) {
+		const artistResp = await axios.get(`${spotifyApi}/artists/${artist}`, {
 			headers: {
 				Authorization: `Bearer ${await authHelper.getAccessToken()}`
-			},
-			params: {
-				ids: artistChunk.join(",")
 			}
 		});
 
-		for (const artist of artistResp.data.artists) {
-			artistGenreMap.set(artist.id, artist.genres);
-		}
+		artistGenreMap.set(artistResp.id, artistResp.genres);
+		// await new Promise(resolve => setTimeout(resolve, 100));
 	}
 	return artistGenreMap;
 }
