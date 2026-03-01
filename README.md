@@ -50,7 +50,7 @@ Algorithms can also filter in more complex ways, like a playlist's songs that we
 
 After creating an algorithm, you can randomly queue songs that match its criteria. Up to 50 matching songs can be added to your queue at once. Again, to queue a song, you must be already listening to any song on Spotify.
 
-Values for Album, Artist, Genre, and Song must match their target **exactly**. For example, use "Stairway to Heaven - Remaster" and not "Stairway to Heaven". `IN`/`NOT IN` operators support multiple elements, but they must be separated by a `, `. Ideally a multi-select, searchable dropdown would be used here, but that proved to be too difficult to create in Blessed (the project's TUI library). The Added condition corresponds to how recently a song was added to your playlist. Values begin at 1 and lower values correspond to more recent songs, so a song with a value of 1 was your playlist's most recent addition. Genres are unfortunately specified by artist, not song. Spotify's API only provides Artist genres, limiting the filter's capabilities.
+Values for Album, Artist, and Song must match their target **exactly**. For example, use "Stairway to Heaven - Remaster" and not "Stairway to Heaven". `IN`/`NOT IN` operators support multiple elements, but they must be separated by a `, `. Ideally a multi-select, searchable dropdown would be used here, but that proved to be too difficult to create in Blessed (the project's TUI library). The Added condition corresponds to how recently a song was added to your playlist. Values begin at 1 and lower values correspond to more recent songs, so a song with a value of 1 was your playlist's most recent addition.
 
 ### Dependent Playlists
 
@@ -104,8 +104,8 @@ I added keyboard shortcuts to make navigation easier. I recommend leveraging tho
 
 While currently in a working state, there are many things I hope to improve about this application:
 
-- Improved genre filtering
-  - Genre filtering is present but scoped by artists instead of songs. Storing genre information by song would give users more accurate filtering, especially for artists that span a wide range of genres.
+- Genre filtering
+  - Genre filtering was previously supported, but was removed after being deprecated by Spotify's recent API changes. Running algorithms based on certain genres would be a helpful feature, and I hope to find a suitable method for retrieving genres soon. 
 - Quicker refreshes
   - Refershing your local database can take a minute or two. While much of this is dependent on Spotify's API response times, there are surely opportunities to act more efficiently on our end.
 - Code quality

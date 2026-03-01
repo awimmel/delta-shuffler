@@ -29,7 +29,7 @@ class Condition {
 		);
 		this.typeDropdown = new TypeDropdown(
 			screen,
-			["Added", "Album", "Artist", "Genre", "Song", "Year"],
+			["Added", "Album", "Artist", "Song", "Year"],
 			conditionGroup.conditionBox,
 			topOffset,
 			0,
@@ -392,13 +392,6 @@ function generateConditions(operatorStr, type, values) {
 		case "Artist":
 			conditions = values.map(
 				value => `song.artists.some(artist => artist.name ${operator} '${value}')`
-			);
-			break;
-		case "Genre":
-			const negation = operator === "===" ? "" : "!";
-			conditions = values.map(
-				value =>
-					`${negation}song.artists.some(artist => artist.genres.some(genre => genre === '${value}'.toLowerCase()))`
 			);
 			break;
 		case "Song":

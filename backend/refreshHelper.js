@@ -59,6 +59,7 @@ exports.refresh = async function (screen, playlistsToRetrieve) {
 	let playlistSongs = [];
 	let adjAlgs = [];
 	let playlistSongMap = new Map();
+	let algSongMap = new Map();
 	for (const playlist of playlistsToQuery) {
 		const isPlaylist = playlist.id !== "likedSongs";
 		const trackUrl = isPlaylist
@@ -89,26 +90,9 @@ exports.refresh = async function (screen, playlistsToRetrieve) {
 			});
 		songs = [...songs, ...filteredSongs];
 		songIds = [...songIds, ...filteredSongs.map(song => song.id)];
-	}
-
-	// const artistGenres = await grabGenres(songs);
-	// const songsWithGenres = songs.map(song => {
-	// 	for (const artist of song.artists) {
-	// 		artist.genres = artistGenres.get(artist.id);
-	// 	}
-	// 	return song;
-	// });
-
-	/*
-	 * Second iteration over playlistsToQuery. While obviously not ideal, this allows algorithms with genre conditions to be updated
-	 * without introducing duplicate calls to Spotify's API for artist genres
-	 */
-	let algSongMap = new Map();
-	for (const playlist of playlistsToQuery) {
-		const playlistSongIds = playlistSongMap.get(playlist.id);
-		const fullSongs = songs.filter(song => playlistSongIds.includes(song.id));
+		
 		const matchingAlgs = algorithmHelper.filterAlgorithms(playlist.id, algorithms);
-		adjAlgs = [...adjAlgs, ...updateAlgorithms(matchingAlgs, playlist, fullSongs, algSongMap)];
+		adjAlgs = [...adjAlgs, ...updateAlgorithms(matchingAlgs, playlist, currSongs, algSongMap)];
 	}
 
 	const algPlaylistsUpdate = updateAlgorithmPlaylists(algPlaylists, algSongMap, algorithms);
@@ -190,22 +174,6 @@ function updateAlgorithms(matchingAlgs, playlist, currSongs, algSongMap) {
 		}
 	}
 	return adjAlgs;
-}
-
-async function grabGenres(songs) {
-	const artists = [...new Set(songs.flatMap(song => song.artists.map(artist => artist.id)))];
-	const artistGenreMap = new Map();
-	for (const artist of artists) {
-		const artistResp = await axios.get(`${spotifyApi}/artists/${artist}`, {
-			headers: {
-				Authorization: `Bearer ${await authHelper.getAccessToken()}`
-			}
-		});
-
-		artistGenreMap.set(artistResp.id, artistResp.genres);
-		// await new Promise(resolve => setTimeout(resolve, 100));
-	}
-	return artistGenreMap;
 }
 
 function updateAlgorithmPlaylists(algPlaylists, algSongMap, algorithms) {

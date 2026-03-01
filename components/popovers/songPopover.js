@@ -11,7 +11,7 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 	const songBox = blessed.box({
 		parent: screen,
 		border: "line",
-		height: 16,
+		height: 14,
 		width: "50%",
 		top: "center",
 		left: "center",
@@ -26,13 +26,7 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 		}
 	});
 
-	let songStr = `Artist: ${songHelper.getArtistString(song)}\n\nAlbum: ${song.album.name}`;
-	const genreStr = [
-		...new Set(song.artists.flatMap(artist => artist.genres.map(genre => adjustCasing(genre))))
-	].join(", ");
-	if (genreStr.length !== 0) {
-		songStr += `\n\nGenres: ${genreStr}`;
-	}
+	let songStr = `Artist(s): ${songHelper.getArtistString(song)}\n\nAlbum: ${song.album.name}`;
 	songStr += `\n\nRelease Date: ${song.album.release_date}\n\nAdded Rank: ${song.addedRank} (${song.addedAt.split("T")[0]})`;
 
 	// Info about the current song
@@ -42,7 +36,7 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 		top: 1,
 		left: 2,
 		width: "100%-4",
-		height: 11,
+		height: 9,
 		style: {
 			fg: settingsHelper.getText()
 		}
@@ -51,7 +45,7 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 	const closeBox = blessed.box({
 		parent: songBox,
 		content: "Close",
-		top: 13,
+		bottom: -2,
 		left: "25%-7",
 		height: 3,
 		width: 7,
@@ -77,7 +71,7 @@ module.exports = function createSongPopover(mainScreen, songsTable, song) {
 	const queueBox = blessed.box({
 		parent: songBox,
 		content: "Queue",
-		top: 13,
+		bottom: -2,
 		left: "75%",
 		height: 3,
 		width: 7,
