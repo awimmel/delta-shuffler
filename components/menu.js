@@ -90,6 +90,15 @@ class Menu {
 			border: "line"
 		});
 
+		this.openSong = blessed.box({
+			parent: this.toolbar,
+			content: "Open Song",
+			left: "50%+21",
+			height: 3,
+			width: 11,
+			border: "line"
+		});
+
 		// Refresh button
 		this.refresh = blessed.box({
 			parent: this.toolbar,
@@ -115,6 +124,7 @@ class Menu {
 			valign: "middle",
 			border: "line"
 		});
+
 		// Close button
 		this.close = blessed.box({
 			parent: this.toolbar,
@@ -215,8 +225,8 @@ class Menu {
 				this.queueSong.focus();
 			},
 			() => {
-				this.prevFocus = this.refresh;
-				this.refresh.focus();
+				this.prevFocus = this.openSong;
+				this.openSong.focus();
 			},
 			() => {},
 			() => {
@@ -227,10 +237,33 @@ class Menu {
 			}
 		);
 		toolbarKeypress(
-			this.refresh,
+			this.openSong,
 			() => {
 				this.prevFocus = this.reshuffle;
 				this.reshuffle.focus();
+			},
+			() => {
+				this.prevFocus = this.refresh;
+				this.refresh.focus();
+			},
+			() => {},
+			() => {
+				this.searchBar.focus();
+			},
+			async () => {
+				const songId = this.currPlaying.id;
+				if (songId) {
+					//eventually fix import here to follow better practice
+					const open = (await import("open")).default;
+					await open(`https://open.spotify.com/track/${this.currPlaying.id}`);
+				}
+			}
+		);
+		toolbarKeypress(
+			this.refresh,
+			() => {
+				this.prevFocus = this.openSong;
+				this.openSong.focus();
 			},
 			() => {
 				this.prevFocus = this.settings;
@@ -371,6 +404,7 @@ class Menu {
 		this.skipSong.top = playerButtonTop;
 		this.queueSong.top = playerButtonTop;
 		this.reshuffle.top = playerButtonTop;
+		this.openSong.top = playerButtonTop;
 	}
 
 	setColors() {
@@ -406,6 +440,9 @@ class Menu {
 
 		this.reshuffle.style = JSON.parse(JSON.stringify(playerButtonStyle));
 		setFocus(this.reshuffle, true, settingsHelper.getPrimary());
+
+		this.openSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
+		setFocus(this.openSong, true, settingsHelper.getPrimary());
 
 		this.refresh.style = {
 			fg: settingsHelper.getText(),
