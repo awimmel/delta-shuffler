@@ -23,19 +23,16 @@ class SearchBar {
 		focusText(this.searchBar);
 	}
 
-	setKeyPresses(playlistDetailsView, playlistTable, menu) {
+	setKeyPresses(playlistView, playlistDetailsView, menu) {
 		this.searchBar.on("keypress", (char, key) => {
 			if (key.name === "enter" || key.name === "down") {
-				if (!playlistDetailsView.hidden) {
-					playlistDetailsView.focus(key.name);
-				} else if (!playlistTable.hidden && playlistTable.getDataCount() !== 0) {
-					playlistTable.focus();
-				}
+				const elToFocus = !playlistDetailsView.hidden ? playlistDetailsView : playlistView;
+				elToFocus.focus(key.name);
 				this.screen.render();
 			} else if (key.name === "up") {
 				menu.focus();
 			} else if (key.name !== "escape" && this.searchBar._reading) {
-				updateList(this.searchBar, char, playlistDetailsView, playlistTable, this.screen);
+				updateList(this.searchBar, char, playlistView, playlistDetailsView, this.screen);
 			}
 		});
 	}
@@ -75,12 +72,12 @@ class SearchBar {
 	}
 }
 
-function updateList(searchBar, newChar, playlistDetailsView, playlistTable, screen) {
+function updateList(searchBar, newChar, playlistView, playlistDetailsView, screen) {
 	const query = getQuery(searchBar, newChar);
 	if (!playlistDetailsView.hidden) {
 		playlistDetailsView.filterData(query);
 	} else {
-		playlistTable.filterData(query);
+		playlistView.filterData(query);
 	}
 	screen.render();
 }

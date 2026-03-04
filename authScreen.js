@@ -235,7 +235,7 @@ async function beginAuth(clientId, clientSecret, authScreen) {
 				"user-read-recently-played playlist-read-collaborative " +
 				"playlist-read-private user-read-playback-state " +
 				"user-library-read playlist-modify-public playlist-modify-private " +
-				"user-read-private user-read-email",
+				"user-read-private user-read-email user-top-read",
 			show_dialog: true
 		});
 

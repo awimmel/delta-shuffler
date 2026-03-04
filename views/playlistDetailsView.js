@@ -53,7 +53,7 @@ class PlaylistDetailsView {
 	}
 
 	focus(keyName) {
-		if (keyName === "down") {
+		if (keyName === "down" || this.getDataCount() === 0) {
 			this.playlistToolbar.focus();
 		} else {
 			this.getActiveTable().focus();

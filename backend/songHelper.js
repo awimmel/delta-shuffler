@@ -5,6 +5,10 @@ const displayString = require("../utilities/displayString.js");
 const songsPath = path.join(__dirname, "../database", "songs.json");
 const playlistSongsPath = path.join(__dirname, "../database", "playlistSongs.json");
 
+exports.readAllSongs = function () {
+	return JSON.parse(fs.readFileSync(songsPath, "utf8"));
+};
+
 exports.readSongs = function (playlistId) {
 	const playlistSongs = JSON.parse(fs.readFileSync(playlistSongsPath, "utf8"));
 	const playlistSongsMap = new Map(

@@ -1,18 +1,18 @@
 const createTable = require("./table.js");
-const setTableKeypress = require("../utilities/setTableKeypress");
 
 const playlistHelper = require("../backend/playlistHelper.js");
-const settingsHelper = require("../backend/settingsHelper.js");
+const setTableKeypress = require("../utilities/setTableKeypress.js");
 
 const columns = ["PLAYLIST", "SONG COUNT"];
 
 class PlaylistTable {
-	constructor(screen, playlists, search, playlistDetailsView) {
-		this.screen = screen;
+	constructor(view, playlists, search, playlistDetailsView) {
+		this.view = view;
+		this.parent = this.view.playlistView;
 		this.playlists = playlistHelper.sortPlaylists(playlists);
 		this.filteredPlaylists = this.playlists;
 		this.playlistCount = this.playlists.length;
-		this.playlistTable = createPlaylistTable(this.screen, this.playlists, this.screen.width);
+		this.playlistTable = createPlaylistTable(this.parent, this.playlists, this.parent.width);
 		this.search = search;
 		this.playlistDetailsView = playlistDetailsView;
 		this.setKeypresses();
@@ -25,7 +25,7 @@ class PlaylistTable {
 		this.playlistCount = this.playlists.length;
 		this.playlistTable.setData([
 			columns,
-			...playlistHelper.displayPlaylists(this.playlists, this.screen.width)
+			...playlistHelper.displayPlaylists(this.playlists, this.parent.width)
 		]);
 	}
 
@@ -38,7 +38,7 @@ class PlaylistTable {
 		this.playlistCount = this.filteredPlaylists.length;
 		this.playlistTable.setData([
 			columns,
-			...playlistHelper.displayPlaylists(this.filteredPlaylists, this.screen.width)
+			...playlistHelper.displayPlaylists(this.filteredPlaylists, this.parent.width)
 		]);
 	}
 
@@ -53,7 +53,7 @@ class PlaylistTable {
 
 	resizeAndSetColors() {
 		this.playlistTable.destroy();
-		this.playlistTable = createPlaylistTable(this.screen, this.playlists, this.screen.width);
+		this.playlistTable = createPlaylistTable(this.parent, this.playlists, this.parent.width);
 		this.setKeypresses();
 	}
 
@@ -64,39 +64,28 @@ class PlaylistTable {
 				this.search.setValue("");
 				this.playlistTable.setData([
 					columns,
-					...playlistHelper.displayPlaylists(this.playlists, this.screen.width)
+					...playlistHelper.displayPlaylists(this.playlists, this.parent.width)
 				]);
-
 				const playlistId = this.filteredPlaylists[index - 1].id;
 				const algorithmsTable = this.playlistDetailsView.algorithmsTable;
 				algorithmsTable.setData(playlistId);
-
 				const songsTable = this.playlistDetailsView.songsTable;
 				songsTable.setData(playlistId);
-
 				this.playlistDetailsView.playlistToolbar.setPlaylistId(playlistId);
-
-				this.playlistTable.hide();
-				this.hidden = true;
-
+				this.view.hide();
 				this.playlistDetailsView.show();
 				algorithmsTable.show();
 				algorithmsTable.focus();
 			},
 			() => {
-				this.search.focus();
+				this.view.primaryToolbar.focus();
 			}
 		);
 	}
 }
 
 function createPlaylistTable(parent, playlists, width) {
-	return createTable(
-		parent,
-		settingsHelper.getShowAlbumArt() ? 17 : 15,
-		columns,
-		playlistHelper.displayPlaylists(playlists, width)
-	);
+	return createTable(parent, 3, columns, playlistHelper.displayPlaylists(playlists, width));
 }
 
 module.exports = PlaylistTable;

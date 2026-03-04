@@ -1,8 +1,8 @@
 const blessed = require("blessed");
 const Menu = require("./components/menu");
 const SearchBar = require("./components/searchBar");
-const PlaylistTable = require("./tables/playlistTable");
 const PlaylistDetailsView = require("./views/playlistDetailsView");
+const PlaylistView = require("./views/playlistView");
 
 const playlistHelper = require("./backend/playlistHelper.js");
 const createRefreshPopover = require("./components/popovers/refreshPopover.js");
@@ -16,24 +16,19 @@ class MainScreen {
 
 		this.menu = new Menu(this, this.searchBar);
 		this.playlistDetailsView = new PlaylistDetailsView(this, this.searchBar);
+		this.playlistView = new PlaylistView(this, this.searchBar, this.playlistDetailsView);
 		this.backButton = this.playlistDetailsView.playlistToolbar.backButton;
 		this.algorithmsTable = this.playlistDetailsView.algorithmsTable;
 		this.songsTable = this.playlistDetailsView.songsTable;
-		this.playlistTable = new PlaylistTable(
-			this.screen,
-			playlistHelper.readVisiblePlaylists(),
-			this.searchBar,
-			this.playlistDetailsView
-		);
 		this.footer = createFooter(this.screen);
 
 		this.setShortcuts();
 
 		this.setBackKeypress();
-		this.searchBar.setKeyPresses(this.playlistDetailsView, this.playlistTable, this.menu);
+		this.searchBar.setKeyPresses(this.playlistView, this.playlistDetailsView, this.menu);
 
 		this.resizeAndSetColors();
-		this.playlistTable.focus();
+		this.playlistView.focus();
 
 		if (playlistHelper.readPlaylists().length === 0) {
 			createRefreshPopover(this, this.searchBar, false);
@@ -43,10 +38,10 @@ class MainScreen {
 	}
 
 	setPlaylists(playlists) {
-		this.playlistTable.setData(playlists);
+		this.playlistView.setPlaylists(playlists);
 		this.playlistDetailsView.hide();
-		this.playlistTable.show();
-		this.playlistTable.focus();
+		this.playlistView.show();
+		this.playlistView.focus();
 	}
 
 	setShortcuts() {
@@ -65,18 +60,18 @@ class MainScreen {
 				} else if (char === "'") {
 					this.menu.reshuffleSongs();
 				} else if (char === "?") {
-					if (!this.playlistTable.hidden && this.playlistTable.getDataCount() > 0) {
-						this.playlistTable.focus();
+					if (!this.playlistView.hidden && this.playlistView.getDataCount() > 0) {
+						this.playlistView.focus();
 					} else if (this.playlistDetailsView.getActiveTable().getDataCount() > 0) {
 						this.playlistDetailsView.focus();
 					}
 				} else if (char === "s") {
-					if (this.playlistTable.hidden) {
+					if (this.playlistView.hidden) {
 						this.searchBar.setValue("");
 						this.playlistDetailsView.showSongsTable();
 					}
 				} else if (char === "a") {
-					if (this.playlistTable.hidden) {
+					if (this.playlistView.hidden) {
 						this.searchBar.setValue("");
 						this.playlistDetailsView.showAlgorithmsTable();
 					}
@@ -102,9 +97,9 @@ class MainScreen {
 	resizeAndSetColors() {
 		this.menu.resizeAndSetColors();
 		this.searchBar.resizeAndSetColors();
-		this.playlistTable.resizeAndSetColors();
+		this.playlistView.resizeAndSetColors();
 		this.playlistDetailsView.resizeAndSetColors();
-		this.searchBar.setKeyPresses(this.playlistDetailsView, this.playlistTable, this.menu);
+		this.searchBar.setKeyPresses(this.playlistView, this.playlistDetailsView, this.menu);
 		this.setBackKeypress();
 		this.screen.render();
 	}
@@ -119,9 +114,9 @@ class MainScreen {
 				this.songsTable.hide();
 
 				this.searchBar.setValue("");
-				this.playlistTable.filterData("");
-				this.playlistTable.show();
-				this.playlistTable.focus();
+				this.playlistView.filterData("");
+				this.playlistView.show();
+				this.playlistView.focus();
 			} else if (key.name === "right") {
 				const createAlgorithm = this.playlistDetailsView.playlistToolbar.createAlgorithm;
 				this.playlistDetailsView.playlistToolbar.prevFocus = createAlgorithm;

@@ -1,6 +1,8 @@
 const axios = require("axios");
 const authHelper = require("./authHelper.js");
+const algorithmHelper = require("./algorithmHelper.js");
 const settingsHelper = require("./settingsHelper.js");
+const songHelper = require("./songHelper.js");
 const path = require("path");
 const sharp = require("sharp");
 
@@ -126,4 +128,47 @@ exports.reshuffleSongs = async function () {
 	await axios.put(`${spotifyApi}/me/player/shuffle?state=true`, null, {
 		headers: { Authorization: `Bearer ${accessToken}` }
 	});
+};
+
+exports.queueTopItems = async function (rawItemType, duration, limit, queueCount) {
+	var itemType;
+	switch (rawItemType) {
+		case "Artists":
+			itemType = "artists";
+			break;
+		case "Songs":
+			itemType = "tracks";
+			break;
+	}
+
+	var timeRange;
+	switch (duration) {
+		case "Last Month":
+			timeRange = "short_term";
+			break;
+		case "Last 6 Months":
+			timeRange = "medium_term";
+			break;
+		case "Last Year":
+			timeRange = "long_term";
+			break;
+	}
+
+	const accessToken = await authHelper.getAccessToken();
+	const resp = await axios.get(
+		`${spotifyApi}/me/top/${itemType}?time_range=${timeRange}&limit=${limit}`,
+		{
+			headers: { Authorization: `Bearer ${accessToken}` }
+		}
+	);
+
+	const idList = resp.data.items.map(item => item.id);
+	const idStr = "['" + idList.join("','") + "']";
+	var condition;
+	if (itemType === "artists") {
+		condition = `(song.artists.some(artist => ${idStr}.includes(artist.id)))`;
+	} else {
+		condition = `(${idList}.includes(song.id))`;
+	}
+	algorithmHelper.runAlgorithm({ condition: condition }, songHelper.readAllSongs(), queueCount);
 };
