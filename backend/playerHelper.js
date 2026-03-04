@@ -163,12 +163,14 @@ exports.queueTopItems = async function (rawItemType, duration, limit, queueCount
 	);
 
 	const idList = resp.data.items.map(item => item.id);
-	const idStr = "['" + idList.join("','") + "']";
-	var condition;
 	if (itemType === "artists") {
-		condition = `(song.artists.some(artist => ${idStr}.includes(artist.id)))`;
+		const idStr = "['" + idList.join("','") + "']";
+		algorithmHelper.runAlgorithm(
+			{ condition: `(song.artists.some(artist => ${idStr}.includes(artist.id)))` },
+			songHelper.readAllSongs(),
+			queueCount
+		);
 	} else {
-		condition = `(${idList}.includes(song.id))`;
+		algorithmHelper.queueSongList(idList, queueCount);
 	}
-	algorithmHelper.runAlgorithm({ condition: condition }, songHelper.readAllSongs(), queueCount);
 };
