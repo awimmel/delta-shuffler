@@ -3,6 +3,7 @@ const createRefreshPopover = require("./popovers/refreshPopover.js");
 const createSettingsPopover = require("./popovers/settingsPopover.js");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const displayString = require("../utilities/displayString.js");
+const setFocusStyle = require("../utilities/setFocusStyle.js");
 const playerHelper = require("../backend/playerHelper.js");
 const settingsHelper = require("../backend/settingsHelper.js");
 const PlayerOptions = require("../components/playerOptions.js");
@@ -278,7 +279,7 @@ class Menu {
 			},
 			bold: true
 		};
-		setFocus(this.refresh, false, settingsHelper.getConfirmation());
+		setFocusStyle(this.refresh, false, settingsHelper.getConfirmation());
 
 		this.settings.style = {
 			fg: settingsHelper.getText(),
@@ -287,7 +288,7 @@ class Menu {
 			},
 			bold: true
 		};
-		setFocus(this.settings, false, settingsHelper.getUtility());
+		setFocusStyle(this.settings, false, settingsHelper.getUtility());
 
 		this.close.style = {
 			fg: settingsHelper.getText(),
@@ -296,7 +297,7 @@ class Menu {
 			},
 			bold: true
 		};
-		setFocus(this.close, false, settingsHelper.getDecline());
+		setFocusStyle(this.close, false, settingsHelper.getDecline());
 
 		this.screen.render();
 	}
@@ -378,24 +379,4 @@ async function retrieveAndSetCurrPlaying(
 		albumArt.hidden = true;
 	}
 	screen.render();
-}
-
-function setFocus(el, setFg, focusColor) {
-	el.on("focus", function () {
-		if (setFg) {
-			this.style.fg = settingsHelper.getSecondary();
-		}
-		this.style.bg = focusColor;
-		this.style.border.fg = settingsHelper.getFocus();
-		this.screen.render();
-	});
-
-	el.on("blur", function () {
-		if (setFg) {
-			this.style.fg = settingsHelper.getText();
-		}
-		this.style.bg = "none";
-		this.style.border.fg = focusColor;
-		this.screen.render();
-	});
 }

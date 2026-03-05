@@ -1,5 +1,6 @@
 const blessed = require("blessed");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
+const setFocusStyle = require("../utilities/setFocusStyle.js");
 const playerHelper = require("../backend/playerHelper.js");
 const settingsHelper = require("../backend/settingsHelper.js");
 
@@ -284,43 +285,23 @@ class PlayerOptions {
 			bold: true
 		};
 		this.backSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.backSong, true, settingsHelper.getPrimary());
+		setFocusStyle(this.backSong, true, settingsHelper.getPrimary());
 
 		this.pauseSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.pauseSong, true, settingsHelper.getPrimary());
+		setFocusStyle(this.pauseSong, true, settingsHelper.getPrimary());
 
 		this.skipSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.skipSong, true, settingsHelper.getPrimary());
+		setFocusStyle(this.skipSong, true, settingsHelper.getPrimary());
 
 		this.queueSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.queueSong, true, settingsHelper.getPrimary());
+		setFocusStyle(this.queueSong, true, settingsHelper.getPrimary());
 
 		this.reshuffle.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.reshuffle, true, settingsHelper.getPrimary());
+		setFocusStyle(this.reshuffle, true, settingsHelper.getPrimary());
 
 		this.openSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.openSong, true, settingsHelper.getPrimary());
+		setFocusStyle(this.openSong, true, settingsHelper.getPrimary());
 	}
 }
 
 module.exports = PlayerOptions;
-
-function setFocus(el, setFg, focusColor) {
-	el.on("focus", function () {
-		if (setFg) {
-			this.style.fg = settingsHelper.getSecondary();
-		}
-		this.style.bg = focusColor;
-		this.style.border.fg = settingsHelper.getFocus();
-		this.screen.render();
-	});
-
-	el.on("blur", function () {
-		if (setFg) {
-			this.style.fg = settingsHelper.getText();
-		}
-		this.style.bg = "none";
-		this.style.border.fg = focusColor;
-		this.screen.render();
-	});
-}
