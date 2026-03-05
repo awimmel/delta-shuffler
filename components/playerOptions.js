@@ -68,13 +68,10 @@ class PlayerOptions {
 			border: "line"
 		});
 
-		this.prevFocus = this.pauseSong;
-
 		toolbarKeypress(
 			this.backSong,
 			() => {},
 			() => {
-				this.prevFocus = this.pauseSong;
 				this.pauseSong.focus();
 			},
 			() => {
@@ -92,11 +89,9 @@ class PlayerOptions {
 		toolbarKeypress(
 			this.pauseSong,
 			() => {
-				this.prevFocus = this.backSong;
 				this.backSong.focus();
 			},
 			() => {
-				this.prevFocus = this.skipSong;
 				this.skipSong.focus();
 			},
 			() => {
@@ -114,11 +109,9 @@ class PlayerOptions {
 		toolbarKeypress(
 			this.skipSong,
 			() => {
-				this.prevFocus = this.pauseSong;
 				this.pauseSong.focus();
 			},
 			() => {
-				this.prevFocus = this.queueSong;
 				this.queueSong.focus();
 			},
 			() => {
@@ -136,11 +129,9 @@ class PlayerOptions {
 		toolbarKeypress(
 			this.queueSong,
 			() => {
-				this.prevFocus = this.skipSong;
 				this.skipSong.focus();
 			},
 			() => {
-				this.prevFocus = this.reshuffle;
 				this.reshuffle.focus();
 			},
 			() => {
@@ -158,11 +149,9 @@ class PlayerOptions {
 		toolbarKeypress(
 			this.reshuffle,
 			() => {
-				this.prevFocus = this.queueSong;
 				this.queueSong.focus();
 			},
 			() => {
-				this.prevFocus = this.openSong;
 				this.openSong.focus();
 			},
 			() => {
@@ -180,7 +169,6 @@ class PlayerOptions {
 		toolbarKeypress(
 			this.openSong,
 			() => {
-				this.prevFocus = this.reshuffle;
 				this.reshuffle.focus();
 			},
 			() => {
@@ -212,12 +200,11 @@ class PlayerOptions {
 	}
 
 	focus() {
-		this.prevFocus.focus();
+		this.pauseSong.focus();
 	}
 
 	focusRight() {
 		this.openSong.focus();
-		this.prevFocus = this.openSong;
 	}
 
 	async back() {

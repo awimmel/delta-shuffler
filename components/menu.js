@@ -98,18 +98,14 @@ class Menu {
 			this.songProgressBar
 		);
 
-		this.prevFocus = this.playerOptions;
-
 		toolbarKeypress(
 			this.refresh,
 			() => {
 				if (!settingsHelper.getShowAlbumArt()) {
 					this.playerOptions.focusRight();
-					this.prevFocus = this.playerOptions;
 				}
 			},
 			() => {
-				this.prevFocus = this.settings;
 				this.settings.focus();
 			},
 			() => {},
@@ -127,11 +123,9 @@ class Menu {
 		toolbarKeypress(
 			this.settings,
 			() => {
-				this.prevFocus = this.refresh;
 				this.refresh.focus();
 			},
 			() => {
-				this.prevFocus = this.close;
 				this.close.focus();
 			},
 			() => {},
@@ -149,7 +143,6 @@ class Menu {
 		toolbarKeypress(
 			this.close,
 			() => {
-				this.prevFocus = this.settings;
 				this.settings.focus();
 			},
 			() => {},
@@ -170,11 +163,7 @@ class Menu {
 	}
 
 	focus() {
-		if (settingsHelper.getShowAlbumArt()) {
-			this.playerOptions.focus();
-		} else {
-			this.prevFocus.focus();
-		}
+		this.playerOptions.focus();
 	}
 
 	async back() {
@@ -239,7 +228,6 @@ class Menu {
 
 	focusClose() {
 		this.close.focus();
-		this.prevFocus = this.close;
 	}
 
 	resizeAndSetColors() {
@@ -303,12 +291,7 @@ class Menu {
 	}
 
 	focusOptions() {
-		if (this.prevFocus === this.playerOptions) {
-			this.refresh.focus();
-			this.prevFocus = this.refresh;
-		} else {
-			this.prevFocus.focus();
-		}
+		this.refresh.focus();
 	}
 
 	updateCurrPlaying() {

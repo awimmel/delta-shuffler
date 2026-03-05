@@ -75,16 +75,12 @@ class PlaylistToolbar {
 			keys: true
 		});
 
-		this.prevFocus = this.backButton;
-
 		toolbarKeypress(
 			this.createAlgorithm,
 			() => {
-				this.prevFocus = this.backButton;
 				this.backButton.focus();
 			},
 			() => {
-				this.prevFocus = this.showAlgorithms;
 				this.showAlgorithms.focus();
 			},
 			() => {
@@ -105,11 +101,9 @@ class PlaylistToolbar {
 		toolbarKeypress(
 			this.showAlgorithms,
 			() => {
-				this.prevFocus = this.createAlgorithm;
 				this.createAlgorithm.focus();
 			},
 			() => {
-				this.prevFocus = this.showSongs;
 				this.showSongs.focus();
 			},
 			() => {
@@ -131,7 +125,6 @@ class PlaylistToolbar {
 		toolbarKeypress(
 			this.showSongs,
 			() => {
-				this.prevFocus = this.showAlgorithms;
 				this.showAlgorithms.focus();
 			},
 			() => {},
@@ -161,7 +154,7 @@ class PlaylistToolbar {
 	}
 
 	focus() {
-		this.prevFocus.focus();
+		this.backButton.focus();
 	}
 
 	setPlaylistId(playlistId) {
