@@ -5,6 +5,7 @@ const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const displayString = require("../utilities/displayString.js");
 const playerHelper = require("../backend/playerHelper.js");
 const settingsHelper = require("../backend/settingsHelper.js");
+const PlayerOptions = require("../components/playerOptions.js");
 const SongProgressBar = require("../components/songProgressBar.js");
 const path = require("path");
 
@@ -46,58 +47,7 @@ class Menu {
 		});
 
 		// Playback tools
-		this.backSong = blessed.box({
-			parent: this.toolbar,
-			content: "<<",
-			left: "50%-6",
-			height: 3,
-			width: 4,
-			border: "line"
-		});
-		this.pauseSong = blessed.box({
-			parent: this.toolbar,
-			content: play,
-			left: "50%-2",
-			height: 3,
-			width: 4,
-			border: "line"
-		});
-
-		this.skipSong = blessed.box({
-			parent: this.toolbar,
-			content: ">>",
-			left: "50%+2",
-			height: 3,
-			width: 4,
-			border: "line"
-		});
-
-		this.queueSong = blessed.box({
-			parent: this.toolbar,
-			content: "+≡",
-			left: "50%+6",
-			height: 3,
-			width: 4,
-			border: "line"
-		});
-
-		this.reshuffle = blessed.box({
-			parent: this.toolbar,
-			content: "Reshuffle",
-			left: "50%+10",
-			height: 3,
-			width: 11,
-			border: "line"
-		});
-
-		this.openSong = blessed.box({
-			parent: this.toolbar,
-			content: "Open Song",
-			left: "50%+21",
-			height: 3,
-			width: 11,
-			border: "line"
-		});
+		this.playerOptions = new PlayerOptions(this, this.toolbar, this.searchBar);
 
 		// Refresh button
 		this.refresh = blessed.box({
@@ -143,127 +93,19 @@ class Menu {
 			this.screen,
 			this.albumArt,
 			this.currPlaying,
-			this.pauseSong,
+			this.playerOptions.pauseSong,
 			this.songProgressBar
 		);
 
-		this.prevFocus = this.pauseSong;
+		this.prevFocus = this.playerOptions;
 
-		toolbarKeypress(
-			this.backSong,
-			() => {},
-			() => {
-				this.prevFocus = this.pauseSong;
-				this.pauseSong.focus();
-			},
-			() => {},
-			() => {
-				this.searchBar.focus();
-			},
-			async () => {
-				await this.back();
-			}
-		);
-		toolbarKeypress(
-			this.pauseSong,
-			() => {
-				this.prevFocus = this.backSong;
-				this.backSong.focus();
-			},
-			() => {
-				this.prevFocus = this.skipSong;
-				this.skipSong.focus();
-			},
-			() => {},
-			() => {
-				this.searchBar.focus();
-			},
-			async () => {
-				await this.togglePlayback();
-			}
-		);
-		toolbarKeypress(
-			this.skipSong,
-			() => {
-				this.prevFocus = this.pauseSong;
-				this.pauseSong.focus();
-			},
-			() => {
-				this.prevFocus = this.queueSong;
-				this.queueSong.focus();
-			},
-			() => {},
-			() => {
-				this.searchBar.focus();
-			},
-			async () => {
-				await this.skip();
-			}
-		);
-		toolbarKeypress(
-			this.queueSong,
-			() => {
-				this.prevFocus = this.skipSong;
-				this.skipSong.focus();
-			},
-			() => {
-				this.prevFocus = this.reshuffle;
-				this.reshuffle.focus();
-			},
-			() => {},
-			() => {
-				this.searchBar.focus();
-			},
-			() => {
-				playerHelper.queueSongs([this.currPlaying.id]);
-			}
-		);
-		toolbarKeypress(
-			this.reshuffle,
-			() => {
-				this.prevFocus = this.queueSong;
-				this.queueSong.focus();
-			},
-			() => {
-				this.prevFocus = this.openSong;
-				this.openSong.focus();
-			},
-			() => {},
-			() => {
-				this.searchBar.focus();
-			},
-			() => {
-				playerHelper.reshuffleSongs();
-			}
-		);
-		toolbarKeypress(
-			this.openSong,
-			() => {
-				this.prevFocus = this.reshuffle;
-				this.reshuffle.focus();
-			},
-			() => {
-				this.prevFocus = this.refresh;
-				this.refresh.focus();
-			},
-			() => {},
-			() => {
-				this.searchBar.focus();
-			},
-			async () => {
-				const songId = this.currPlaying.id;
-				if (songId) {
-					//eventually fix import here to follow better practice
-					const open = (await import("open")).default;
-					await open(`https://open.spotify.com/track/${this.currPlaying.id}`);
-				}
-			}
-		);
 		toolbarKeypress(
 			this.refresh,
 			() => {
-				this.prevFocus = this.openSong;
-				this.openSong.focus();
+				if (!settingsHelper.getShowAlbumArt()) {
+					this.playerOptions.focusRight();
+					this.prevFocus = this.playerOptions;
+				}
 			},
 			() => {
 				this.prevFocus = this.settings;
@@ -271,7 +113,11 @@ class Menu {
 			},
 			() => {},
 			() => {
-				this.searchBar.focus();
+				if (settingsHelper.getShowAlbumArt()) {
+					this.playerOptions.focus();
+				} else {
+					this.searchBar.focus();
+				}
 			},
 			async () => {
 				await createRefreshPopover(mainScreen, this.refresh, true);
@@ -289,7 +135,11 @@ class Menu {
 			},
 			() => {},
 			() => {
-				this.searchBar.focus();
+				if (settingsHelper.getShowAlbumArt()) {
+					this.playerOptions.focus();
+				} else {
+					this.searchBar.focus();
+				}
 			},
 			() => {
 				createSettingsPopover(mainScreen, this.settings);
@@ -304,7 +154,11 @@ class Menu {
 			() => {},
 			() => {},
 			() => {
-				this.searchBar.focus();
+				if (settingsHelper.getShowAlbumArt()) {
+					this.playerOptions.focus();
+				} else {
+					this.searchBar.focus();
+				}
 			},
 			() => process.exit(0)
 		);
@@ -315,7 +169,11 @@ class Menu {
 	}
 
 	focus() {
-		this.prevFocus.focus();
+		if (settingsHelper.getShowAlbumArt()) {
+			this.playerOptions.focus();
+		} else {
+			this.prevFocus.focus();
+		}
 	}
 
 	async back() {
@@ -380,12 +238,14 @@ class Menu {
 
 	focusClose() {
 		this.close.focus();
+		this.prevFocus = this.close;
 	}
 
 	resizeAndSetColors() {
 		this.adjAlbumArt();
 		this.setColors();
 		this.songProgressBar.resizeAndSetColors();
+		this.playerOptions.resizeAndSetColors();
 	}
 
 	adjAlbumArt() {
@@ -397,14 +257,6 @@ class Menu {
 		this.toolbar.height = showAlbumArt ? 12 : 9;
 		this.currPlaying.left = showAlbumArt ? 23 : 1;
 		this.currPlaying.width = showAlbumArt ? "100%-52" : "50%-6";
-
-		const playerButtonTop = showAlbumArt ? "100%-5" : 0;
-		this.backSong.top = playerButtonTop;
-		this.pauseSong.top = playerButtonTop;
-		this.skipSong.top = playerButtonTop;
-		this.queueSong.top = playerButtonTop;
-		this.reshuffle.top = playerButtonTop;
-		this.openSong.top = playerButtonTop;
 	}
 
 	setColors() {
@@ -418,31 +270,6 @@ class Menu {
 			fg: settingsHelper.getText(),
 			bold: true
 		};
-
-		const playerButtonStyle = {
-			fg: settingsHelper.getText(),
-			border: {
-				fg: settingsHelper.getPrimary()
-			},
-			bold: true
-		};
-		this.backSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.backSong, true, settingsHelper.getPrimary());
-
-		this.pauseSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.pauseSong, true, settingsHelper.getPrimary());
-
-		this.skipSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.skipSong, true, settingsHelper.getPrimary());
-
-		this.queueSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.queueSong, true, settingsHelper.getPrimary());
-
-		this.reshuffle.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.reshuffle, true, settingsHelper.getPrimary());
-
-		this.openSong.style = JSON.parse(JSON.stringify(playerButtonStyle));
-		setFocus(this.openSong, true, settingsHelper.getPrimary());
 
 		this.refresh.style = {
 			fg: settingsHelper.getText(),
@@ -472,6 +299,29 @@ class Menu {
 		setFocus(this.close, false, settingsHelper.getDecline());
 
 		this.screen.render();
+	}
+
+	focusOptions() {
+		if (this.prevFocus === this.playerOptions) {
+			this.refresh.focus();
+			this.prevFocus = this.refresh;
+		} else {
+			this.prevFocus.focus();
+		}
+	}
+
+	updateCurrPlaying() {
+		retrieveAndSetCurrPlaying(
+			this.screen,
+			this.albumArt,
+			this.currPlaying,
+			this.playerOptions.pauseSong,
+			this.songProgressBar
+		);
+	}
+
+	getCurrPlayingId() {
+		return this.currPlaying.id;
 	}
 }
 
