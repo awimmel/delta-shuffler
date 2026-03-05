@@ -182,16 +182,16 @@ class PlaylistToolbar {
 			}
 		};
 		this.backButton.style = JSON.parse(JSON.stringify(buttonStyle));
-		setFocusStyle(this.backButton);
+		setFocusStyle(this.backButton, true, settingsHelper.getPrimary());
 
 		this.createAlgorithm.style = JSON.parse(JSON.stringify(buttonStyle));
-		setFocusStyle(this.createAlgorithm);
+		setFocusStyle(this.createAlgorithm, true, settingsHelper.getPrimary());
 
 		this.showAlgorithms.style = JSON.parse(JSON.stringify(buttonStyle));
-		setFocusStyle(this.showAlgorithms);
+		setFocusStyle(this.showAlgorithms, true, settingsHelper.getPrimary());
 
 		this.showSongs.style = JSON.parse(JSON.stringify(buttonStyle));
-		setFocusStyle(this.showSongs);
+		setFocusStyle(this.showSongs, true, settingsHelper.getPrimary());
 
 		this.mainScreen.screen.render();
 	}
