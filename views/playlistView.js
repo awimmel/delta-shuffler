@@ -62,14 +62,24 @@ class PlaylistView {
 	}
 
 	resizeAndSetColors() {
-		this.adjAlbumArt();
+		this.adjHeight();
 		this.setColors();
 	}
 
-	adjAlbumArt() {
+	adjHeight() {
 		const showAlbumArt = settingsHelper.getShowAlbumArt();
 		this.playlistView.top = showAlbumArt ? 15 : 12;
-		this.playlistView.height = showAlbumArt ? "100%-15" : "100%-12";
+
+		const showFooter = settingsHelper.getShowFooter();
+		if (showAlbumArt && showFooter) {
+			this.playlistView.height = "100%-15";
+		} else if (showAlbumArt) {
+			this.playlistView.height = "100%-14";
+		} else if (showFooter) {
+			this.playlistView.height = "100%-12";
+		} else {
+			this.playlistView.height = "100%-11";
+		}
 	}
 
 	setColors() {

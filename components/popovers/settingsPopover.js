@@ -29,7 +29,29 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		checked: settingsHelper.getShowAlbumArt(),
 		top: 0,
 		left: 0,
-		width: "50%",
+		width: "50%-1",
+		height: 3,
+		border: "line",
+		style: {
+			fg: settingsHelper.getText(),
+			focus: {
+				border: {
+					fg: settingsHelper.getFocus()
+				}
+			},
+			border: {
+				fg: settingsHelper.getPrimary()
+			}
+		}
+	});
+
+	const footerCheckbox = blessed.checkbox({
+		parent: settingsBox,
+		content: "Display footer?",
+		checked: settingsHelper.getShowFooter(),
+		top: 0,
+		left: "50%-1",
+		width: "50%-1",
 		height: 3,
 		border: "line",
 		style: {
@@ -276,11 +298,23 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 	toolbarKeypress(
 		albumArtCheckbox,
 		() => {},
-		() => {},
+		focusFunction(footerCheckbox),
 		() => {},
 		() => focusText(primaryBox),
 		() => {
 			albumArtCheckbox.toggle();
+			screen.render();
+		}
+	);
+
+	toolbarKeypress(
+		footerCheckbox,
+		focusFunction(albumArtCheckbox),
+		() => {},
+		() => {},
+		() => focusText(secondaryBox),
+		() => {
+			footerCheckbox.toggle();
 			screen.render();
 		}
 	);
@@ -343,6 +377,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 		() => {},
 		() => {
 			settingsHelper.saveShowAlbumArt(albumArtCheckbox.checked);
+			settingsHelper.saveShowFooter(footerCheckbox.checked);
 
 			readAndSaveColors([
 				primaryBox,
@@ -372,7 +407,17 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 	setListKeypresses(screen, playlistList, playlists, hidden, focusBox, saveBox);
 
 	escapeKeypress(
-		[albumArtCheckbox, primaryBox, secondaryBox, focusBox, confirmationBox, declineBox, utilityBox, playlistList],
+		[
+			albumArtCheckbox,
+			footerCheckbox,
+			primaryBox,
+			secondaryBox,
+			focusBox,
+			confirmationBox,
+			declineBox,
+			utilityBox,
+			playlistList
+		],
 		saveBox
 	);
 

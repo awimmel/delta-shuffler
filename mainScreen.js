@@ -5,6 +5,7 @@ const PlaylistDetailsView = require("./views/playlistDetailsView");
 const PlaylistView = require("./views/playlistView");
 
 const playlistHelper = require("./backend/playlistHelper.js");
+const settingsHelper = require("./backend/settingsHelper.js");
 const createRefreshPopover = require("./components/popovers/refreshPopover.js");
 const createWaitingPopover = require("./components/popovers/waitingPopover.js");
 
@@ -101,6 +102,13 @@ class MainScreen {
 		this.playlistDetailsView.resizeAndSetColors();
 		this.searchBar.setKeyPresses(this.playlistView, this.playlistDetailsView, this.menu);
 		this.setBackKeypress();
+
+		if (settingsHelper.getShowFooter()) {
+			this.footer.show();
+		} else {
+			this.footer.hide();
+		}
+
 		this.screen.render();
 	}
 
@@ -147,7 +155,8 @@ function createFooter(screen) {
 			"{magenta-fg}a{/magenta-fg} alg. table | {yellow-fg}<{/yellow-fg} rewind | " +
 			"{yellow-fg},{/yellow-fg} pause/play | {yellow-fg}>{/yellow-fg} skip | " +
 			"{yellow-fg}.{/yellow-fg} queue | {yellow-fg}'{/yellow-fg} reshuffle | " +
-			"{red-fg}esc{/red-fg} back/close"
+			"{red-fg}esc{/red-fg} back/close",
+		hidden: settingsHelper.getShowFooter()
 	});
 }
 

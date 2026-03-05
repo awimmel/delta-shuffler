@@ -14,6 +14,17 @@ exports.saveShowAlbumArt = function (showAlbumArt) {
 	fs.writeFileSync(filePath, JSON.stringify(settings), err => {});
 };
 
+exports.getShowFooter = function () {
+	return JSON.parse(fs.readFileSync(filePath, "utf8")).showFooter;
+};
+
+exports.saveShowFooter = function (showFooter) {
+	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
+	settings.showFooter = showFooter;
+
+	fs.writeFileSync(filePath, JSON.stringify(settings), err => {});
+};
+
 exports.getHexCodes = function () {
 	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));
 	return [
