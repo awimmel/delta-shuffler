@@ -79,7 +79,7 @@ exports.writeAlgorithm = function (name, playlistId, conditionGroups) {
 
 exports.runAlgorithm = async function (algorithm, songs, queueCount) {
 	const matchingSongs = this.filterSongs(songs, algorithm.condition).map(song => song.id);
-	await queueSongList(matchingSongs, queueCount);
+	await this.queueSongList(matchingSongs, queueCount);
 };
 
 exports.queueSongList = async function (songs, queueCount) {

@@ -3,6 +3,7 @@ const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const focusText = require("../../utilities/focusText.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
+const readNumericInput = require("../../utilities/readNumericInput.js");
 const settingsHelper = require("../../backend/settingsHelper.js");
 const playerHelper = require("../../backend/playerHelper.js");
 
@@ -244,12 +245,14 @@ module.exports = function createQueueTopPopover(mainScreen, queueTopButton) {
 			const topItemsValue = readNumericInput(topItemsInput);
 			const queueValue = readNumericInput(songCountInput);
 
-			playerHelper.queueTopItems(
-				itemDropdown.getSelectedItem(),
-				timeDropdown.getSelectedItem(),
-				topItemsValue,
-				queueValue
-			);
+			if (topItemsValue > 0 && queueValue > 0) {
+				playerHelper.queueTopItems(
+					itemDropdown.getSelectedItem(),
+					timeDropdown.getSelectedItem(),
+					topItemsValue,
+					queueValue
+				);
+			}
 
 			mainScreen.setFocus(true);
 			queueTopButton.focus();
@@ -269,13 +272,3 @@ module.exports = function createQueueTopPopover(mainScreen, queueTopButton) {
 
 	return queueTopBox;
 };
-
-function readNumericInput(element) {
-	const input = element.getValue() === "" ? "50" : element.getValue();
-	let numericVal = Number(input);
-	if (Number.isInteger(numericVal)) {
-		numericVal = numericVal > 50 ? 50 : numericVal;
-		return numericVal;
-	}
-	return 0;
-}

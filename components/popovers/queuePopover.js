@@ -3,6 +3,7 @@ const toolbarKeypress = require("../../utilities/toolbarKeypress.js");
 const focusFunction = require("../../utilities/focusElement.js");
 const focusText = require("../../utilities/focusText.js");
 const escapeKeypress = require("../../utilities/escapeKeypress.js");
+const readNumericInput = require("../../utilities/readNumericInput.js");
 const algorithmHelper = require("../../backend/algorithmHelper.js");
 const songHelper = require("../../backend/songHelper.js");
 const settingsHelper = require("../../backend/settingsHelper.js");
@@ -149,14 +150,12 @@ module.exports = function createQueuePopover(mainScreen, algorithmsTable, algori
 		},
 		() => {},
 		async () => {
-			const input = songCountInput.getValue() === "" ? "50" : songCountInput.getValue();
-			let queueValue = Number(input);
-			if (Number.isInteger(queueValue)) {
-				queueValue = queueValue > 50 ? 50 : queueValue;
+			const queueVal = readNumericInput(songCountInput);
+			if (queueVal > 0) {
 				await algorithmHelper.runAlgorithm(
 					algorithm,
 					songHelper.readSongs(algorithm.playlistId),
-					queueValue
+					queueVal
 				);
 			}
 
