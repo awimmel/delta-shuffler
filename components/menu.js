@@ -193,11 +193,11 @@ class Menu {
 			this.songProgressBar.pause();
 		} else {
 			modifPlayback = await playerHelper.playSong();
-			this.songProgressBar.setAutoUpdate();
 		}
 
 		if (modifPlayback) {
 			pauseSong.setContent(pauseSong.getContent() === pause ? play : pause);
+			this.songProgressBar.setAutoUpdate();
 			this.screen.render();
 		}
 	}
@@ -362,7 +362,11 @@ async function retrieveAndSetCurrPlaying(
 		albumArt.hidden = !showAlbumArt;
 	} else {
 		songProgressBar.hide();
+	}
+
+	if (songAndArtist.trim().length === 0) {
 		albumArt.hidden = true;
 	}
+
 	screen.render();
 }
