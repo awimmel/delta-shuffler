@@ -167,7 +167,8 @@ class Menu {
 	}
 
 	async back() {
-		this.pauseSong.setContent(pause);
+		const pauseSong = this.playerOptions.pauseSong;
+		pauseSong.setContent(pause);
 		await playerHelper.prevSong();
 
 		// Give Spotify a tenth of a second to account for the request
@@ -177,7 +178,7 @@ class Menu {
 					this.screen,
 					this.albumArt,
 					this.currPlaying,
-					this.pauseSong,
+					pauseSong,
 					this.songProgressBar
 				),
 			100
@@ -186,7 +187,8 @@ class Menu {
 
 	async togglePlayback() {
 		let modifPlayback = false;
-		if (this.pauseSong.getContent() === pause) {
+		const pauseSong = this.playerOptions.pauseSong;
+		if (pauseSong.getContent() === pause) {
 			modifPlayback = await playerHelper.pauseSong();
 			this.songProgressBar.pause();
 		} else {
@@ -195,13 +197,14 @@ class Menu {
 		}
 
 		if (modifPlayback) {
-			this.pauseSong.setContent(this.pauseSong.getContent() === pause ? play : pause);
+			pauseSong.setContent(pauseSong.getContent() === pause ? play : pause);
 			this.screen.render();
 		}
 	}
 
 	async skip() {
-		this.pauseSong.setContent(pause);
+		const pauseSong = this.playerOptions.pauseSong;
+		pauseSong.setContent(pause);
 		await playerHelper.skipSong();
 
 		// Give Spotify a tenth of a second to account for the request
@@ -211,7 +214,7 @@ class Menu {
 					this.screen,
 					this.albumArt,
 					this.currPlaying,
-					this.pauseSong,
+					pauseSong,
 					this.songProgressBar
 				),
 			100
