@@ -2,8 +2,8 @@ const express = require("express");
 const blessed = require("blessed");
 const settings = require("./database/settings.json");
 
-const AuthScreen = require("./authScreen.js");
-const MainScreen = require("./mainScreen.js");
+const AuthScreen = require("./screens/authScreen.js");
+const MainScreen = require("./screens/mainScreen.js");
 
 const routes = require("./server/routes.js");
 const path = require("path");

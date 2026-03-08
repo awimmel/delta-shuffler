@@ -1,13 +1,13 @@
 const blessed = require("blessed");
-const Menu = require("./components/menu");
-const SearchBar = require("./components/searchBar");
-const PlaylistDetailsView = require("./views/playlistDetailsView");
-const PlaylistView = require("./views/playlistView");
+const Menu = require("../components/menu.js");
+const SearchBar = require("../components/searchBar.js");
+const PlaylistDetailsView = require("../views/playlistDetailsView.js");
+const PlaylistView = require("../views/playlistView.js");
 
-const playlistHelper = require("./backend/playlistHelper.js");
-const settingsHelper = require("./backend/settingsHelper.js");
-const createRefreshPopover = require("./components/popovers/refreshPopover.js");
-const createWaitingPopover = require("./components/popovers/waitingPopover.js");
+const playlistHelper = require("../backend/playlistHelper.js");
+const settingsHelper = require("../backend/settingsHelper.js");
+const createRefreshPopover = require("../components/popovers/refreshPopover.js");
+const createWaitingPopover = require("../components/popovers/waitingPopover.js");
 
 class MainScreen {
 	constructor(screen) {

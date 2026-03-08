@@ -1,16 +1,16 @@
 const blessed = require("blessed");
 const crypto = require("crypto");
 const querystring = require("querystring");
-const settings = require("./database/settings.json");
+const settings = require("../database/settings.json");
 const primaryColor = settings.primaryColor;
 
 const MainScreen = require("./mainScreen.js");
 
-const focusFunction = require("./utilities/focusElement.js");
-const focusText = require("./utilities/focusText.js");
-const toolbarKeypress = require("./utilities/toolbarKeypress.js");
+const focusFunction = require("../utilities/focusElement.js");
+const focusText = require("../utilities/focusText.js");
+const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 
-const authHelper = require("./backend/authHelper.js");
+const authHelper = require("../backend/authHelper.js");
 
 class AuthScreen {
 	constructor(screen, server) {
