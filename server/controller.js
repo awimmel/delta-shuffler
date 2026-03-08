@@ -2,7 +2,7 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 const authHelper = require("../backend/authHelper.js");
-const settings = require("../database/settings.json");
+const settings = require("../database/settings.example.json");
 
 const spotifyApi = "https://api.spotify.com/v1";
 const authFailed = "Authorization Failed!";

@@ -1,4 +1,7 @@
 node_modules
 package-lock.json
-database/
 tmp/
+
+# Only include .example.json database/ files
+database/
+!database/*.example.json

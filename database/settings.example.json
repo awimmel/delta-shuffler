@@ -1,0 +1,18 @@
+{
+	"showAlbumArt": true,
+	"showFooter": true,
+	"primaryColor": "#D9A86A",
+	"secondaryColor": "#000000",
+	"confirmationColor": "#0000FF",
+	"declineColor": "#FF0000",
+	"focusColor": "#FFFFFF",
+	"textColor": "#FFFFFF",
+	"utilityColor": "#696969",
+	"clientId": "",
+	"clientSecret": "",
+	"state": null,
+	"accessToken": {},
+	"userId": "",
+	"refreshing": false,
+	"refreshToken": ""
+}
