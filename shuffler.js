@@ -5,6 +5,7 @@ const AuthScreen = require("./screens/authScreen.js");
 const MainScreen = require("./screens/mainScreen.js");
 
 const routes = require("./server/routes.js");
+const getAppDataDir = require("./utilities/getAppDataDir.js");
 const path = require("path");
 
 const screen = blessed.screen({
@@ -13,21 +14,28 @@ const screen = blessed.screen({
 	term: "xterm-256color"
 });
 
+const appDataDir = getAppDataDir();
+
+if (!fs.existsSync(getAppDataDir())) {
+	fs.mkdirSync(appDataDir, { recursive: true });
+}
+
 const dbFiles = [
-	["./database/algorithms.json", "./database/algorithms.example.json"],
-	["./database/playlists.json", "./database/playlists.example.json"],
-	["./database/playlistSongs.json", "./database/playlistSongs.example.json"],
-	["./database/settings.json", "./database/settings.example.json"],
-	["./database/songs.json", "./database/songs.example.json"]
+	["algorithms.json", "./database/algorithms.example.json"],
+	["playlists.json", "./database/playlists.example.json"],
+	["playlistSongs.json", "./database/playlistSongs.example.json"],
+	["settings.json", "./database/settings.example.json"],
+	["songs.json", "./database/songs.example.json"]
 ];
 
 for (const dbFile of dbFiles) {
-	if (!fs.existsSync(dbFile[0])) {
-		fs.copyFileSync(dbFile[1], dbFile[0]);
+	const currPath = path.join(appDataDir, dbFile[0]);
+	if (!fs.existsSync(currPath)) {
+		fs.copyFileSync(dbFile[1], currPath);
 	}
 }
 
-const settings = JSON.parse(fs.readFileSync("./database/settings.json"));
+const settings = JSON.parse(fs.readFileSync(path.join(appDataDir, "settings.json")));
 
 if (!settings.clientId || !settings.clientSecret || !settings.accessToken || !settings.refreshToken) {
 	const app = express();

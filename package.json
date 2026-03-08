@@ -2,12 +2,9 @@
   "name": "draft-buddy",
   "version": "1.0.0",
   "description": "Fantasy football draft companion",
-  "main": "bin/index.js",
+  "main": "shuffler.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "bin": {
-    "draft-buddy": "./bin/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,5 +17,13 @@
     "inquirer": "^12.9.3",
     "open": "^11.0.0",
     "sharp": "^0.34.5"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/**/*",
+      "database/*.example.json"
+    ],
+    "targets": ["node20-win-x64"],
+    "outputPath": "dist"
   }
 }

@@ -13,6 +13,7 @@
   - [Dependent Playlists](#dependent-playlists)
   - [Queueing Top Items](#queueing-top-items)
   - [Keyboard Shortcuts](#keyboard-shortcuts)
+  - [Uninstalling](#uninstalling)
 - [Design Decisions](#design-decisions)
   - [Why a TUI?](#why-a-tui)
   - [No Local Database?](#no-local-database)
@@ -108,6 +109,10 @@ A few keyboard shortcuts are available to improve navigation throughout the app:
 |  .  | Queue |
 |  '  | Reshuffle |
 | esc | Close |
+
+### Uninstalling
+
+Uninstalling is as simple as removing the repo (or `.exe` file) and deleting the `delta-shuffler` directory from your `AppData`.
 
 ---
 ## Design Decisions

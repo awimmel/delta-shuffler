@@ -1,9 +1,10 @@
 const path = require("path");
 const fs = require("fs");
 const displayString = require("../utilities/displayString.js");
+const getAppDataDir = require("../utilities/getAppDataDir.js");
 
-const songsPath = path.join(__dirname, "../database", "songs.json");
-const playlistSongsPath = path.join(__dirname, "../database", "playlistSongs.json");
+const songsPath = path.join(getAppDataDir(), "songs.json");
+const playlistSongsPath = path.join(getAppDataDir(), "playlistSongs.json");
 
 exports.readAllSongs = function () {
 	return JSON.parse(fs.readFileSync(songsPath, "utf8"));

@@ -2,7 +2,9 @@ const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
 
-const filePath = path.join(__dirname, "../database", "settings.json");
+const getAppDataDir = require("../utilities/getAppDataDir.js");
+
+const filePath = path.join(getAppDataDir(), "settings.json");
 
 exports.getAccessToken = async function () {
 	const settings = JSON.parse(fs.readFileSync(filePath, "utf8"));

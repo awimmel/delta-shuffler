@@ -5,8 +5,9 @@ const playerHelper = require("./playerHelper.js");
 const songHelper = require("./songHelper.js");
 const joinOperator = require("../utilities/joinOperator.js");
 const displayString = require("../utilities/displayString.js");
+const getAppDataDir = require("../utilities/getAppDataDir.js");
 
-const filePath = path.join(__dirname, "../database", "algorithms.json");
+const filePath = path.join(getAppDataDir(), "algorithms.json");
 
 exports.readAllAlgorithms = function () {
 	return JSON.parse(fs.readFileSync(filePath, "utf8"));

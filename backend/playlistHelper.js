@@ -7,9 +7,10 @@ const songHelper = require("./songHelper.js");
 const orderSongs = require("../utilities/orderSongs.js");
 const chunkItems = require("../utilities/chunkItems.js");
 const displayString = require("../utilities/displayString.js");
+const getAppDataDir = require("../utilities/getAppDataDir.js");
 
 const spotifyApi = "https://api.spotify.com/v1";
-const filePath = path.join(__dirname, "../database", "playlists.json");
+const filePath = path.join(getAppDataDir(), "playlists.json");
 
 exports.readPlaylists = function () {
 	return JSON.parse(fs.readFileSync(filePath, "utf8"));

@@ -1,7 +1,9 @@
 const path = require("path");
 const fs = require("fs");
 
-const filePath = path.join(__dirname, "../database", "settings.json");
+const getAppDataDir = require("../utilities/getAppDataDir.js");
+
+const filePath = path.join(getAppDataDir(), "settings.json");
 
 exports.getShowAlbumArt = function () {
 	return JSON.parse(fs.readFileSync(filePath, "utf8")).showAlbumArt;
