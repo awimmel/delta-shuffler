@@ -172,7 +172,8 @@ class PlaylistToolbar {
 			fg: settingsHelper.getText(),
 			border: {
 				fg: settingsHelper.getPrimary()
-			}
+			},
+			bold: true
 		};
 		this.backButton.style = JSON.parse(JSON.stringify(buttonStyle));
 		setFocusStyle(this.backButton, true, settingsHelper.getPrimary());

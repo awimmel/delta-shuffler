@@ -64,7 +64,8 @@ class PrimaryToolbar {
 				fg: settingsHelper.getText(),
 				border: {
 					fg: settingsHelper.getPrimary()
-				}
+				},
+				bold: true
 			})
 		);
 		this.queueTop.on("focus", function () {
