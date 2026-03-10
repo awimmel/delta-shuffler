@@ -1,4 +1,4 @@
-name: Build Windows Test
+name: Build Release Artifacts
 
 on:
   push:
@@ -6,8 +6,23 @@ on:
       - "v*"
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  build:
+    name: Build ${{ matrix.artifact }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            target: node22-win-x64
+            artifact: win-x64
+          - os: macos-26-intel
+            target: node22-macos-x64
+            artifact: macos-x64
+          - os: macos-latest
+            target: node22-macos-arm64
+            artifact: macos-arm64
+
     steps:
       - uses: actions/checkout@v4
 
@@ -18,56 +33,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build Windows binary
-        run: npx @yao-pkg/pkg shuffler.js --targets node22-win-x64 --output dist/delta-shuffler.exe
+      - name: Build binary
+        run: npx @yao-pkg/pkg shuffler.js --targets ${{ matrix.target }} --output dist/delta-shuffler
 
       - uses: actions/upload-artifact@v4
         with:
-          name: windows-binary
-          path: dist/delta-shuffler.exe
-
-  build-macos-x64:
-    runs-on: macos-26-intel
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build macOS x64 binary
-        run: npx @yao-pkg/pkg shuffler.js --targets node22-macos-x64 --output dist/delta-shuffler-x64
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: macos-x64-binary
-          path: dist/delta-shuffler-x64
-
-  build-macos-arm:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build macOS ARM binary
-        run: npx @yao-pkg/pkg shuffler.js --targets node22-macos-arm64 --output dist/delta-shuffler-arm64
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: macos-arm64-binary
-          path: dist/delta-shuffler-arm64
+          name: ${{ matrix.artifact }}
+          path: dist/*
   
   release:
-    needs: [build-windows, build-macos-x64, build-macos-arm]
+    name: Create Release
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -76,10 +52,16 @@ jobs:
       
       - uses: actions/download-artifact@v4
         with:
-          path: dist
+          path: artifacts
           merge-multiple: true
+
+      - name: Debug
+        run: |
+          echo "ref_name: ${{ github.ref_name }}"
+          echo "ref: ${{ github.ref }}"
+          ls -la artifacts/
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create ${{ github.ref_name }} dist/* --title "${{ github.ref_name }}" --generate-notes
+        run: gh release create ${{ github.ref_name }} artifacts/* --title "${{ github.ref_name }}"
