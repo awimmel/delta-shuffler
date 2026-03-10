@@ -46,7 +46,7 @@ class SearchBar {
 	}
 
 	resizeAndSetColors() {
-		this.searchBar.top = settingsHelper.getShowAlbumArt() ? 12 : 9;
+		this.searchBar.top = settingsHelper.getShowAlbumArt() ? 12 : 10;
 
 		this.searchBar.style = {
 			fg: settingsHelper.getText(),

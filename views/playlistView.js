@@ -68,7 +68,7 @@ class PlaylistView {
 
 	adjHeight() {
 		const showAlbumArt = settingsHelper.getShowAlbumArt();
-		this.playlistView.top = showAlbumArt ? 15 : 12;
+		this.playlistView.top = showAlbumArt ? 15 : 13;
 
 		const showFooter = settingsHelper.getShowFooter();
 		if (showAlbumArt && showFooter) {
@@ -76,9 +76,9 @@ class PlaylistView {
 		} else if (showAlbumArt) {
 			this.playlistView.height = "100%-14";
 		} else if (showFooter) {
-			this.playlistView.height = "100%-12";
+			this.playlistView.height = "100%-13";
 		} else {
-			this.playlistView.height = "100%-11";
+			this.playlistView.height = "100%-12";
 		}
 	}
 

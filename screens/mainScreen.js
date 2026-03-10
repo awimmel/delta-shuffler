@@ -151,7 +151,7 @@ function createFooter(screen) {
 			bold: true
 		},
 		content:
-			"♫ Powered by Spotify | {cyan-fg}/{/cyan-fg} search | {green-fg}?{/green-fg} table | {blue-fg}s{/blue-fg} songs table | " +
+			"{cyan-fg}/{/cyan-fg} search | {green-fg}?{/green-fg} table | {blue-fg}s{/blue-fg} songs table | " +
 			"{magenta-fg}a{/magenta-fg} alg. table | {yellow-fg}<{/yellow-fg} rewind | " +
 			"{yellow-fg},{/yellow-fg} pause/play | {yellow-fg}>{/yellow-fg} skip | " +
 			"{yellow-fg}.{/yellow-fg} queue | {yellow-fg}'{/yellow-fg} reshuffle | " +

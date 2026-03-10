@@ -99,6 +99,15 @@ class Menu {
 			this.songProgressBar
 		);
 
+		this.spotifyText = blessed.text({
+			parent: this.toolbar,
+			content: "♫ Powered by Spotify",
+			bottom: 1,
+			left: "100%-22",
+			width: 20,
+			height: 1
+		});
+
 		toolbarKeypress(
 			this.refresh,
 			() => {
@@ -250,9 +259,11 @@ class Menu {
 			this.albumArt.hidden = true;
 		}
 
-		this.toolbar.height = showAlbumArt ? 12 : 9;
+		this.toolbar.height = showAlbumArt ? 12 : 10;
 		this.currPlaying.left = showAlbumArt ? 23 : 1;
 		this.currPlaying.width = showAlbumArt ? "100%-52" : "50%-6";
+		this.spotifyText.left = showAlbumArt ?  "100%-22" : "0%";
+		this.spotifyText.bottom = showAlbumArt ? 1 : 0;
 	}
 
 	setColors() {
