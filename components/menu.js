@@ -3,6 +3,7 @@ const createRefreshPopover = require("./popovers/refreshPopover.js");
 const createSettingsPopover = require("./popovers/settingsPopover.js");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const displayString = require("../utilities/displayString.js");
+const getAppDataDir = require("../utilities/getAppDataDir.js");
 const setFocusStyle = require("../utilities/setFocusStyle.js");
 const playerHelper = require("../backend/playerHelper.js");
 const settingsHelper = require("../backend/settingsHelper.js");
@@ -10,7 +11,7 @@ const PlayerOptions = require("../components/playerOptions.js");
 const SongProgressBar = require("../components/songProgressBar.js");
 const path = require("path");
 
-const imagePath = path.join(__dirname, "../tmp", `album_cover.png`);
+const imagePath = path.join(getAppDataDir(), "album_cover.png");
 const pause = "||";
 const play = "▷";
 
@@ -154,7 +155,10 @@ class Menu {
 					this.searchBar.focus();
 				}
 			},
-			() => process.exit(0)
+			() => {
+				playerHelper.deleteAlbumArt();
+				process.exit(0);
+			}
 		);
 
 		this.resizeAndSetColors();

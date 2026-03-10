@@ -1,13 +1,15 @@
 const axios = require("axios");
+const fs = require("fs");
 const authHelper = require("./authHelper.js");
 const algorithmHelper = require("./algorithmHelper.js");
 const settingsHelper = require("./settingsHelper.js");
 const songHelper = require("./songHelper.js");
+const getAppDataDir = require("../utilities/getAppDataDir.js");
 const path = require("path");
 const sharp = require("sharp");
 
 const spotifyApi = "https://api.spotify.com/v1";
-const imagePath = path.join(__dirname, "../tmp", `album_cover.png`);
+const imagePath = path.join(getAppDataDir(), "album_cover.png");
 let currPlayingId = "";
 
 exports.queueSongs = async function (songs) {
@@ -175,4 +177,8 @@ exports.queueTopItems = async function (rawItemType, duration, limit, queueCount
 	} else {
 		algorithmHelper.queueSongList(idList, queueCount);
 	}
+};
+
+exports.deleteAlbumArt = function () {
+	fs.unlinkSync(imagePath);
 };
