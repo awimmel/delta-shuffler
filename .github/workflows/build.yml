@@ -45,9 +45,29 @@ jobs:
         with:
           name: macos-x64-binary
           path: dist/delta-shuffler-x64
+
+  build-macos-arm:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build macOS ARM binary
+        run: npx @yao-pkg/pkg shuffler.js --targets node22-macos-arm64 --output dist/delta-shuffler-arm64
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-arm64-binary
+          path: dist/delta-shuffler-arm64
   
   release:
-    needs: [build-windows, build-macos-x64]
+    needs: [build-windows, build-macos-x64, build-macos-arm]
     runs-on: ubuntu-latest
     permissions:
       contents: write
