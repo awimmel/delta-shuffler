@@ -1,6 +1,7 @@
 const blessed = require("blessed");
-const toolbarKeypress = require("../utilities/toolbarKeypress.js");
+const escapeKeypress = require("../utilities/escapeKeypress.js");
 const setFocusStyle = require("../utilities/setFocusStyle.js");
+const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const NameAlgorithmPopover = require("../components/popovers/nameAlgorithmPopover.js");
 const playlistHelper = require("../backend/playlistHelper.js");
 const settingsHelper = require("../backend/settingsHelper.js");
@@ -144,6 +145,8 @@ class PlaylistToolbar {
 				this.songsTable.focus();
 			}
 		);
+
+		escapeKeypress([this.createAlgorithm, this.showAlgorithms, this.showSongs], this.backButton);
 	}
 
 	focusTable() {
