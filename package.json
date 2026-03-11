@@ -1,11 +1,8 @@
 {
-  "name": "draft-buddy",
+  "name": "delta-shuffler",
   "version": "1.0.0",
-  "description": "Fantasy football draft companion",
+  "description": "Local, terminal-based Spotify wrapper",
   "main": "shuffler.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -22,8 +19,9 @@
     "assets": [
       "node_modules/**/*",
       "database/*.example.json"
-    ],
-    "targets": ["node20-win-x64"],
-    "outputPath": "dist"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

@@ -1,12 +1,25 @@
+<pre>
+        /\\  
+       /  \\                                   |\
+      /    \\       ⎺⎺⎺⎻-⎽_          _⎽-⎻⎺⎺⎺⎺⎺⎺⎺  \
+     /      \\            ⎺⎺⎻-⎽__⎽-⎻⎺⎺            /
+    /        \\     ⎺⎺⎺⎻-⎽_     ⎺⎺⎻-⎽__⎽-⎻⎺⎺⎺⎺⎺⎺|/
+   /          \\    ___⎽-⎻⎺⎺⎺⎻-⎽_      ⎺⎺⎻-⎽____|\
+  /            \\         _⎽-⎻⎺⎺⎺⎻-⎽_             \
+ /              \\  ___⎽-⎻⎺⎺          ⎺⎺⎻-⎽______ /
+/________________\\                             |/ 
+</pre>
+
 # Delta Shuffler
 
 #### A local, terminal-based Spotify wrapper
 
 ---
 
-## Table of Contents:
+## Contents:
 - [About](#about)
 - [User Guide](#user-guide)
+  - [Installation](#installation)
   - [Setup](#setup)
   - [Queueing Songs](#queueing-songs)
   - [Creating and Running Algorithms](#creating-and-running-algorithms)
@@ -26,6 +39,10 @@
 
 ## About
 
+[![Latest Release](https://img.shields.io/github/v/release/awimmel/delta-shuffler)](https://github.com/awimmel/delta-shuffler/releases/latest)
+
+![Build Status](https://github.com/awimmel/delta-shuffler/actions/workflows/build.yml/badge.svg)
+
 Delta Shuffler is a text-based user interface (TUI) that gives users greater control over their Spotify libraries. As someone who is constantly listening to music, I've found myself frustrated with Spotify's default algorithm. While the company has [claimed recent improvements](https://engineering.atspotify.com/2025/11/shuffle-making-random-feel-more-human), I still find myself unsatisfied with the product. Random shuffling tools are pretty common ([I](https://stevenaleong.com/tools/spotifyplaylistrandomizer) [found](https://trackify.am/tools/playlist-randomizer-spotify) [three](https://shuffle.virock.org) in about 10 seconds of searching), though, and Spotify [maintains](https://engineering.atspotify.com/2025/11/shuffle-making-random-feel-more-human#:~:text=Standard%20Shuffle%3A%20still%20pure%20randomness) that its Standard Shuffle is entirely random. A few features differentiate this tool from alternatives:
 - Delta Shuffler is run locally and, aside from calls to Spotify, is completely isolated to the user's machine. This keeps users in control of their API tokens without outsourcing them to any third-party servers
 - Most alternatives only offer random shuffling. This project expands on that functionality by allowing users to create custom Algorithms and Dependent Playlists
@@ -37,9 +54,14 @@ The overall goal of this project was to create functionality similar to [iTunes'
 
 ## User Guide
 
+### Installation
+To install, either:
+- Clone the repo (`node v20.0.0` or later requried). Run `npm i` to download all dependencies before `node shuffler.js` to launch the app.
+- Download a release file from [here](https://github.com/awimmel/delta-shuffler/releases/latest). Run the downloaded file from your terminal of choice.
+
 ### Setup
 
-To begin, go to https://developer.spotify.com and sign in. From there, navigate to your Dashboard and create an app. Set the following information:
+Go to https://developer.spotify.com and sign in. From there, navigate to your Dashboard and create an app. Set the following information:
 
 - App name/description: whatever works best for you. "Delta Shuffler" is recommended, but anything should work
 - Redirect URIs: http://127.0.0.1:3438/spotifyLogin
@@ -112,7 +134,7 @@ A few keyboard shortcuts are available to improve navigation throughout the app:
 
 ### Uninstalling
 
-Uninstalling is as simple as removing the repo (or `.exe` file) and deleting the `delta-shuffler` directory from your `AppData`.
+Uninstalling is as simple as removing the repo/application file and deleting the `delta-shuffler` directory from your `AppData`/`.config`.
 
 ---
 ## Design Decisions
