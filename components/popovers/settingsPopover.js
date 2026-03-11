@@ -412,9 +412,10 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 			footerCheckbox,
 			primaryBox,
 			secondaryBox,
-			focusBox,
 			confirmationBox,
 			declineBox,
+			focusBox,
+			textBox,
 			utilityBox,
 			playlistList
 		],
