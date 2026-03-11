@@ -103,6 +103,7 @@ class MainScreen {
 		this.searchBar.setKeyPresses(this.playlistView, this.playlistDetailsView, this.menu);
 		this.setBackKeypress();
 
+		this.footer.style.fg = settingsHelper.getText();
 		if (settingsHelper.getShowFooter()) {
 			this.footer.show();
 		} else {
@@ -148,7 +149,8 @@ function createFooter(screen) {
 		tags: true,
 		align: "center",
 		style: {
-			bold: true
+			bold: true,
+			fg: settingsHelper.getText()
 		},
 		content:
 			"{cyan-fg}/{/cyan-fg} search | {green-fg}?{/green-fg} table | {blue-fg}s{/blue-fg} songs table | " +

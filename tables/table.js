@@ -19,6 +19,7 @@ module.exports = function createTable(parent, top, headers, displayItems) {
 			},
 			cell: {
 				bold: true,
+				fg: settingsHelper.getText(),
 				selected: {
 					bg: settingsHelper.getPrimary(),
 					fg: settingsHelper.getSecondary(),

@@ -262,7 +262,7 @@ class Menu {
 		this.toolbar.height = showAlbumArt ? 12 : 10;
 		this.currPlaying.left = showAlbumArt ? 23 : 1;
 		this.currPlaying.width = showAlbumArt ? "100%-52" : "50%-6";
-		this.spotifyText.left = showAlbumArt ?  "100%-22" : "0%";
+		this.spotifyText.left = showAlbumArt ? "100%-22" : "0%";
 		this.spotifyText.bottom = showAlbumArt ? 1 : 0;
 	}
 
@@ -304,6 +304,10 @@ class Menu {
 			bold: true
 		};
 		setFocusStyle(this.close, false, settingsHelper.getDecline());
+
+		this.spotifyText.style = {
+			fg: settingsHelper.getText()
+		};
 
 		this.screen.render();
 	}
