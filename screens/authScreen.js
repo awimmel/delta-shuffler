@@ -6,6 +6,7 @@ const primaryColor = settings.primaryColor;
 
 const MainScreen = require("./mainScreen.js");
 
+const escapeKeypress = require("../utilities/escapeKeypress.js");
 const focusFunction = require("../utilities/focusElement.js");
 const focusText = require("../utilities/focusText.js");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
@@ -39,14 +40,15 @@ class AuthScreen {
 		this.authText = blessed.text({
 			parent: this.screen,
 			content:
-				"After creating your app on Spotify's Developer dashboard, enter your Client Id and Client Secret here. " +
-				"You will be routed to a Spotify authorization page where you will be asked to grant a few permissions. " +
-				"Granting will take you to a local web page, after which the app will begin downloading your playlist data. " +
-				"The local web page will give you steps to fix any errors in the process.",
+				"After creating your app on Spotify's Developer dashboard, enter your \n" +
+				"Client Id and Client Secret here. You will be routed to a Spotify\n" +
+				"authorization page where you will be asked to grant a few permissions.\n" +
+				"Granting will take you to a local web page, from which you should\n" +
+				"return to the app to begin downloading.",
 			top: "50%-6",
 			left: "25%",
 			width: "50%",
-			height: 5
+			height: 7
 		});
 
 		this.clientIdBox = blessed.textbox({
@@ -196,6 +198,8 @@ class AuthScreen {
 				}
 			}
 		);
+
+		escapeKeypress([this.clientIdBox, this.clientSecretBox, this.authBox], this.exitBox);
 
 		this.screen.render();
 	}
