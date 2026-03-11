@@ -35,36 +35,44 @@ exports.queueSongs = async function (songs) {
 };
 
 exports.getCurrPlaying = async function () {
-	const accessToken = await authHelper.getAccessToken();
-	const resp = await axios.get(`${spotifyApi}/me/player/currently-playing`, {
-		headers: { Authorization: `Bearer ${accessToken}` }
-	});
+	try {
+		const accessToken = await authHelper.getAccessToken();
+		const resp = await axios.get(`${spotifyApi}/me/player/currently-playing`, {
+			headers: { Authorization: `Bearer ${accessToken}` }
+		});
 
-	if (resp.data === "") {
+		if (resp.data === "") {
+			return {
+				playing: false,
+				songAndArtist: "",
+				album: ""
+			};
+		}
+
+		const song = resp.data.item;
+		if (settingsHelper.getShowAlbumArt() && currPlayingId !== song.id) {
+			const imageUrl = song.album.images.at(0);
+			const response = await axios.get(imageUrl.url, { responseType: "arraybuffer" });
+			await sharp(response.data).png().toFile(imagePath);
+			currPlayingId = song.id;
+		}
+
+		const artistStr = song.artists.map(artist => artist.name).join(", ");
+		return {
+			playing: resp.data.is_playing,
+			songAndArtist: song.name + " - " + artistStr,
+			album: song.album.name ?? "",
+			songId: song.id,
+			spot: resp.data.progress_ms,
+			duration: resp.data.item.duration_ms
+		};
+	} catch {
 		return {
 			playing: false,
 			songAndArtist: "",
 			album: ""
 		};
 	}
-
-	const song = resp.data.item;
-	if (settingsHelper.getShowAlbumArt() && currPlayingId !== song.id) {
-		const imageUrl = song.album.images.at(0);
-		const response = await axios.get(imageUrl.url, { responseType: "arraybuffer" });
-		await sharp(response.data).png().toFile(imagePath);
-		currPlayingId = song.id;
-	}
-
-	const artistStr = song.artists.map(artist => artist.name).join(", ");
-	return {
-		playing: resp.data.is_playing,
-		songAndArtist: song.name + " - " + artistStr,
-		album: song.album.name ?? "",
-		songId: song.id,
-		spot: resp.data.progress_ms,
-		duration: resp.data.item.duration_ms
-	};
 };
 
 exports.playSong = async function () {
