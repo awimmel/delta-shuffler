@@ -15,12 +15,15 @@ jobs:
         include:
           - os: windows-latest
             target: node22-win-x64
+            output: delta-shuffler.exe
             artifact: win-x64
           - os: macos-26-intel
             target: node22-macos-x64
+            output: delta-shuffler-macos-x64
             artifact: macos-x64
           - os: macos-latest
             target: node22-macos-arm64
+            output: delta-shuffler-macos-arm64
             artifact: macos-arm64
 
     steps:
@@ -34,7 +37,21 @@ jobs:
         run: npm install
 
       - name: Build binary
-        run: npx @yao-pkg/pkg shuffler.js --targets ${{ matrix.target }} --output dist/delta-shuffler
+        run: npx @yao-pkg/pkg shuffler.js --targets ${{ matrix.target }} --output dist/${{ matrix.output }}
+      
+      - name: Create Windows launcher
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: |
+          echo @echo off > dist/delta-shuffler-launcher.bat
+          echo wt --size 131,48 cmd /c "%%~dp0delta-shuffler.exe" >> dist/delta-shuffler-launcher.bat
+      
+      - name: Zip Windows release
+        if: matrix.os == 'windows-latest'
+        run: |
+          Compress-Archive -Path dist/delta-shuffler.exe, dist/delta-shuffler-launcher.bat -DestinationPath dist/delta-shuffler-windows.zip
+          Remove-Item dist/delta-shuffler.exe, dist/delta-shuffler-launcher.bat
+
 
       - uses: actions/upload-artifact@v4
         with:
