@@ -44,7 +44,7 @@ jobs:
         shell: cmd
         run: |
           echo @echo off > dist/delta-shuffler-launcher.bat
-          echo wt --size 131,48 cmd /c "%%~dp0delta-shuffler.exe" >> dist/delta-shuffler-launcher.bat
+          echo wt --size 130,43 cmd /c "%%~dp0delta-shuffler.exe" >> dist/delta-shuffler-launcher.bat
       
       - name: Zip Windows release
         if: matrix.os == 'windows-latest'

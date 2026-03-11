@@ -17,7 +17,7 @@ class BuildAlgorithmPopover {
 		this.buildAlgBox = blessed.box({
 			parent: this.screen,
 			border: "line",
-			height: 42,
+			height: 39,
 			width: 100,
 			top: "center",
 			left: "center",
@@ -31,7 +31,7 @@ class BuildAlgorithmPopover {
 		this.closeBox = blessed.box({
 			parent: this.buildAlgBox,
 			content: "Close",
-			top: 39,
+			top: 36,
 			left: "25%-3",
 			height: 3,
 			width: 7,
@@ -57,7 +57,7 @@ class BuildAlgorithmPopover {
 		this.saveBox = blessed.box({
 			parent: this.buildAlgBox,
 			content: "Save",
-			top: 39,
+			top: 36,
 			left: "75%-3",
 			height: 3,
 			width: 7,
@@ -201,6 +201,9 @@ function setAddConditionNavigation(buildAlgPopover) {
 			if (buildAlgPopover.addConditionButton == null) {
 				setBottomBoxesNavigation(buildAlgPopover);
 			}
+
+			buildAlgPopover.closeBox.setFront();
+			buildAlgPopover.saveBox.setFront();
 
 			buildAlgPopover.screen.render();
 		}
