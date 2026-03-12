@@ -25,21 +25,23 @@
   - [Creating and Running Algorithms](#creating-and-running-algorithms)
   - [Dependent Playlists](#dependent-playlists)
   - [Queueing Top Items](#queueing-top-items)
-  - [Keyboard Shortcuts](#keyboard-shortcuts)
+  - [Settings](#settings)
+  - [Keybindings](#keybindings)
+  - [FAQ](#faq)
+    - [Music playback](#can-i-listen-to-music-through-delta-shuffler)
+    - [Missing playlists](#some-of-my-playlists-arent-available-to-download)
+    - [Non-premium support](#is-there-support-for-non-premium-users)
   - [Uninstalling](#uninstalling)
 - [Design Decisions](#design-decisions)
   - [Why a TUI?](#why-a-tui)
-  - [No Local Database?](#no-local-database)
-  - [No Mouse Support?](#no-mouse-support)
-  - [No Music Playback?](#no-music-playback)
-  - [Support for Non-Premium Users?](#support-for-non-premium-users)
+  - [No local database?](#no-local-database)
+  - [No mouse support?](#no-mouse-support)
+  - [Versioning standard](#versioning-standard)
 - [Future Improvements](#future-improvements)
 
 ---
 
 ## About
-
-[![Latest Release](https://img.shields.io/github/v/release/awimmel/delta-shuffler)](https://github.com/awimmel/delta-shuffler/releases/latest)
 
 ![Build Status](https://github.com/awimmel/delta-shuffler/actions/workflows/build.yml/badge.svg)
 
@@ -58,6 +60,7 @@ The overall goal of this project was to create functionality similar to [iTunes'
 To install, either:
 - Clone the repo (`node v20.0.0` or later requried). Run `npm i` to download all dependencies before `node shuffler.js` to launch the app.
 - Download a release file from [here](https://github.com/awimmel/delta-shuffler/releases/latest). Run the downloaded file from your terminal of choice.
+  - Windows builds are currently the only option. macOS builds have not worked properly in my testing, but I hope to add support for them soon. I don't plan on supporting Linux, since I figured that most Linux users would prefer to run via Node anyways.
 
 ### Setup
 
@@ -114,13 +117,18 @@ The following input queues 25 songs from the user's top 15 artists over the past
 
 ![Queue Top Items](assets/topItems.png)
 
+### Settings
 
-### Keyboard shortcuts
+Album art and footer display options, theming, and hiding playlists are all controlled from the Settings page:
 
-A few keyboard shortcuts are available to improve navigation throughout the app:
+![Settings](assets/settings.png)
 
-| Key | Destination |
+
+### Keybindings
+
+| Key | Action |
 | --- | --------- |
+| ↑ / ↓ / ← / →  | Navigate |
 |  /  | Search |
 |  ?  | Current table |
 |  s  | Show Songs table (if viewing playlist)|
@@ -132,9 +140,25 @@ A few keyboard shortcuts are available to improve navigation throughout the app:
 |  '  | Reshuffle |
 | esc | Close |
 
+It's important to note that navigation is handled **entirely** by the keyboard. There is no mouse support for interacting with the application.
+
+### FAQ
+
+#### Can I listen to music through Delta Shuffler?
+
+Spotify's [Web Playback SDK](https://developer.spotify.com/documentation/web-playback-sdk) provides audio playback options, but this application was never intended to completely replace your Spotify player. You should still plan to listen to tracks in Spotify. While I may add player funcitonality in the future, I was looking to avoid feature creep on a smaller personal project.
+
+#### Some of my playlists aren't available to download!
+
+Only user-owned and user-collaborated playlists are available to download. This is due to a restriction on downloading playlist tracks from Spotify's API ([here](https://developer.spotify.com/documentation/web-api/reference/get-playlists-items)). If there is an unavailable playlist that you'd like, try creating a personal copy of the playlist to download.
+
+#### Is there support for non-premium users?
+
+Unfortunately, users must be Spotify Premium subscribers to access the [Web API](https://developer.spotify.com/documentation/web-api).
+
 ### Uninstalling
 
-Uninstalling is as simple as removing the repo/application file and deleting the `delta-shuffler` directory from your `AppData`/`.config`.
+Uninstalling is as simple as removing the repo/application file and deleting the `delta-shuffler` directory from your `AppData` or `.config` folder.
 
 ---
 ## Design Decisions
@@ -145,25 +169,21 @@ A TUI best aligned with my goals for this project to be lightweight and entirely
 
 One downside of making a TUI is a limited audience; web-based and Electron applications are rightly popular for their greater reach with less savvy audiences. Given the nature of the application, however, I was willing to accept this downside. I figured that most users nerdy enough to want custom shuffling algorithms would be happy to run a program through their terminal :smile:.
 
-### No Local Database?
+### No local database?
 
 I opted against running a local database to keep the application particularly lightweight. User data is stored in JSON files instead. Given a typical user's data volume and the low number of JOINs, this seemed to be the best option. To handle the M:N relationship between Songs and Playlists, I created the `playlistSongs.json` file, which stores `playlistId`, `songId`, `addedAt`, and `addedRank` attributes.
 
 Still, I should optimize data read/write operations. Much of the current logic is undoubtedly inefficient, and I'm sure I can find more optimal routes to perform our database operations.
 
-### No Mouse Support?
+### No mouse support?
 
-I opted against adding mouse support because I imagined it would interfere with the "retro vibe" I was looking to create. I'm aware this is a pretty weak argument, but I never imagined using a mouse to interact with the application :man_shrugging:.
+I decided not to add mouse support because I imagined it would interfere with the "retro vibe" I was looking to create. I'm aware this is a pretty weak argument, but I never imagined using a mouse to interact with the application :man_shrugging:.
 
 I added keyboard shortcuts to make navigation easier. I recommend leveraging those if you find yourself frustrated with the application.
 
-### No Music Playback?
+### Versioning standard
 
-Spotify's [Web Playback SDK](https://developer.spotify.com/documentation/web-playback-sdk) provides audio playback options, but this application was never intended to completely replace your Spotify player. You should still plan to begin listening to tracks in Spotify. While I may add player funcitonality in the future, I was looking to avoid feature creep on a smaller personal project.
-
-### Support for Non-Premium Users?
-
-Unfortunately, users must be Spotify Premium subscribers to access the [Web API](https://developer.spotify.com/documentation/web-api). I apologize, but this is a restriction from Spotify themselves.
+Full Semantic Versioning felt too detailed for such a small project. I opted for a two-number, `MAJOR.MINOR` versioning system. What constitutes a major/minor release will mainly just be left up to my own judgment. Versions with major version < 1 are considered pre-release versions.
 
 ---
 
@@ -171,9 +191,11 @@ Unfortunately, users must be Spotify Premium subscribers to access the [Web API]
 
 While currently in a working state, there are many things I hope to improve about this application:
 
+- Fix macOS builds
+  - macOS builds have hit a lot of issues that I haven't seen when running via Node on my Mac. I hope to fix these and provide proper build files to macOS users. 
 - Genre filtering
   - Genre filtering was previously supported, but was removed after being deprecated by Spotify's recent API changes. Running Algorithms based on certain genres would be a helpful feature, and I hope to find a suitable way to retrieve genres soon.
 - Code quality
-  - Given the non-reactive nature of Blessed, I resorted to some bad practices to get everything working properly. I could really stand to implement a few design patterns to reduce coupling throughout the code base.
+  - Given the non-reactive nature of Blessed, I resorted to some bad practices to get everything working properly. I could really stand to implement a few design patterns to reduce coupling throughout the code base. I would also like to add some linting to organize each file's imports.
 - Player functionality
   - It would be nice if users could listen to tracks directly in their terminal. I have no idea what this would look like, but it could be worth investigating in the future.
