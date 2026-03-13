@@ -84,7 +84,7 @@ function updateList(searchBar, newChar, playlistView, playlistDetailsView, scree
 
 function getQuery(searchBar, currChar) {
 	const currQuery = searchBar.getValue().toLowerCase();
-	if (currChar != null && currChar !== "\b") {
+	if (currChar != null && currChar !== "\b" && currChar !== '\x7f') {
 		return currQuery + currChar.toLowerCase();
 	} else {
 		return currQuery.slice(0, -1);
