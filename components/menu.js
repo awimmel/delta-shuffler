@@ -3,6 +3,7 @@ const createRefreshPopover = require("./popovers/refreshPopover.js");
 const createSettingsPopover = require("./popovers/settingsPopover.js");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const displayString = require("../utilities/displayString.js");
+const exitProgram = require("../utilities/exitProgram.js");
 const getAppDataDir = require("../utilities/getAppDataDir.js");
 const setFocusStyle = require("../utilities/setFocusStyle.js");
 const playerHelper = require("../backend/playerHelper.js");
@@ -166,7 +167,7 @@ class Menu {
 			},
 			() => {
 				playerHelper.deleteAlbumArt();
-				process.exit(0);
+				exitProgram();
 			}
 		);
 

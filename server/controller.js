@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const authHelper = require("../backend/authHelper.js");
 const settings = require("../database/settings.example.json");
+const exitProgram = require("../utilities/exitProgram.js");
 
 const spotifyApi = "https://api.spotify.com/v1";
 const authFailed = "Authorization Failed!";
@@ -22,7 +23,7 @@ exports.spotifyLogin = async (req, res) => {
 					"Received state does not match expectations. Finish authentication in less than 30 seconds."
 				)
 			);
-			setTimeout(() => process.exit(0), 100);
+			setTimeout(() => exitProgram(), 100);
 			return;
 		}
 
@@ -56,7 +57,7 @@ exports.spotifyLogin = async (req, res) => {
 					"Invalid tokens received from Spotify. Restart app and try again."
 				)
 			);
-			setTimeout(() => process.exit(0), 100);
+			setTimeout(() => exitProgram(), 100);
 			return;
 		}
 		authHelper.setTokens(accessToken, refreshToken);
@@ -69,7 +70,7 @@ exports.spotifyLogin = async (req, res) => {
 			res.send(
 				generateHtmlPage(authFailed, "Unable to retrieve User ID. Restart app and try again.")
 			);
-			setTimeout(() => process.exit(0), 100);
+			setTimeout(() => exitProgram(), 100);
 			return;
 		}
 		authHelper.setUserId(userId);

@@ -7,6 +7,7 @@ const primaryColor = settings.primaryColor;
 const MainScreen = require("./mainScreen.js");
 
 const escapeKeypress = require("../utilities/escapeKeypress.js");
+const exitProgram = require("../utilities/exitProgram.js");
 const focusFunction = require("../utilities/focusElement.js");
 const focusText = require("../utilities/focusText.js");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
@@ -180,7 +181,7 @@ class AuthScreen {
 				focusText(this.clientSecretBox);
 			},
 			() => {},
-			() => process.exit(0)
+			() => exitProgram()
 		);
 		toolbarKeypress(
 			this.authBox,
