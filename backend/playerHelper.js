@@ -188,5 +188,7 @@ exports.queueTopItems = async function (rawItemType, duration, limit, queueCount
 };
 
 exports.deleteAlbumArt = function () {
-	fs.unlinkSync(imagePath);
+	if (fs.existsSync(imagePath)) {
+		fs.unlinkSync(imagePath);
+	}
 };
