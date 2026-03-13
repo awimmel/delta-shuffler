@@ -20,18 +20,19 @@ if (!fs.existsSync(getAppDataDir())) {
 	fs.mkdirSync(appDataDir, { recursive: true });
 }
 
-const dbFiles = [
-	["algorithms.json", "./database/algorithms.example.json"],
-	["playlists.json", "./database/playlists.example.json"],
-	["playlistSongs.json", "./database/playlistSongs.example.json"],
-	["settings.json", "./database/settings.example.json"],
-	["songs.json", "./database/songs.example.json"]
-];
-
+const dbFiles = [["algorithms"], ["playlists"], ["playlistSongs"], ["settings"], ["songs"]];
+const baseDir = (() => {
+	// Get correct dir depending on how we're running the program
+	if (process.pkg) {
+		return path.dirname(process.execPath);
+	}
+	return path.dirname(require.main?.filename ?? process.argv[1]);
+})();
 for (const dbFile of dbFiles) {
-	const currPath = path.join(appDataDir, dbFile[0]);
-	if (!fs.existsSync(currPath)) {
-		fs.copyFileSync(dbFile[1], currPath);
+	const outputPath = path.join(appDataDir, `${dbFile}.json`);
+	if (!fs.existsSync(outputPath)) {
+		const sourcePath = path.join(baseDir, 'database', `${dbFile}.example.json`);
+		fs.copyFileSync(sourcePath, outputPath);
 	}
 }
 

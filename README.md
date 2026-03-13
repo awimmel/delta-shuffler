@@ -45,6 +45,9 @@
 
 ![Build Status](https://github.com/awimmel/delta-shuffler/actions/workflows/build.yml/badge.svg)
 
+[![Latest Release](https://img.shields.io/github/v/release/awimmel/delta-shuffler)](https://github.com/awimmel/delta-shuffler/releases/latest)
+
+
 Delta Shuffler is a text-based user interface (TUI) that gives users greater control over their Spotify libraries. As someone who is constantly listening to music, I've found myself frustrated with Spotify's default algorithm. While the company has [claimed recent improvements](https://engineering.atspotify.com/2025/11/shuffle-making-random-feel-more-human), I still find myself unsatisfied with the product. Random shuffling tools are pretty common ([I](https://stevenaleong.com/tools/spotifyplaylistrandomizer) [found](https://trackify.am/tools/playlist-randomizer-spotify) [three](https://shuffle.virock.org) in about 10 seconds of searching), though, and Spotify [maintains](https://engineering.atspotify.com/2025/11/shuffle-making-random-feel-more-human#:~:text=Standard%20Shuffle%3A%20still%20pure%20randomness) that its Standard Shuffle is entirely random. A few features differentiate this tool from alternatives:
 - Delta Shuffler is run locally and, aside from calls to Spotify, is completely isolated to the user's machine. This keeps users in control of their API tokens without outsourcing them to any third-party servers
 - Most alternatives only offer random shuffling. This project expands on that functionality by allowing users to create custom Algorithms and Dependent Playlists
@@ -60,7 +63,8 @@ The overall goal of this project was to create functionality similar to [iTunes'
 To install, either:
 - Clone the repo (`node v20.0.0` or later requried). Run `npm i` to download all dependencies before `node shuffler.js` to launch the app.
 - Download a release file from [here](https://github.com/awimmel/delta-shuffler/releases/latest). Run the downloaded file from your terminal of choice.
-  - Windows builds are currently the only option. macOS builds have not worked properly in my testing, but I hope to add support for them soon. I don't plan on supporting Linux, since I figured that most Linux users would prefer to run via Node anyways.
+  - Windows builds contain a `.exe` and a `.bat` file. You can run the `.exe` directly from your terminal, or click the `.bat` to automatically launch a terminal for you
+  - macOS will not originally recognize the file as a program. Run `chmod +x <downloaded_file_name>` to give yourself priveleges to execute the file. After this you can run the program, but you will likely have to override macOS' security protections via the Privacy & Security Settings page.
 
 ### Setup
 
@@ -191,11 +195,13 @@ Full Semantic Versioning felt too detailed for such a small project. I opted for
 
 While currently in a working state, there are many things I hope to improve about this application:
 
-- Fix macOS builds
-  - macOS builds have hit a lot of issues that I haven't seen when running via Node on my Mac. I hope to fix these and provide proper build files to macOS users. 
+- ~~Fix macOS builds~~
+  - ~~macOS builds have hit a lot of issues that I haven't seen when running via Node on my Mac. I hope to fix these and provide proper build files to macOS users.~~
 - Genre filtering
   - Genre filtering was previously supported, but was removed after being deprecated by Spotify's recent API changes. Running Algorithms based on certain genres would be a helpful feature, and I hope to find a suitable way to retrieve genres soon.
 - Code quality
   - Given the non-reactive nature of Blessed, I resorted to some bad practices to get everything working properly. I could really stand to implement a few design patterns to reduce coupling throughout the code base. I would also like to add some linting to organize each file's imports.
 - Player functionality
   - It would be nice if users could listen to tracks directly in their terminal. I have no idea what this would look like, but it could be worth investigating in the future.
+- Provide a proper installer
+  - A proper installer would go a long way in improving user experience, especially for those who are less technical
