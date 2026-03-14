@@ -19,7 +19,9 @@
   "pkg": {
     "assets": [
       "node_modules/**/*",
-      "database/*.example.json"
+      "database/*.example.json",
+      "server/resp.html",
+      "assets/background.png"
     ]
   },
   "engines": {
