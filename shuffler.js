@@ -21,17 +21,10 @@ if (!fs.existsSync(getAppDataDir())) {
 }
 
 const dbFiles = [["algorithms"], ["playlists"], ["playlistSongs"], ["settings"], ["songs"]];
-const baseDir = (() => {
-	// Get correct dir depending on how we're running the program
-	if (process.platform === 'darwin' && process.pkg) {
-		return path.dirname(process.execPath);
-	}
-	return path.dirname(require.main?.filename ?? process.argv[1]);
-})();
 for (const dbFile of dbFiles) {
 	const outputPath = path.join(appDataDir, `${dbFile}.json`);
 	if (!fs.existsSync(outputPath)) {
-		const sourcePath = path.join(baseDir, 'database', `${dbFile}.example.json`);
+		const sourcePath = path.join(__dirname, 'database', `${dbFile}.example.json`);
 		fs.copyFileSync(sourcePath, outputPath);
 	}
 }
