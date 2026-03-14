@@ -1,6 +1,8 @@
 const blessed = require("blessed");
 const crypto = require("crypto");
+const opener = require("opener");
 const querystring = require("querystring");
+
 const settings = require("../database/settings.example.json");
 const primaryColor = settings.primaryColor;
 
@@ -244,9 +246,7 @@ async function beginAuth(clientId, clientSecret, authScreen) {
 			show_dialog: true
 		});
 
-	//eventually fix import here to follow better practice
-	const open = (await import("open")).default;
-	await open(reqString);
+	opener(reqString);
 
 	pollForResp(authScreen);
 }

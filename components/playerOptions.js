@@ -1,4 +1,5 @@
 const blessed = require("blessed");
+const opener = require("opener");
 const toolbarKeypress = require("../utilities/toolbarKeypress.js");
 const setFocusStyle = require("../utilities/setFocusStyle.js");
 const playerHelper = require("../backend/playerHelper.js");
@@ -187,9 +188,7 @@ class PlayerOptions {
 			async () => {
 				const songId = this.menu.getCurrPlayingId();
 				if (songId) {
-					//eventually fix import here to follow better practice
-					const open = (await import("open")).default;
-					await open(`https://open.spotify.com/track/${songId}`);
+					opener(`https://open.spotify.com/track/${songId}`);
 				}
 			}
 		);
