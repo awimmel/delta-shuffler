@@ -23,7 +23,7 @@ if (!fs.existsSync(getAppDataDir())) {
 const dbFiles = [["algorithms"], ["playlists"], ["playlistSongs"], ["settings"], ["songs"]];
 const baseDir = (() => {
 	// Get correct dir depending on how we're running the program
-	if (process.pkg) {
+	if (process.platform === 'darwin' && process.pkg) {
 		return path.dirname(process.execPath);
 	}
 	return path.dirname(require.main?.filename ?? process.argv[1]);
