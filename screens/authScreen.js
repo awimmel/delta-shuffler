@@ -24,20 +24,21 @@ class AuthScreen {
 		this.title = blessed.text({
 			parent: this.screen,
 			content: `
-        /\\  
-       /  \\                                    |\\
-      /    \\       ⎺⎺⎺⎻-⎽_          _⎽-⎻⎺⎺⎺⎺⎺⎺⎺  \\
-     /      \\            ⎺⎺⎻-⎽__⎽-⎻⎺⎺            /
-    /        \\     ⎺⎺⎺⎻-⎽_     ⎺⎺⎻-⎽__⎽-⎻⎺⎺⎺⎺⎺⎺|/
-   /          \\    ___⎽-⎻⎺⎺⎺⎻-⎽_      ⎺⎺⎻-⎽____|\\
-  /            \\         _⎽-⎻⎺⎺⎺⎻-⎽_             \\
- /              \\  ___⎽-⎻⎺⎺          ⎺⎺⎻-⎽______ /
-/________________\\                             |/ 
+		 ___
+        /\\  \\  
+       /  \\  \\                                    |\\
+      /    \\  \\       ⎺⎺⎺⎻-⎽_          _⎽-⎻⎺⎺⎺⎺⎺⎺⎺  \\
+     /      \\  \\            ⎺⎺⎻-⎽__⎽-⎻⎺⎺            /
+    /        \\  \\     ⎺⎺⎺⎻-⎽_     ⎺⎺⎻-⎽__⎽-⎻⎺⎺⎺⎺⎺⎺|/
+   /          \\  \\    ___⎽-⎻⎺⎺⎺⎻-⎽_      ⎺⎺⎻-⎽____|\\
+  /            \\  \\         _⎽-⎻⎺⎺⎺⎻-⎽_             \\
+ /              \\  \\  ___⎽-⎻⎺⎺          ⎺⎺⎻-⎽______ /
+/________________\\__\\                             |/ 
 `,
 			top: "50%-22",
 			left: "50%-25",
 			width: "50%",
-			height: 15
+			height: 16
 		});
 
 		this.authText = blessed.text({
@@ -48,7 +49,7 @@ class AuthScreen {
 				"authorization page where you will be asked to grant a few permissions.\n\n" +
 				"Granting will take you to a local web page, from which you should " +
 				"return to the app to begin downloading.",
-			top: "50%-7",
+			top: "50%-6",
 			left: "25%",
 			width: "50%",
 			height: 7
@@ -57,7 +58,7 @@ class AuthScreen {
 		this.clientIdBox = blessed.textbox({
 			parent: this.screen,
 			label: " Client Id:",
-			top: "50%",
+			top: "50%+2",
 			left: "25%",
 			height: 3,
 			width: "50%",
@@ -81,7 +82,7 @@ class AuthScreen {
 		this.clientSecretBox = blessed.textbox({
 			parent: this.screen,
 			label: " Client Secret:",
-			top: "50%+3",
+			top: "50%+5",
 			left: "25%",
 			height: 3,
 			width: "50%",
@@ -104,7 +105,7 @@ class AuthScreen {
 		this.exitBox = blessed.box({
 			parent: this.screen,
 			content: "Exit",
-			top: "50%+6",
+			top: "50%+8",
 			left: "25%",
 			height: 3,
 			width: "25%",
@@ -131,7 +132,7 @@ class AuthScreen {
 		this.authBox = blessed.box({
 			parent: this.screen,
 			content: "Authenticate",
-			top: "50%+6",
+			top: "50%+8",
 			left: "50%",
 			height: 3,
 			width: "25%",
