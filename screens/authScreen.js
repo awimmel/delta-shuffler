@@ -34,7 +34,7 @@ class AuthScreen {
  /              \\  ___⎽-⎻⎺⎺          ⎺⎺⎻-⎽______ /
 /________________\\                             |/ 
 `,
-			top: "50%-20",
+			top: "50%-22",
 			left: "50%-25",
 			width: "50%",
 			height: 15
@@ -43,12 +43,12 @@ class AuthScreen {
 		this.authText = blessed.text({
 			parent: this.screen,
 			content:
-				"After creating your app on Spotify's Developer dashboard, enter your \n" +
-				"Client Id and Client Secret here. You will be routed to a Spotify\n" +
-				"authorization page where you will be asked to grant a few permissions.\n" +
-				"Granting will take you to a local web page, from which you should\n" +
+				"After creating your app on Spotify's Developer dashboard, enter your " +
+				"Client Id and Client Secret here. You will be routed to a Spotify " +
+				"authorization page where you will be asked to grant a few permissions.\n\n" +
+				"Granting will take you to a local web page, from which you should " +
 				"return to the app to begin downloading.",
-			top: "50%-6",
+			top: "50%-7",
 			left: "25%",
 			width: "50%",
 			height: 7
