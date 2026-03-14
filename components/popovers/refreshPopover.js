@@ -139,12 +139,14 @@ module.exports = async function createRefreshPopover(mainScreen, elOnExit, showC
 		() => {},
 		() => {
 			const playlistsToDownload = playlists.filter((playlist, index) => !hiddenIndexes.has(index));
-			refreshHelper.refresh(mainScreen, playlistsToDownload);
-			mainScreen.createWaitingPopover();
+			if (playlistsToDownload.length > 0) {
+				refreshHelper.refresh(mainScreen, playlistsToDownload);
+				mainScreen.createWaitingPopover();
 
-			refreshPopover.destroy();
-			elOnExit.focus();
-			mainScreen.screen.render();
+				refreshPopover.destroy();
+				elOnExit.focus();
+				mainScreen.screen.render();
+			}
 		}
 	);
 
