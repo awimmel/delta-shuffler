@@ -33,7 +33,7 @@ class Menu {
 			parent: this.toolbar,
 			top: 0,
 			left: 1,
-			width: 20,
+			width: process.platform === 'darwin' ? 24 : 21,
 			height: 10,
 			align: "left",
 			file: imagePath,
@@ -261,8 +261,14 @@ class Menu {
 		}
 
 		this.toolbar.height = showAlbumArt ? 12 : 10;
-		this.currPlaying.left = showAlbumArt ? 23 : 1;
-		this.currPlaying.width = showAlbumArt ? "100%-52" : "50%-6";
+		if (showAlbumArt) {
+			this.currPlaying.left = process.platform === 'darwin' ? 26 : 23
+			this.currPlaying.width = process.platform === 'darwin' ? "100%-55" : "100%-52"
+		} else {
+			this.currPlaying.left = 1;
+			this.currPlaying.width = "50%-7";
+		}
+
 		this.spotifyText.left = showAlbumArt ? "100%-22" : "0%";
 		this.spotifyText.bottom = showAlbumArt ? 1 : 0;
 	}

@@ -88,8 +88,13 @@ class SongProgressBar {
 
 	adjAlbumArt() {
 		const showAlbumArt = settingsHelper.getShowAlbumArt();
-		this.progressBar.left = showAlbumArt ? 22 : 0;
-		this.progressBar.width = showAlbumArt ? "100%-37" : "100%-15";
+		if (showAlbumArt) {
+			this.progressBar.left = process.platform === 'darwin' ? 26 : 23
+			this.progressBar.width = process.platform === 'darwin' ? "100%-41" : "100%-38"
+		} else {
+			this.progressBar.left = 0;
+			this.progressBar.width = "100%-15";
+		}
 		this.interiorBars.forEach(bar => (bar.hidden = true));
 		this.interiorBars = createProgressBars(this.progressBar);
 	}
