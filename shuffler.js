@@ -8,6 +8,8 @@ const routes = require("./server/routes.js");
 const getAppDataDir = require("./utilities/getAppDataDir.js");
 const path = require("path");
 
+process.stdout.write("\x1Bc");
+
 const screen = blessed.screen({
 	smartCSR: true,
 	title: "Delta Shuffler",
