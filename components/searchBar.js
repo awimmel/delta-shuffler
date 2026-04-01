@@ -19,20 +19,28 @@ class SearchBar {
 		this.resizeAndSetColors();
 	}
 
+	setViews(playlistView, playlistDetailsView, menu) {
+		this.playlistView = playlistView;
+		this.playlistDetailsView = playlistDetailsView;
+		this.menu = menu;
+	}
+
 	focus() {
+		this.searchBar.removeAllListeners("keypress");
+		this.setKeyPresses();
 		focusText(this.searchBar);
 	}
 
-	setKeyPresses(playlistView, playlistDetailsView, menu) {
+	setKeyPresses() {
 		this.searchBar.on("keypress", (char, key) => {
 			if (key.name === "enter" || key.name === "down") {
-				const elToFocus = !playlistDetailsView.hidden ? playlistDetailsView : playlistView;
+				const elToFocus = !this.playlistDetailsView.hidden ? this.playlistDetailsView : this.playlistView;
 				elToFocus.focus(key.name);
 				this.screen.render();
 			} else if (key.name === "up") {
-				menu.focus();
+				this.menu.focus();
 			} else if (key.name !== "escape" && this.searchBar._reading) {
-				updateList(this.searchBar, char, playlistView, playlistDetailsView, this.screen);
+				updateList(this.searchBar, char, this.playlistView, this.playlistDetailsView, this.screen);
 			}
 		});
 	}
@@ -79,12 +87,11 @@ function updateList(searchBar, newChar, playlistView, playlistDetailsView, scree
 	} else {
 		playlistView.filterData(query);
 	}
-	screen.render();
 }
 
 function getQuery(searchBar, currChar) {
 	const currQuery = searchBar.getValue().toLowerCase();
-	if (currChar != null && currChar !== "\b" && currChar !== '\x7f') {
+	if (currChar != null && currChar !== "\b" && currChar !== "\x7f") {
 		return currQuery + currChar.toLowerCase();
 	} else {
 		return currQuery.slice(0, -1);

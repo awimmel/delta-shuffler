@@ -26,7 +26,7 @@ class MainScreen {
 		this.setShortcuts();
 
 		this.setBackKeypress();
-		this.searchBar.setKeyPresses(this.playlistView, this.playlistDetailsView, this.menu);
+		this.searchBar.setViews(this.playlistView, this.playlistDetailsView, this.menu)
 
 		this.resizeAndSetColors();
 		this.playlistView.focus();
@@ -100,7 +100,7 @@ class MainScreen {
 		this.searchBar.resizeAndSetColors();
 		this.playlistView.resizeAndSetColors();
 		this.playlistDetailsView.resizeAndSetColors();
-		this.searchBar.setKeyPresses(this.playlistView, this.playlistDetailsView, this.menu);
+		this.searchBar.setKeyPresses();
 		this.setBackKeypress();
 
 		this.footer.style.fg = settingsHelper.getText();
