@@ -50,7 +50,7 @@ exports.getCurrPlaying = async function () {
 		}
 
 		const song = resp.data.item;
-		if (settingsHelper.getShowAlbumArt() && currPlayingId !== song.id) {
+		if (settingsHelper.getShowAlbumArt() && (currPlayingId !== song.id || !fs.existsSync(imagePath))) {
 			const imageUrl = song.album.images.at(0);
 			const response = await axios.get(imageUrl.url, { responseType: "arraybuffer" });
 			await sharp(response.data).png().toFile(imagePath);

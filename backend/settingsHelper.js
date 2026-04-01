@@ -1,6 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 
+const playerHelper = require("./playerHelper.js");
 const getAppDataDir = require("../utilities/getAppDataDir.js");
 
 const filePath = path.join(getAppDataDir(), "settings.json");
@@ -14,6 +15,10 @@ exports.saveShowAlbumArt = function (showAlbumArt) {
 	settings.showAlbumArt = showAlbumArt;
 
 	fs.writeFileSync(filePath, JSON.stringify(settings), err => {});
+
+	if (!showAlbumArt) {
+		playerHelper.deleteAlbumArt();
+	}
 };
 
 exports.getShowFooter = function () {
