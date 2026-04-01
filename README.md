@@ -135,6 +135,7 @@ Album art and footer display options, theming, and hiding playlists are all cont
 | --- | --------- |
 | ↑ / ↓ / ← / →  | Navigate |
 |  /  | Search |
+|  c  | Clear search |
 |  ?  | Current table |
 |  s  | Show Songs table (if viewing playlist)|
 |  a  | Show Algorithms table (if viewing playlist)|

@@ -50,6 +50,14 @@ class MainScreen {
 			if (this.focus) {
 				if (char === "/") {
 					this.searchBar.focus();
+				} else if (char === "c") {
+					this.searchBar.setValue("");
+					if (!this.playlistView.hidden) {
+						this.playlistView.filterData("");
+					} else {
+						this.playlistDetailsView.filterData("");
+					}
+					this.screen.render();
 				} else if (char === "<") {
 					this.menu.back();
 				} else if (char === ",") {
@@ -153,7 +161,7 @@ function createFooter(screen) {
 			fg: settingsHelper.getText()
 		},
 		content:
-			"{cyan-fg}/{/cyan-fg} search | {green-fg}?{/green-fg} table | {blue-fg}s{/blue-fg} songs table | " +
+			"{cyan-fg}/{/cyan-fg} search | {cyan-fg}c{/cyan-fg} clear | {green-fg}?{/green-fg} table | {blue-fg}s{/blue-fg} songs table | " +
 			"{magenta-fg}a{/magenta-fg} alg. table | {yellow-fg}<{/yellow-fg} rewind | " +
 			"{yellow-fg},{/yellow-fg} pause/play | {yellow-fg}>{/yellow-fg} skip | " +
 			"{yellow-fg}.{/yellow-fg} queue | {yellow-fg}'{/yellow-fg} reshuffle | " +

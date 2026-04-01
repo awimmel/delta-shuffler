@@ -44,9 +44,7 @@ class PlaylistView {
 	}
 
 	focus(keyName) {
-		if (keyName === "down") {
-			this.primaryToolbar.focus();
-		} else if (this.getDataCount() > 0) {
+		if (keyName !== "down" && this.getDataCount() > 0) {
 			this.playlistTable.focus();
 		} else {
 			this.primaryToolbar.focus();
