@@ -64,7 +64,7 @@ The overall goal of this project was to create functionality similar to [iTunes'
 To install, either:
 - Clone the repo (`node v20.0.0` or later requried). Run `npm i` to download all dependencies before `node shuffler.js` to launch the app.
 - Download a release file from [here](https://github.com/awimmel/delta-shuffler/releases/latest). Run the downloaded file from your terminal of choice.
-  - Windows builds contain a `.exe` and a `.bat` file. You can run the `.exe` directly from your terminal, or click the `.bat` to automatically launch a terminal for you
+  - Windows builds contain a `.exe` and a `.bat` file. You can run the `.exe` directly from your terminal or click the `.bat` to automatically launch a terminal for you
   - macOS will not originally recognize the file as a program. Run `chmod +x <downloaded_file_name>` to give yourself priveleges to execute the file. After this you can run the program, but you will likely have to override macOS' security protections via the Privacy & Security Settings page.
 
 ### Setup
@@ -189,7 +189,7 @@ I added keyboard shortcuts to make navigation easier. I recommend leveraging tho
 
 ### Versioning standard
 
-Full Semantic Versioning felt too detailed for such a small project. I opted for a two-number, `MAJOR.MINOR` versioning system. What constitutes a major/minor release will mainly just be left up to my own judgment. Versions with major version < 1 are considered pre-release versions.
+Full Semantic Versioning felt too detailed for such a small project. I opted for a two-number, `MAJOR.MINOR` versioning system. What constitutes a major/minor release will mainly just be left up to my own judgment. Versions with a suffix are experimental releases. `1.0-alpha` is the first Alpha release for `1.0`, and `1.3-beta` is the Beta release for `1.3`. 
 
 ---
 
@@ -206,4 +206,4 @@ While currently in a working state, there are many things I hope to improve abou
 - Player functionality
   - It would be nice if users could listen to tracks directly in their terminal. I have no idea what this would look like, but it could be worth investigating in the future.
 - Provide a proper installer
-  - A proper installer would go a long way in improving user experience, especially for those who are less technical
+  - A proper installer would go a long way in improving user experience, especially for those who are less technical.
