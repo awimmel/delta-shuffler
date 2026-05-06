@@ -145,6 +145,10 @@ class MainScreen {
 			}
 		});
 	}
+
+	clearSearch() {
+		this.searchBar.setValue("");
+	}
 }
 
 function createFooter(screen) {

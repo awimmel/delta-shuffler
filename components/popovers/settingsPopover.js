@@ -396,6 +396,7 @@ module.exports = function createSettingsPopover(mainScreen, settingsButton) {
 			playlistHelper.hidePlaylists(hiddenIds);
 
 			mainScreen.setPlaylists(playlists.filter((playlist, index) => !hidden.has(index)));
+			mainScreen.clearSearch();
 			mainScreen.setFocus(true);
 
 			settingsBox.destroy();
